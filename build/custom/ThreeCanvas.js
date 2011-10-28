@@ -1,159 +1,6173 @@
 // ThreeCanvas.js r45 - http://github.com/mrdoob/three.js
-var THREE=THREE||{};if(!self.Int32Array)self.Int32Array=Array,self.Float32Array=Array;THREE.Color=function(a){a!==void 0&&this.setHex(a);return this};
-THREE.Color.prototype={constructor:THREE.Color,r:1,g:1,b:1,copy:function(a){this.r=a.r;this.g=a.g;this.b=a.b;return this},setRGB:function(a,b,c){this.r=a;this.g=b;this.b=c;return this},setHSV:function(a,b,c){var d,f,e;if(c==0)this.r=this.g=this.b=0;else switch(d=Math.floor(a*6),f=a*6-d,a=c*(1-b),e=c*(1-b*f),b=c*(1-b*(1-f)),d){case 1:this.r=e;this.g=c;this.b=a;break;case 2:this.r=a;this.g=c;this.b=b;break;case 3:this.r=a;this.g=e;this.b=c;break;case 4:this.r=b;this.g=a;this.b=c;break;case 5:this.r=
-c;this.g=a;this.b=e;break;case 6:case 0:this.r=c,this.g=b,this.b=a}return this},setHex:function(a){a=Math.floor(a);this.r=(a>>16&255)/255;this.g=(a>>8&255)/255;this.b=(a&255)/255;return this},getHex:function(){return~~(this.r*255)<<16^~~(this.g*255)<<8^~~(this.b*255)},getContextStyle:function(){return"rgb("+Math.floor(this.r*255)+","+Math.floor(this.g*255)+","+Math.floor(this.b*255)+")"},clone:function(){return(new THREE.Color).setRGB(this.r,this.g,this.b)}};
-THREE.Vector2=function(a,b){this.x=a||0;this.y=b||0};
-THREE.Vector2.prototype={constructor:THREE.Vector2,set:function(a,b){this.x=a;this.y=b;return this},copy:function(a){this.x=a.x;this.y=a.y;return this},clone:function(){return new THREE.Vector2(this.x,this.y)},add:function(a,b){this.x=a.x+b.x;this.y=a.y+b.y;return this},addSelf:function(a){this.x+=a.x;this.y+=a.y;return this},sub:function(a,b){this.x=a.x-b.x;this.y=a.y-b.y;return this},subSelf:function(a){this.x-=a.x;this.y-=a.y;return this},multiplyScalar:function(a){this.x*=a;this.y*=a;return this},
-divideScalar:function(a){a?(this.x/=a,this.y/=a):this.set(0,0);return this},negate:function(){return this.multiplyScalar(-1)},dot:function(a){return this.x*a.x+this.y*a.y},lengthSq:function(){return this.x*this.x+this.y*this.y},length:function(){return Math.sqrt(this.lengthSq())},normalize:function(){return this.divideScalar(this.length())},distanceTo:function(a){return Math.sqrt(this.distanceToSquared(a))},distanceToSquared:function(a){var b=this.x-a.x,a=this.y-a.y;return b*b+a*a},setLength:function(a){return this.normalize().multiplyScalar(a)},
-equals:function(a){return a.x==this.x&&a.y==this.y}};THREE.Vector3=function(a,b,c){this.x=a||0;this.y=b||0;this.z=c||0};
-THREE.Vector3.prototype={constructor:THREE.Vector3,set:function(a,b,c){this.x=a;this.y=b;this.z=c;return this},setX:function(a){this.x=a;return this},setY:function(a){this.y=a;return this},setZ:function(a){this.z=a;return this},copy:function(a){this.x=a.x;this.y=a.y;this.z=a.z;return this},clone:function(){return new THREE.Vector3(this.x,this.y,this.z)},add:function(a,b){this.x=a.x+b.x;this.y=a.y+b.y;this.z=a.z+b.z;return this},addSelf:function(a){this.x+=a.x;this.y+=a.y;this.z+=a.z;return this},
-addScalar:function(a){this.x+=a;this.y+=a;this.z+=a;return this},sub:function(a,b){this.x=a.x-b.x;this.y=a.y-b.y;this.z=a.z-b.z;return this},subSelf:function(a){this.x-=a.x;this.y-=a.y;this.z-=a.z;return this},multiply:function(a,b){this.x=a.x*b.x;this.y=a.y*b.y;this.z=a.z*b.z;return this},multiplySelf:function(a){this.x*=a.x;this.y*=a.y;this.z*=a.z;return this},multiplyScalar:function(a){this.x*=a;this.y*=a;this.z*=a;return this},divideSelf:function(a){this.x/=a.x;this.y/=a.y;this.z/=a.z;return this},
-divideScalar:function(a){a?(this.x/=a,this.y/=a,this.z/=a):this.set(0,0,0);return this},negate:function(){return this.multiplyScalar(-1)},dot:function(a){return this.x*a.x+this.y*a.y+this.z*a.z},lengthSq:function(){return this.x*this.x+this.y*this.y+this.z*this.z},length:function(){return Math.sqrt(this.lengthSq())},lengthManhattan:function(){return this.x+this.y+this.z},normalize:function(){return this.divideScalar(this.length())},setLength:function(a){return this.normalize().multiplyScalar(a)},
-cross:function(a,b){this.x=a.y*b.z-a.z*b.y;this.y=a.z*b.x-a.x*b.z;this.z=a.x*b.y-a.y*b.x;return this},crossSelf:function(a){return this.set(this.y*a.z-this.z*a.y,this.z*a.x-this.x*a.z,this.x*a.y-this.y*a.x)},distanceTo:function(a){return Math.sqrt(this.distanceToSquared(a))},distanceToSquared:function(a){return(new THREE.Vector3).sub(this,a).lengthSq()},setPositionFromMatrix:function(a){this.x=a.n14;this.y=a.n24;this.z=a.n34},setRotationFromMatrix:function(a){var b=Math.cos(this.y);this.y=Math.asin(a.n13);
-Math.abs(b)>1.0E-5?(this.x=Math.atan2(-a.n23/b,a.n33/b),this.z=Math.atan2(-a.n12/b,a.n11/b)):(this.x=0,this.z=Math.atan2(a.n21,a.n22))},isZero:function(){return this.lengthSq()<1.0E-4}};THREE.Vector4=function(a,b,c,d){this.x=a||0;this.y=b||0;this.z=c||0;this.w=d!==void 0?d:1};
-THREE.Vector4.prototype={constructor:THREE.Vector4,set:function(a,b,c,d){this.x=a;this.y=b;this.z=c;this.w=d;return this},copy:function(a){this.x=a.x;this.y=a.y;this.z=a.z;this.w=a.w!==void 0?a.w:1},clone:function(){return new THREE.Vector4(this.x,this.y,this.z,this.w)},add:function(a,b){this.x=a.x+b.x;this.y=a.y+b.y;this.z=a.z+b.z;this.w=a.w+b.w;return this},addSelf:function(a){this.x+=a.x;this.y+=a.y;this.z+=a.z;this.w+=a.w;return this},sub:function(a,b){this.x=a.x-b.x;this.y=a.y-b.y;this.z=a.z-
-b.z;this.w=a.w-b.w;return this},subSelf:function(a){this.x-=a.x;this.y-=a.y;this.z-=a.z;this.w-=a.w;return this},multiplyScalar:function(a){this.x*=a;this.y*=a;this.z*=a;this.w*=a;return this},divideScalar:function(a){a?(this.x/=a,this.y/=a,this.z/=a,this.w/=a):(this.z=this.y=this.x=0,this.w=1);return this},negate:function(){return this.multiplyScalar(-1)},dot:function(a){return this.x*a.x+this.y*a.y+this.z*a.z+this.w*a.w},lengthSq:function(){return this.dot(this)},length:function(){return Math.sqrt(this.lengthSq())},
-normalize:function(){return this.divideScalar(this.length())},setLength:function(a){return this.normalize().multiplyScalar(a)},lerpSelf:function(a,b){this.x+=(a.x-this.x)*b;this.y+=(a.y-this.y)*b;this.z+=(a.z-this.z)*b;this.w+=(a.w-this.w)*b;return this}};THREE.Ray=function(a,b){this.origin=a||new THREE.Vector3;this.direction=b||new THREE.Vector3};
-THREE.Ray.prototype={constructor:THREE.Ray,intersectScene:function(a){return this.intersectObjects(a.objects)},intersectObjects:function(a){var b,c,d=[];b=0;for(c=a.length;b<c;b++)Array.prototype.push.apply(d,this.intersectObject(a[b]));d.sort(function(a,b){return a.distance-b.distance});return d},intersectObject:function(a){function b(a,b,c){var d;d=c.clone().subSelf(a).dot(b);if(d<=0)return null;a=a.clone().addSelf(b.clone().multiplyScalar(d));return c.distanceTo(a)}function c(a,b,c,d){var d=d.clone().subSelf(b),
-c=c.clone().subSelf(b),f=a.clone().subSelf(b),a=d.dot(d),b=d.dot(c),d=d.dot(f),e=c.dot(c),c=c.dot(f),f=1/(a*e-b*b),e=(e*d-b*c)*f,a=(a*c-b*d)*f;return e>0&&a>0&&e+a<1}if(a instanceof THREE.Particle){var d=b(this.origin,this.direction,a.matrixWorld.getPosition());if(d==null||d>a.scale.x)return[];return[{distance:d,point:a.position,face:null,object:a}]}else if(a instanceof THREE.Mesh){d=b(this.origin,this.direction,a.matrixWorld.getPosition());if(d==null||d>a.geometry.boundingSphere.radius*Math.max(a.scale.x,
-Math.max(a.scale.y,a.scale.z)))return[];var f,e,g,h,l,k,o,i,n,j,r=a.geometry,s=r.vertices,w=[],d=0;for(f=r.faces.length;d<f;d++)if(e=r.faces[d],n=this.origin.clone(),j=this.direction.clone(),k=a.matrixWorld,g=k.multiplyVector3(e.centroid.clone()).subSelf(n),i=g.dot(j),!(i<=0)&&(g=k.multiplyVector3(s[e.a].position.clone()),h=k.multiplyVector3(s[e.b].position.clone()),l=k.multiplyVector3(s[e.c].position.clone()),k=e instanceof THREE.Face4?k.multiplyVector3(s[e.d].position.clone()):null,o=a.matrixRotationWorld.multiplyVector3(e.normal.clone()),
-i=j.dot(o),a.doubleSided||(a.flipSided?i>0:i<0)))if(i=o.dot((new THREE.Vector3).sub(g,n))/i,n=n.addSelf(j.multiplyScalar(i)),e instanceof THREE.Face3)c(n,g,h,l)&&(e={distance:this.origin.distanceTo(n),point:n,face:e,object:a},w.push(e));else if(e instanceof THREE.Face4&&(c(n,g,h,k)||c(n,h,l,k)))e={distance:this.origin.distanceTo(n),point:n,face:e,object:a},w.push(e);w.sort(function(a,b){return a.distance-b.distance});return w}else return[]}};
-THREE.Rectangle=function(){function a(){e=d-b;g=f-c}var b,c,d,f,e,g,h=!0;this.getX=function(){return b};this.getY=function(){return c};this.getWidth=function(){return e};this.getHeight=function(){return g};this.getLeft=function(){return b};this.getTop=function(){return c};this.getRight=function(){return d};this.getBottom=function(){return f};this.set=function(e,g,o,i){h=!1;b=e;c=g;d=o;f=i;a()};this.addPoint=function(e,g){h?(h=!1,b=e,c=g,d=e,f=g):(b=b<e?b:e,c=c<g?c:g,d=d>e?d:e,f=f>g?f:g);a()};this.add3Points=
-function(e,g,o,i,n,j){h?(h=!1,b=e<o?e<n?e:n:o<n?o:n,c=g<i?g<j?g:j:i<j?i:j,d=e>o?e>n?e:n:o>n?o:n,f=g>i?g>j?g:j:i>j?i:j):(b=e<o?e<n?e<b?e:b:n<b?n:b:o<n?o<b?o:b:n<b?n:b,c=g<i?g<j?g<c?g:c:j<c?j:c:i<j?i<c?i:c:j<c?j:c,d=e>o?e>n?e>d?e:d:n>d?n:d:o>n?o>d?o:d:n>d?n:d,f=g>i?g>j?g>f?g:f:j>f?j:f:i>j?i>f?i:f:j>f?j:f);a()};this.addRectangle=function(e){h?(h=!1,b=e.getLeft(),c=e.getTop(),d=e.getRight(),f=e.getBottom()):(b=b<e.getLeft()?b:e.getLeft(),c=c<e.getTop()?c:e.getTop(),d=d>e.getRight()?d:e.getRight(),f=f>
-e.getBottom()?f:e.getBottom());a()};this.inflate=function(e){b-=e;c-=e;d+=e;f+=e;a()};this.minSelf=function(e){b=b>e.getLeft()?b:e.getLeft();c=c>e.getTop()?c:e.getTop();d=d<e.getRight()?d:e.getRight();f=f<e.getBottom()?f:e.getBottom();a()};this.intersects=function(a){return Math.min(d,a.getRight())-Math.max(b,a.getLeft())>=0&&Math.min(f,a.getBottom())-Math.max(c,a.getTop())>=0};this.empty=function(){h=!0;f=d=c=b=0;a()};this.isEmpty=function(){return h}};THREE.Matrix3=function(){this.m=[]};
-THREE.Matrix3.prototype={constructor:THREE.Matrix3,transpose:function(){var a,b=this.m;a=b[1];b[1]=b[3];b[3]=a;a=b[2];b[2]=b[6];b[6]=a;a=b[5];b[5]=b[7];b[7]=a;return this},transposeIntoArray:function(a){var b=this.m;a[0]=b[0];a[1]=b[3];a[2]=b[6];a[3]=b[1];a[4]=b[4];a[5]=b[7];a[6]=b[2];a[7]=b[5];a[8]=b[8];return this}};
-THREE.Matrix4=function(a,b,c,d,f,e,g,h,l,k,o,i,n,j,r,s){this.set(a!==void 0?a:1,b||0,c||0,d||0,f||0,e!==void 0?e:1,g||0,h||0,l||0,k||0,o!==void 0?o:1,i||0,n||0,j||0,r||0,s!==void 0?s:1);this.flat=Array(16);this.m33=new THREE.Matrix3};
-THREE.Matrix4.prototype={constructor:THREE.Matrix4,set:function(a,b,c,d,f,e,g,h,l,k,o,i,n,j,r,s){this.n11=a;this.n12=b;this.n13=c;this.n14=d;this.n21=f;this.n22=e;this.n23=g;this.n24=h;this.n31=l;this.n32=k;this.n33=o;this.n34=i;this.n41=n;this.n42=j;this.n43=r;this.n44=s;return this},identity:function(){this.set(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);return this},copy:function(a){this.set(a.n11,a.n12,a.n13,a.n14,a.n21,a.n22,a.n23,a.n24,a.n31,a.n32,a.n33,a.n34,a.n41,a.n42,a.n43,a.n44);return this},lookAt:function(a,
-b,c){var d=THREE.Matrix4.__v1,f=THREE.Matrix4.__v2,e=THREE.Matrix4.__v3;e.sub(a,b).normalize();if(e.length()===0)e.z=1;d.cross(c,e).normalize();d.length()===0&&(e.x+=1.0E-4,d.cross(c,e).normalize());f.cross(e,d).normalize();this.n11=d.x;this.n12=f.x;this.n13=e.x;this.n21=d.y;this.n22=f.y;this.n23=e.y;this.n31=d.z;this.n32=f.z;this.n33=e.z;return this},multiplyVector3:function(a){var b=a.x,c=a.y,d=a.z,f=1/(this.n41*b+this.n42*c+this.n43*d+this.n44);a.x=(this.n11*b+this.n12*c+this.n13*d+this.n14)*f;
-a.y=(this.n21*b+this.n22*c+this.n23*d+this.n24)*f;a.z=(this.n31*b+this.n32*c+this.n33*d+this.n34)*f;return a},multiplyVector4:function(a){var b=a.x,c=a.y,d=a.z,f=a.w;a.x=this.n11*b+this.n12*c+this.n13*d+this.n14*f;a.y=this.n21*b+this.n22*c+this.n23*d+this.n24*f;a.z=this.n31*b+this.n32*c+this.n33*d+this.n34*f;a.w=this.n41*b+this.n42*c+this.n43*d+this.n44*f;return a},rotateAxis:function(a){var b=a.x,c=a.y,d=a.z;a.x=b*this.n11+c*this.n12+d*this.n13;a.y=b*this.n21+c*this.n22+d*this.n23;a.z=b*this.n31+
-c*this.n32+d*this.n33;a.normalize();return a},crossVector:function(a){var b=new THREE.Vector4;b.x=this.n11*a.x+this.n12*a.y+this.n13*a.z+this.n14*a.w;b.y=this.n21*a.x+this.n22*a.y+this.n23*a.z+this.n24*a.w;b.z=this.n31*a.x+this.n32*a.y+this.n33*a.z+this.n34*a.w;b.w=a.w?this.n41*a.x+this.n42*a.y+this.n43*a.z+this.n44*a.w:1;return b},multiply:function(a,b){var c=a.n11,d=a.n12,f=a.n13,e=a.n14,g=a.n21,h=a.n22,l=a.n23,k=a.n24,o=a.n31,i=a.n32,n=a.n33,j=a.n34,r=a.n41,s=a.n42,w=a.n43,u=a.n44,M=b.n11,R=b.n12,
-B=b.n13,N=b.n14,O=b.n21,t=b.n22,m=b.n23,C=b.n24,D=b.n31,T=b.n32,U=b.n33,F=b.n34,K=b.n41,I=b.n42,J=b.n43,P=b.n44;this.n11=c*M+d*O+f*D+e*K;this.n12=c*R+d*t+f*T+e*I;this.n13=c*B+d*m+f*U+e*J;this.n14=c*N+d*C+f*F+e*P;this.n21=g*M+h*O+l*D+k*K;this.n22=g*R+h*t+l*T+k*I;this.n23=g*B+h*m+l*U+k*J;this.n24=g*N+h*C+l*F+k*P;this.n31=o*M+i*O+n*D+j*K;this.n32=o*R+i*t+n*T+j*I;this.n33=o*B+i*m+n*U+j*J;this.n34=o*N+i*C+n*F+j*P;this.n41=r*M+s*O+w*D+u*K;this.n42=r*R+s*t+w*T+u*I;this.n43=r*B+s*m+w*U+u*J;this.n44=r*N+s*
-C+w*F+u*P;return this},multiplyToArray:function(a,b,c){this.multiply(a,b);c[0]=this.n11;c[1]=this.n21;c[2]=this.n31;c[3]=this.n41;c[4]=this.n12;c[5]=this.n22;c[6]=this.n32;c[7]=this.n42;c[8]=this.n13;c[9]=this.n23;c[10]=this.n33;c[11]=this.n43;c[12]=this.n14;c[13]=this.n24;c[14]=this.n34;c[15]=this.n44;return this},multiplySelf:function(a){this.multiply(this,a);return this},multiplyScalar:function(a){this.n11*=a;this.n12*=a;this.n13*=a;this.n14*=a;this.n21*=a;this.n22*=a;this.n23*=a;this.n24*=a;this.n31*=
-a;this.n32*=a;this.n33*=a;this.n34*=a;this.n41*=a;this.n42*=a;this.n43*=a;this.n44*=a;return this},determinant:function(){var a=this.n11,b=this.n12,c=this.n13,d=this.n14,f=this.n21,e=this.n22,g=this.n23,h=this.n24,l=this.n31,k=this.n32,o=this.n33,i=this.n34,n=this.n41,j=this.n42,r=this.n43,s=this.n44;return d*g*k*n-c*h*k*n-d*e*o*n+b*h*o*n+c*e*i*n-b*g*i*n-d*g*l*j+c*h*l*j+d*f*o*j-a*h*o*j-c*f*i*j+a*g*i*j+d*e*l*r-b*h*l*r-d*f*k*r+a*h*k*r+b*f*i*r-a*e*i*r-c*e*l*s+b*g*l*s+c*f*k*s-a*g*k*s-b*f*o*s+a*e*o*s},
-transpose:function(){var a;a=this.n21;this.n21=this.n12;this.n12=a;a=this.n31;this.n31=this.n13;this.n13=a;a=this.n32;this.n32=this.n23;this.n23=a;a=this.n41;this.n41=this.n14;this.n14=a;a=this.n42;this.n42=this.n24;this.n24=a;a=this.n43;this.n43=this.n34;this.n43=a;return this},clone:function(){var a=new THREE.Matrix4;a.n11=this.n11;a.n12=this.n12;a.n13=this.n13;a.n14=this.n14;a.n21=this.n21;a.n22=this.n22;a.n23=this.n23;a.n24=this.n24;a.n31=this.n31;a.n32=this.n32;a.n33=this.n33;a.n34=this.n34;
-a.n41=this.n41;a.n42=this.n42;a.n43=this.n43;a.n44=this.n44;return a},flatten:function(){this.flat[0]=this.n11;this.flat[1]=this.n21;this.flat[2]=this.n31;this.flat[3]=this.n41;this.flat[4]=this.n12;this.flat[5]=this.n22;this.flat[6]=this.n32;this.flat[7]=this.n42;this.flat[8]=this.n13;this.flat[9]=this.n23;this.flat[10]=this.n33;this.flat[11]=this.n43;this.flat[12]=this.n14;this.flat[13]=this.n24;this.flat[14]=this.n34;this.flat[15]=this.n44;return this.flat},flattenToArray:function(a){a[0]=this.n11;
-a[1]=this.n21;a[2]=this.n31;a[3]=this.n41;a[4]=this.n12;a[5]=this.n22;a[6]=this.n32;a[7]=this.n42;a[8]=this.n13;a[9]=this.n23;a[10]=this.n33;a[11]=this.n43;a[12]=this.n14;a[13]=this.n24;a[14]=this.n34;a[15]=this.n44;return a},flattenToArrayOffset:function(a,b){a[b]=this.n11;a[b+1]=this.n21;a[b+2]=this.n31;a[b+3]=this.n41;a[b+4]=this.n12;a[b+5]=this.n22;a[b+6]=this.n32;a[b+7]=this.n42;a[b+8]=this.n13;a[b+9]=this.n23;a[b+10]=this.n33;a[b+11]=this.n43;a[b+12]=this.n14;a[b+13]=this.n24;a[b+14]=this.n34;
-a[b+15]=this.n44;return a},setTranslation:function(a,b,c){this.set(1,0,0,a,0,1,0,b,0,0,1,c,0,0,0,1);return this},setScale:function(a,b,c){this.set(a,0,0,0,0,b,0,0,0,0,c,0,0,0,0,1);return this},setRotationX:function(a){var b=Math.cos(a),a=Math.sin(a);this.set(1,0,0,0,0,b,-a,0,0,a,b,0,0,0,0,1);return this},setRotationY:function(a){var b=Math.cos(a),a=Math.sin(a);this.set(b,0,a,0,0,1,0,0,-a,0,b,0,0,0,0,1);return this},setRotationZ:function(a){var b=Math.cos(a),a=Math.sin(a);this.set(b,-a,0,0,a,b,0,0,
-0,0,1,0,0,0,0,1);return this},setRotationAxis:function(a,b){var c=Math.cos(b),d=Math.sin(b),f=1-c,e=a.x,g=a.y,h=a.z,l=f*e,k=f*g;this.set(l*e+c,l*g-d*h,l*h+d*g,0,l*g+d*h,k*g+c,k*h-d*e,0,l*h-d*g,k*h+d*e,f*h*h+c,0,0,0,0,1);return this},setPosition:function(a){this.n14=a.x;this.n24=a.y;this.n34=a.z;return this},getPosition:function(){if(!this.position)this.position=new THREE.Vector3;this.position.set(this.n14,this.n24,this.n34);return this.position},getColumnX:function(){if(!this.columnX)this.columnX=
-new THREE.Vector3;this.columnX.set(this.n11,this.n21,this.n31);return this.columnX},getColumnY:function(){if(!this.columnY)this.columnY=new THREE.Vector3;this.columnY.set(this.n12,this.n22,this.n32);return this.columnY},getColumnZ:function(){if(!this.columnZ)this.columnZ=new THREE.Vector3;this.columnZ.set(this.n13,this.n23,this.n33);return this.columnZ},setRotationFromEuler:function(a,b){var c=a.x,d=a.y,f=a.z,e=Math.cos(c),c=Math.sin(c),g=Math.cos(d),d=Math.sin(d),h=Math.cos(f),f=Math.sin(f);switch(b){case "YXZ":var l=
-g*h,k=g*f,o=d*h,i=d*f;this.n11=l+i*c;this.n12=o*c-k;this.n13=e*d;this.n21=e*f;this.n22=e*h;this.n23=-c;this.n31=k*c-o;this.n32=i+l*c;this.n33=e*g;break;case "ZXY":l=g*h;k=g*f;o=d*h;i=d*f;this.n11=l-i*c;this.n12=-e*f;this.n13=o+k*c;this.n21=k+o*c;this.n22=e*h;this.n23=i-l*c;this.n31=-e*d;this.n32=c;this.n33=e*g;break;case "ZYX":l=e*h;k=e*f;o=c*h;i=c*f;this.n11=g*h;this.n12=o*d-k;this.n13=l*d+i;this.n21=g*f;this.n22=i*d+l;this.n23=k*d-o;this.n31=-d;this.n32=c*g;this.n33=e*g;break;case "YZX":l=e*g;k=
-e*d;o=c*g;i=c*d;this.n11=g*h;this.n12=i-l*f;this.n13=o*f+k;this.n21=f;this.n22=e*h;this.n23=-c*h;this.n31=-d*h;this.n32=k*f+o;this.n33=l-i*f;break;case "XZY":l=e*g;k=e*d;o=c*g;i=c*d;this.n11=g*h;this.n12=-f;this.n13=d*h;this.n21=l*f+i;this.n22=e*h;this.n23=k*f-o;this.n31=o*f-k;this.n32=c*h;this.n33=i*f+l;break;default:l=e*h,k=e*f,o=c*h,i=c*f,this.n11=g*h,this.n12=-g*f,this.n13=d,this.n21=k+o*d,this.n22=l-i*d,this.n23=-c*g,this.n31=i-l*d,this.n32=o+k*d,this.n33=e*g}return this},setRotationFromQuaternion:function(a){var b=
-a.x,c=a.y,d=a.z,f=a.w,e=b+b,g=c+c,h=d+d,a=b*e,l=b*g;b*=h;var k=c*g;c*=h;d*=h;e*=f;g*=f;f*=h;this.n11=1-(k+d);this.n12=l-f;this.n13=b+g;this.n21=l+f;this.n22=1-(a+d);this.n23=c-e;this.n31=b-g;this.n32=c+e;this.n33=1-(a+k);return this},scale:function(a){var b=a.x,c=a.y,a=a.z;this.n11*=b;this.n12*=c;this.n13*=a;this.n21*=b;this.n22*=c;this.n23*=a;this.n31*=b;this.n32*=c;this.n33*=a;this.n41*=b;this.n42*=c;this.n43*=a;return this},compose:function(a,b,c){var d=THREE.Matrix4.__m1,f=THREE.Matrix4.__m2;
-d.identity();d.setRotationFromQuaternion(b);f.setScale(c.x,c.y,c.z);this.multiply(d,f);this.n14=a.x;this.n24=a.y;this.n34=a.z;return this},decompose:function(a,b,c){var d=THREE.Matrix4.__v1,f=THREE.Matrix4.__v2,e=THREE.Matrix4.__v3;d.set(this.n11,this.n21,this.n31);f.set(this.n12,this.n22,this.n32);e.set(this.n13,this.n23,this.n33);a=a instanceof THREE.Vector3?a:new THREE.Vector3;b=b instanceof THREE.Quaternion?b:new THREE.Quaternion;c=c instanceof THREE.Vector3?c:new THREE.Vector3;c.x=d.length();
-c.y=f.length();c.z=e.length();a.x=this.n14;a.y=this.n24;a.z=this.n34;d=THREE.Matrix4.__m1;d.copy(this);d.n11/=c.x;d.n21/=c.x;d.n31/=c.x;d.n12/=c.y;d.n22/=c.y;d.n32/=c.y;d.n13/=c.z;d.n23/=c.z;d.n33/=c.z;b.setFromRotationMatrix(d);return[a,b,c]},extractPosition:function(a){this.n14=a.n14;this.n24=a.n24;this.n34=a.n34},extractRotation:function(a,b){var c=1/b.x,d=1/b.y,f=1/b.z;this.n11=a.n11*c;this.n21=a.n21*c;this.n31=a.n31*c;this.n12=a.n12*d;this.n22=a.n22*d;this.n32=a.n32*d;this.n13=a.n13*f;this.n23=
-a.n23*f;this.n33=a.n33*f}};
-THREE.Matrix4.makeInvert=function(a,b){var c=a.n11,d=a.n12,f=a.n13,e=a.n14,g=a.n21,h=a.n22,l=a.n23,k=a.n24,o=a.n31,i=a.n32,n=a.n33,j=a.n34,r=a.n41,s=a.n42,w=a.n43,u=a.n44;b===void 0&&(b=new THREE.Matrix4);b.n11=l*j*s-k*n*s+k*i*w-h*j*w-l*i*u+h*n*u;b.n12=e*n*s-f*j*s-e*i*w+d*j*w+f*i*u-d*n*u;b.n13=f*k*s-e*l*s+e*h*w-d*k*w-f*h*u+d*l*u;b.n14=e*l*i-f*k*i-e*h*n+d*k*n+f*h*j-d*l*j;b.n21=k*n*r-l*j*r-k*o*w+g*j*w+l*o*u-g*n*u;b.n22=f*j*r-e*n*r+e*o*w-c*j*w-f*o*u+c*n*u;b.n23=e*l*r-f*k*r-e*g*w+c*k*w+f*g*u-c*l*u;b.n24=
-f*k*o-e*l*o+e*g*n-c*k*n-f*g*j+c*l*j;b.n31=h*j*r-k*i*r+k*o*s-g*j*s-h*o*u+g*i*u;b.n32=e*i*r-d*j*r-e*o*s+c*j*s+d*o*u-c*i*u;b.n33=f*k*r-e*h*r+e*g*s-c*k*s-d*g*u+c*h*u;b.n34=e*h*o-d*k*o-e*g*i+c*k*i+d*g*j-c*h*j;b.n41=l*i*r-h*n*r-l*o*s+g*n*s+h*o*w-g*i*w;b.n42=d*n*r-f*i*r+f*o*s-c*n*s-d*o*w+c*i*w;b.n43=f*h*r-d*l*r-f*g*s+c*l*s+d*g*w-c*h*w;b.n44=d*l*o-f*h*o+f*g*i-c*l*i-d*g*n+c*h*n;b.multiplyScalar(1/a.determinant());return b};
-THREE.Matrix4.makeInvert3x3=function(a){var b=a.m33,c=b.m,d=a.n33*a.n22-a.n32*a.n23,f=-a.n33*a.n21+a.n31*a.n23,e=a.n32*a.n21-a.n31*a.n22,g=-a.n33*a.n12+a.n32*a.n13,h=a.n33*a.n11-a.n31*a.n13,l=-a.n32*a.n11+a.n31*a.n12,k=a.n23*a.n12-a.n22*a.n13,o=-a.n23*a.n11+a.n21*a.n13,i=a.n22*a.n11-a.n21*a.n12,a=a.n11*d+a.n21*g+a.n31*k;a==0&&console.error("THREE.Matrix4.makeInvert3x3: Matrix not invertible.");a=1/a;c[0]=a*d;c[1]=a*f;c[2]=a*e;c[3]=a*g;c[4]=a*h;c[5]=a*l;c[6]=a*k;c[7]=a*o;c[8]=a*i;return b};
-THREE.Matrix4.makeFrustum=function(a,b,c,d,f,e){var g;g=new THREE.Matrix4;g.n11=2*f/(b-a);g.n12=0;g.n13=(b+a)/(b-a);g.n14=0;g.n21=0;g.n22=2*f/(d-c);g.n23=(d+c)/(d-c);g.n24=0;g.n31=0;g.n32=0;g.n33=-(e+f)/(e-f);g.n34=-2*e*f/(e-f);g.n41=0;g.n42=0;g.n43=-1;g.n44=0;return g};THREE.Matrix4.makePerspective=function(a,b,c,d){var f,a=c*Math.tan(a*Math.PI/360);f=-a;return THREE.Matrix4.makeFrustum(f*b,a*b,f,a,c,d)};
-THREE.Matrix4.makeOrtho=function(a,b,c,d,f,e){var g,h,l,k;g=new THREE.Matrix4;h=b-a;l=c-d;k=e-f;g.n11=2/h;g.n12=0;g.n13=0;g.n14=-((b+a)/h);g.n21=0;g.n22=2/l;g.n23=0;g.n24=-((c+d)/l);g.n31=0;g.n32=0;g.n33=-2/k;g.n34=-((e+f)/k);g.n41=0;g.n42=0;g.n43=0;g.n44=1;return g};THREE.Matrix4.__v1=new THREE.Vector3;THREE.Matrix4.__v2=new THREE.Vector3;THREE.Matrix4.__v3=new THREE.Vector3;THREE.Matrix4.__m1=new THREE.Matrix4;THREE.Matrix4.__m2=new THREE.Matrix4;
-THREE.Object3D=function(){this.name="";this.id=THREE.Object3DCount++;this.parent=void 0;this.children=[];this.up=new THREE.Vector3(0,1,0);this.position=new THREE.Vector3;this.rotation=new THREE.Vector3;this.eulerOrder="XYZ";this.scale=new THREE.Vector3(1,1,1);this.flipSided=this.doubleSided=this.dynamic=!1;this.renderDepth=null;this.rotationAutoUpdate=!0;this.matrix=new THREE.Matrix4;this.matrixWorld=new THREE.Matrix4;this.matrixRotationWorld=new THREE.Matrix4;this.matrixWorldNeedsUpdate=this.matrixAutoUpdate=
-!0;this.quaternion=new THREE.Quaternion;this.useQuaternion=!1;this.boundRadius=0;this.boundRadiusScale=1;this.visible=!0;this.receiveShadow=this.castShadow=!1;this.frustumCulled=!0;this._vector=new THREE.Vector3};
-THREE.Object3D.prototype={constructor:THREE.Object3D,translate:function(a,b){this.matrix.rotateAxis(b);this.position.addSelf(b.multiplyScalar(a))},translateX:function(a){this.translate(a,this._vector.set(1,0,0))},translateY:function(a){this.translate(a,this._vector.set(0,1,0))},translateZ:function(a){this.translate(a,this._vector.set(0,0,1))},lookAt:function(a){this.matrix.lookAt(a,this.position,this.up);this.rotationAutoUpdate&&this.rotation.setRotationFromMatrix(this.matrix)},add:function(a){if(this.children.indexOf(a)===
--1){a.parent!==void 0&&a.parent.removeChild(a);a.parent=this;this.children.push(a);for(var b=this;b.parent!==void 0;)b=b.parent;b!==void 0&&b instanceof THREE.Scene&&b.addChildRecurse(a)}},remove:function(a){var b=this,c=this.children.indexOf(a);if(c!==-1){a.parent=void 0;for(this.children.splice(c,1);b.parent!==void 0;)b=b.parent;b!==void 0&&b instanceof THREE.Scene&&b.removeChildRecurse(a)}},getChildByName:function(a,b){var c,d,f;c=0;for(d=this.children.length;c<d;c++){f=this.children[c];if(f.name===
-a)return f;if(b&&(f=f.getChildByName(a,b),f!==void 0))return f}},updateMatrix:function(){this.matrix.setPosition(this.position);this.useQuaternion?this.matrix.setRotationFromQuaternion(this.quaternion):this.matrix.setRotationFromEuler(this.rotation,this.eulerOrder);if(this.scale.x!==1||this.scale.y!==1||this.scale.z!==1)this.matrix.scale(this.scale),this.boundRadiusScale=Math.max(this.scale.x,Math.max(this.scale.y,this.scale.z));this.matrixWorldNeedsUpdate=!0},update:function(a,b,c){this.matrixAutoUpdate&&
-this.updateMatrix();if(this.matrixWorldNeedsUpdate||b)a?this.matrixWorld.multiply(a,this.matrix):this.matrixWorld.copy(this.matrix),this.matrixRotationWorld.extractRotation(this.matrixWorld,this.scale),this.matrixWorldNeedsUpdate=!1,b=!0;for(var a=0,d=this.children.length;a<d;a++)this.children[a].update(this.matrixWorld,b,c)},addChild:function(a){console.warn("DEPRECATED: Object3D.addChild() is now Object3D.add().");this.add(a)},removeChild:function(a){console.warn("DEPRECATED: Object3D.removeChild() is now Object3D.remove().");
-this.remove(a)}};THREE.Object3DCount=0;
-THREE.Projector=function(){function a(){var a=l[h]=l[h]||new THREE.RenderableVertex;h++;return a}function b(a,b){return b.z-a.z}function c(a,b){var c=0,d=1,e=a.z+a.w,f=b.z+b.w,g=-a.z+a.w,h=-b.z+b.w;return e>=0&&f>=0&&g>=0&&h>=0?!0:e<0&&f<0||g<0&&h<0?!1:(e<0?c=Math.max(c,e/(e-f)):f<0&&(d=Math.min(d,e/(e-f))),g<0?c=Math.max(c,g/(g-h)):h<0&&(d=Math.min(d,g/(g-h))),d<c?!1:(a.lerpSelf(b,c),b.lerpSelf(a,1-d),!0))}var d,f,e=[],g,h,l=[],k,o,i=[],n,j=[],r,s,w=[],u,M,R=[],B=[],N=[],O=new THREE.Vector4,t=new THREE.Vector4,
-m=new THREE.Matrix4,C=new THREE.Matrix4,D=[new THREE.Vector4,new THREE.Vector4,new THREE.Vector4,new THREE.Vector4,new THREE.Vector4,new THREE.Vector4],T=new THREE.Vector4,U=new THREE.Vector4;this.projectVector=function(a,b){m.multiply(b.projectionMatrix,b.matrixWorldInverse);m.multiplyVector3(a);return a};this.unprojectVector=function(a,b){m.multiply(b.matrixWorld,THREE.Matrix4.makeInvert(b.projectionMatrix));m.multiplyVector3(a);return a};this.pickingRay=function(a,b){var c;a.z=-1;c=new THREE.Vector3(a.x,
-a.y,1);this.unprojectVector(a,b);this.unprojectVector(c,b);c.subSelf(a).normalize();return new THREE.Ray(a,c)};this.projectObjects=function(a,c,g){var h,j;f=B.length=0;h=a.objects;a=0;for(c=h.length;a<c;a++){j=h[a];var i;if(!(i=!j.visible))if(i=j instanceof THREE.Mesh)if(i=j.frustumCulled){a:{i=void 0;for(var k=j.matrixWorld,l=-j.geometry.boundingSphere.radius*Math.max(j.scale.x,Math.max(j.scale.y,j.scale.z)),n=0;n<6;n++)if(i=D[n].x*k.n14+D[n].y*k.n24+D[n].z*k.n34+D[n].w,i<=l){i=!1;break a}i=!0}i=
-!i}if(!i)i=e[f]=e[f]||new THREE.RenderableObject,f++,d=i,O.copy(j.position),m.multiplyVector3(O),d.object=j,d.z=O.z,B.push(d)}g&&B.sort(b);return B};this.projectScene=function(d,e,f){var J=e.near,P=e.far,Q,V,E,B,y,L,H,z,x,q,v,G,O,ea,Z,ba,W;M=s=n=o=N.length=0;e.matrixAutoUpdate&&e.update(void 0,!0);d.update(void 0,!1,e);m.multiply(e.projectionMatrix,e.matrixWorldInverse);D[0].set(m.n41-m.n11,m.n42-m.n12,m.n43-m.n13,m.n44-m.n14);D[1].set(m.n41+m.n11,m.n42+m.n12,m.n43+m.n13,m.n44+m.n14);D[2].set(m.n41+
-m.n21,m.n42+m.n22,m.n43+m.n23,m.n44+m.n24);D[3].set(m.n41-m.n21,m.n42-m.n22,m.n43-m.n23,m.n44-m.n24);D[4].set(m.n41-m.n31,m.n42-m.n32,m.n43-m.n33,m.n44-m.n34);D[5].set(m.n41+m.n31,m.n42+m.n32,m.n43+m.n33,m.n44+m.n34);for(Q=0;Q<6;Q++)x=D[Q],x.divideScalar(Math.sqrt(x.x*x.x+x.y*x.y+x.z*x.z));x=this.projectObjects(d,e,!0);d=0;for(Q=x.length;d<Q;d++)if(q=x[d].object,q.visible)if(v=q.matrixWorld,G=q.matrixRotationWorld,O=q.materials,ea=q.overdraw,h=0,q instanceof THREE.Mesh){Z=q.geometry;B=Z.vertices;
-ba=Z.faces;Z=Z.faceVertexUvs;V=0;for(E=B.length;V<E;V++)g=a(),g.positionWorld.copy(B[V].position),v.multiplyVector3(g.positionWorld),g.positionScreen.copy(g.positionWorld),m.multiplyVector4(g.positionScreen),g.positionScreen.x/=g.positionScreen.w,g.positionScreen.y/=g.positionScreen.w,g.visible=g.positionScreen.z>J&&g.positionScreen.z<P;B=0;for(V=ba.length;B<V;B++){E=ba[B];if(E instanceof THREE.Face3)if(y=l[E.a],L=l[E.b],H=l[E.c],y.visible&&L.visible&&H.visible&&(q.doubleSided||q.flipSided!=(H.positionScreen.x-
-y.positionScreen.x)*(L.positionScreen.y-y.positionScreen.y)-(H.positionScreen.y-y.positionScreen.y)*(L.positionScreen.x-y.positionScreen.x)<0))z=i[o]=i[o]||new THREE.RenderableFace3,o++,k=z,k.v1.copy(y),k.v2.copy(L),k.v3.copy(H);else continue;else if(E instanceof THREE.Face4)if(y=l[E.a],L=l[E.b],H=l[E.c],z=l[E.d],y.visible&&L.visible&&H.visible&&z.visible&&(q.doubleSided||q.flipSided!=((z.positionScreen.x-y.positionScreen.x)*(L.positionScreen.y-y.positionScreen.y)-(z.positionScreen.y-y.positionScreen.y)*
-(L.positionScreen.x-y.positionScreen.x)<0||(L.positionScreen.x-H.positionScreen.x)*(z.positionScreen.y-H.positionScreen.y)-(L.positionScreen.y-H.positionScreen.y)*(z.positionScreen.x-H.positionScreen.x)<0)))W=j[n]=j[n]||new THREE.RenderableFace4,n++,k=W,k.v1.copy(y),k.v2.copy(L),k.v3.copy(H),k.v4.copy(z);else continue;k.normalWorld.copy(E.normal);G.multiplyVector3(k.normalWorld);k.centroidWorld.copy(E.centroid);v.multiplyVector3(k.centroidWorld);k.centroidScreen.copy(k.centroidWorld);m.multiplyVector3(k.centroidScreen);
-H=E.vertexNormals;y=0;for(L=H.length;y<L;y++)z=k.vertexNormalsWorld[y],z.copy(H[y]),G.multiplyVector3(z);y=0;for(L=Z.length;y<L;y++)if(W=Z[y][B]){H=0;for(z=W.length;H<z;H++)k.uvs[y][H]=W[H]}k.meshMaterials=O;k.faceMaterials=E.materials;k.overdraw=ea;k.z=k.centroidScreen.z;N.push(k)}}else if(q instanceof THREE.Line){C.multiply(m,v);B=q.geometry.vertices;y=a();y.positionScreen.copy(B[0].position);C.multiplyVector4(y.positionScreen);V=1;for(E=B.length;V<E;V++)if(y=a(),y.positionScreen.copy(B[V].position),
-C.multiplyVector4(y.positionScreen),L=l[h-2],T.copy(y.positionScreen),U.copy(L.positionScreen),c(T,U))T.multiplyScalar(1/T.w),U.multiplyScalar(1/U.w),v=w[s]=w[s]||new THREE.RenderableLine,s++,r=v,r.v1.positionScreen.copy(T),r.v2.positionScreen.copy(U),r.z=Math.max(T.z,U.z),r.materials=q.materials,N.push(r)}else if(q instanceof THREE.Particle&&(t.set(q.matrixWorld.n14,q.matrixWorld.n24,q.matrixWorld.n34,1),m.multiplyVector4(t),t.z/=t.w,t.z>0&&t.z<1))v=R[M]=R[M]||new THREE.RenderableParticle,M++,u=
-v,u.x=t.x/t.w,u.y=t.y/t.w,u.z=t.z,u.rotation=q.rotation.z,u.scale.x=q.scale.x*Math.abs(u.x-(t.x+e.projectionMatrix.n11)/(t.w+e.projectionMatrix.n14)),u.scale.y=q.scale.y*Math.abs(u.y-(t.y+e.projectionMatrix.n22)/(t.w+e.projectionMatrix.n24)),u.materials=q.materials,N.push(u);f&&N.sort(b);return N}};THREE.Quaternion=function(a,b,c,d){this.set(a||0,b||0,c||0,d!==void 0?d:1)};
-THREE.Quaternion.prototype={constructor:THREE.Quaternion,set:function(a,b,c,d){this.x=a;this.y=b;this.z=c;this.w=d;return this},copy:function(a){this.x=a.x;this.y=a.y;this.z=a.z;this.w=a.w;return this},setFromEuler:function(a){var b=Math.PI/360,c=a.x*b,d=a.y*b,f=a.z*b,a=Math.cos(d),d=Math.sin(d),b=Math.cos(-f),f=Math.sin(-f),e=Math.cos(c),c=Math.sin(c),g=a*b,h=d*f;this.w=g*e-h*c;this.x=g*c+h*e;this.y=d*b*e+a*f*c;this.z=a*f*e-d*b*c;return this},setFromAxisAngle:function(a,b){var c=b/2,d=Math.sin(c);
-this.x=a.x*d;this.y=a.y*d;this.z=a.z*d;this.w=Math.cos(c);return this},setFromRotationMatrix:function(a){var b=Math.pow(a.determinant(),1/3);this.w=Math.sqrt(Math.max(0,b+a.n11+a.n22+a.n33))/2;this.x=Math.sqrt(Math.max(0,b+a.n11-a.n22-a.n33))/2;this.y=Math.sqrt(Math.max(0,b-a.n11+a.n22-a.n33))/2;this.z=Math.sqrt(Math.max(0,b-a.n11-a.n22+a.n33))/2;this.x=a.n32-a.n23<0?-Math.abs(this.x):Math.abs(this.x);this.y=a.n13-a.n31<0?-Math.abs(this.y):Math.abs(this.y);this.z=a.n21-a.n12<0?-Math.abs(this.z):Math.abs(this.z);
-this.normalize();return this},calculateW:function(){this.w=-Math.sqrt(Math.abs(1-this.x*this.x-this.y*this.y-this.z*this.z));return this},inverse:function(){this.x*=-1;this.y*=-1;this.z*=-1;return this},length:function(){return Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z+this.w*this.w)},normalize:function(){var a=Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z+this.w*this.w);a==0?this.w=this.z=this.y=this.x=0:(a=1/a,this.x*=a,this.y*=a,this.z*=a,this.w*=a);return this},multiplySelf:function(a){var b=
-this.x,c=this.y,d=this.z,f=this.w,e=a.x,g=a.y,h=a.z,a=a.w;this.x=b*a+f*e+c*h-d*g;this.y=c*a+f*g+d*e-b*h;this.z=d*a+f*h+b*g-c*e;this.w=f*a-b*e-c*g-d*h;return this},multiply:function(a,b){this.x=a.x*b.w+a.y*b.z-a.z*b.y+a.w*b.x;this.y=-a.x*b.z+a.y*b.w+a.z*b.x+a.w*b.y;this.z=a.x*b.y-a.y*b.x+a.z*b.w+a.w*b.z;this.w=-a.x*b.x-a.y*b.y-a.z*b.z+a.w*b.w;return this},multiplyVector3:function(a,b){b||(b=a);var c=a.x,d=a.y,f=a.z,e=this.x,g=this.y,h=this.z,l=this.w,k=l*c+g*f-h*d,o=l*d+h*c-e*f,i=l*f+e*d-g*c,c=-e*
-c-g*d-h*f;b.x=k*l+c*-e+o*-h-i*-g;b.y=o*l+c*-g+i*-e-k*-h;b.z=i*l+c*-h+k*-g-o*-e;return b}};THREE.Quaternion.slerp=function(a,b,c,d){var f=a.w*b.w+a.x*b.x+a.y*b.y+a.z*b.z;if(Math.abs(f)>=1)return c.w=a.w,c.x=a.x,c.y=a.y,c.z=a.z,c;var e=Math.acos(f),g=Math.sqrt(1-f*f);if(Math.abs(g)<0.001)return c.w=0.5*(a.w+b.w),c.x=0.5*(a.x+b.x),c.y=0.5*(a.y+b.y),c.z=0.5*(a.z+b.z),c;f=Math.sin((1-d)*e)/g;d=Math.sin(d*e)/g;c.w=a.w*f+b.w*d;c.x=a.x*f+b.x*d;c.y=a.y*f+b.y*d;c.z=a.z*f+b.z*d;return c};
-THREE.Vertex=function(a){this.position=a||new THREE.Vector3};THREE.Face3=function(a,b,c,d,f,e){this.a=a;this.b=b;this.c=c;this.normal=d instanceof THREE.Vector3?d:new THREE.Vector3;this.vertexNormals=d instanceof Array?d:[];this.color=f instanceof THREE.Color?f:new THREE.Color;this.vertexColors=f instanceof Array?f:[];this.vertexTangents=[];this.materials=e instanceof Array?e:[e];this.centroid=new THREE.Vector3};
-THREE.Face4=function(a,b,c,d,f,e,g){this.a=a;this.b=b;this.c=c;this.d=d;this.normal=f instanceof THREE.Vector3?f:new THREE.Vector3;this.vertexNormals=f instanceof Array?f:[];this.color=e instanceof THREE.Color?e:new THREE.Color;this.vertexColors=e instanceof Array?e:[];this.vertexTangents=[];this.materials=g instanceof Array?g:[g];this.centroid=new THREE.Vector3};THREE.UV=function(a,b){this.u=a||0;this.v=b||0};
-THREE.UV.prototype={constructor:THREE.UV,set:function(a,b){this.u=a;this.v=b;return this},copy:function(a){this.u=a.u;this.v=a.v;return this},clone:function(){return new THREE.UV(this.u,this.v)}};THREE.Geometry=function(){this.id=THREE.GeometryCount++;this.vertices=[];this.colors=[];this.faces=[];this.faceUvs=[[]];this.faceVertexUvs=[[]];this.morphTargets=[];this.morphColors=[];this.skinWeights=[];this.skinIndices=[];this.boundingSphere=this.boundingBox=null;this.dynamic=this.hasTangents=!1};
-THREE.Geometry.prototype={constructor:THREE.Geometry,applyMatrix:function(a){var b=new THREE.Matrix4;b.extractRotation(a,new THREE.Vector3(1,1,1));for(var c=0,d=this.vertices.length;c<d;c++)a.multiplyVector3(this.vertices[c].position);c=0;for(d=this.faces.length;c<d;c++){var f=this.faces[c];b.multiplyVector3(f.normal);for(var e=0,g=f.vertexNormals.length;e<g;e++)b.multiplyVector3(f.vertexNormals[e]);a.multiplyVector3(f.centroid)}},computeCentroids:function(){var a,b,c;a=0;for(b=this.faces.length;a<
-b;a++)c=this.faces[a],c.centroid.set(0,0,0),c instanceof THREE.Face3?(c.centroid.addSelf(this.vertices[c.a].position),c.centroid.addSelf(this.vertices[c.b].position),c.centroid.addSelf(this.vertices[c.c].position),c.centroid.divideScalar(3)):c instanceof THREE.Face4&&(c.centroid.addSelf(this.vertices[c.a].position),c.centroid.addSelf(this.vertices[c.b].position),c.centroid.addSelf(this.vertices[c.c].position),c.centroid.addSelf(this.vertices[c.d].position),c.centroid.divideScalar(4))},computeFaceNormals:function(a){var b,
-c,d,f,e,g,h=new THREE.Vector3,l=new THREE.Vector3;d=0;for(f=this.faces.length;d<f;d++){e=this.faces[d];if(a&&e.vertexNormals.length){h.set(0,0,0);b=0;for(c=e.vertexNormals.length;b<c;b++)h.addSelf(e.vertexNormals[b]);h.divideScalar(3)}else b=this.vertices[e.a],c=this.vertices[e.b],g=this.vertices[e.c],h.sub(g.position,c.position),l.sub(b.position,c.position),h.crossSelf(l);h.isZero()||h.normalize();e.normal.copy(h)}},computeVertexNormals:function(){var a,b,c,d;if(this.__tmpVertices==void 0){d=this.__tmpVertices=
-Array(this.vertices.length);a=0;for(b=this.vertices.length;a<b;a++)d[a]=new THREE.Vector3;a=0;for(b=this.faces.length;a<b;a++)if(c=this.faces[a],c instanceof THREE.Face3)c.vertexNormals=[new THREE.Vector3,new THREE.Vector3,new THREE.Vector3];else if(c instanceof THREE.Face4)c.vertexNormals=[new THREE.Vector3,new THREE.Vector3,new THREE.Vector3,new THREE.Vector3]}else{d=this.__tmpVertices;a=0;for(b=this.vertices.length;a<b;a++)d[a].set(0,0,0)}a=0;for(b=this.faces.length;a<b;a++)c=this.faces[a],c instanceof
-THREE.Face3?(d[c.a].addSelf(c.normal),d[c.b].addSelf(c.normal),d[c.c].addSelf(c.normal)):c instanceof THREE.Face4&&(d[c.a].addSelf(c.normal),d[c.b].addSelf(c.normal),d[c.c].addSelf(c.normal),d[c.d].addSelf(c.normal));a=0;for(b=this.vertices.length;a<b;a++)d[a].normalize();a=0;for(b=this.faces.length;a<b;a++)c=this.faces[a],c instanceof THREE.Face3?(c.vertexNormals[0].copy(d[c.a]),c.vertexNormals[1].copy(d[c.b]),c.vertexNormals[2].copy(d[c.c])):c instanceof THREE.Face4&&(c.vertexNormals[0].copy(d[c.a]),
-c.vertexNormals[1].copy(d[c.b]),c.vertexNormals[2].copy(d[c.c]),c.vertexNormals[3].copy(d[c.d]))},computeTangents:function(){function a(a,b,c,d,e,f,m){h=a.vertices[b].position;l=a.vertices[c].position;k=a.vertices[d].position;o=g[e];i=g[f];n=g[m];j=l.x-h.x;r=k.x-h.x;s=l.y-h.y;w=k.y-h.y;u=l.z-h.z;M=k.z-h.z;R=i.u-o.u;B=n.u-o.u;N=i.v-o.v;O=n.v-o.v;t=1/(R*O-B*N);T.set((O*j-N*r)*t,(O*s-N*w)*t,(O*u-N*M)*t);U.set((R*r-B*j)*t,(R*w-B*s)*t,(R*M-B*u)*t);C[b].addSelf(T);C[c].addSelf(T);C[d].addSelf(T);D[b].addSelf(U);
-D[c].addSelf(U);D[d].addSelf(U)}var b,c,d,f,e,g,h,l,k,o,i,n,j,r,s,w,u,M,R,B,N,O,t,m,C=[],D=[],T=new THREE.Vector3,U=new THREE.Vector3,F=new THREE.Vector3,K=new THREE.Vector3,I=new THREE.Vector3;b=0;for(c=this.vertices.length;b<c;b++)C[b]=new THREE.Vector3,D[b]=new THREE.Vector3;b=0;for(c=this.faces.length;b<c;b++)e=this.faces[b],g=this.faceVertexUvs[0][b],e instanceof THREE.Face3?a(this,e.a,e.b,e.c,0,1,2):e instanceof THREE.Face4&&(a(this,e.a,e.b,e.c,0,1,2),a(this,e.a,e.b,e.d,0,1,3));var J=["a","b",
-"c","d"];b=0;for(c=this.faces.length;b<c;b++){e=this.faces[b];for(d=0;d<e.vertexNormals.length;d++)I.copy(e.vertexNormals[d]),f=e[J[d]],m=C[f],F.copy(m),F.subSelf(I.multiplyScalar(I.dot(m))).normalize(),K.cross(e.vertexNormals[d],m),f=K.dot(D[f]),f=f<0?-1:1,e.vertexTangents[d]=new THREE.Vector4(F.x,F.y,F.z,f)}this.hasTangents=!0},computeBoundingBox:function(){var a;if(this.vertices.length>0){this.boundingBox={x:[this.vertices[0].position.x,this.vertices[0].position.x],y:[this.vertices[0].position.y,
-this.vertices[0].position.y],z:[this.vertices[0].position.z,this.vertices[0].position.z]};for(var b=1,c=this.vertices.length;b<c;b++){a=this.vertices[b];if(a.position.x<this.boundingBox.x[0])this.boundingBox.x[0]=a.position.x;else if(a.position.x>this.boundingBox.x[1])this.boundingBox.x[1]=a.position.x;if(a.position.y<this.boundingBox.y[0])this.boundingBox.y[0]=a.position.y;else if(a.position.y>this.boundingBox.y[1])this.boundingBox.y[1]=a.position.y;if(a.position.z<this.boundingBox.z[0])this.boundingBox.z[0]=
-a.position.z;else if(a.position.z>this.boundingBox.z[1])this.boundingBox.z[1]=a.position.z}}},computeBoundingSphere:function(){for(var a=0,b=0,c=this.vertices.length;b<c;b++)a=Math.max(a,this.vertices[b].position.length());this.boundingSphere={radius:a}},mergeVertices:function(){var a={},b=[],c=[],d,f=Math.pow(10,4),e,g;e=0;for(g=this.vertices.length;e<g;e++)d=this.vertices[e].position,d=[Math.round(d.x*f),Math.round(d.y*f),Math.round(d.z*f)].join("_"),a[d]===void 0?(a[d]=e,b.push(this.vertices[e]),
-c[e]=b.length-1):c[e]=c[a[d]];e=0;for(g=this.faces.length;e<g;e++){a=this.faces[e];if(a instanceof THREE.Face3)a.a=c[a.a],a.b=c[a.b],a.c=c[a.c];if(a instanceof THREE.Face4)a.a=c[a.a],a.b=c[a.b],a.c=c[a.c],a.d=c[a.d]}this.vertices=b}};THREE.GeometryCount=0;
-THREE.Camera=function(){if(arguments.length)return console.warn("DEPRECATED: Camera() is now PerspectiveCamera() or OrthographicCamera()."),new THREE.PerspectiveCamera(arguments[0],arguments[1],arguments[2],arguments[3]);THREE.Object3D.call(this);this.matrixWorldInverse=new THREE.Matrix4;this.projectionMatrix=new THREE.Matrix4};THREE.Camera.prototype=new THREE.Object3D;THREE.Camera.prototype.constructor=THREE.Camera;
-THREE.Camera.prototype.lookAt=function(a){this.matrix.lookAt(this.position,a,this.up);this.rotationAutoUpdate&&this.rotation.setRotationFromMatrix(this.matrix)};
-THREE.Camera.prototype.update=function(a,b,c){this.matrixAutoUpdate&&this.updateMatrix();if(b||this.matrixWorldNeedsUpdate)a?this.matrixWorld.multiply(a,this.matrix):this.matrixWorld.copy(this.matrix),this.matrixWorldNeedsUpdate=!1,b=!0,THREE.Matrix4.makeInvert(this.matrixWorld,this.matrixWorldInverse);for(a=0;a<this.children.length;a++)this.children[a].update(this.matrixWorld,b,c)};
-THREE.OrthographicCamera=function(a,b,c,d,f,e){THREE.Camera.call(this);this.left=a;this.right=b;this.top=c;this.bottom=d;this.near=f!==void 0?f:0.1;this.far=e!==void 0?e:2E3;this.updateProjectionMatrix()};THREE.OrthographicCamera.prototype=new THREE.Camera;THREE.OrthographicCamera.prototype.constructor=THREE.OrthographicCamera;THREE.OrthographicCamera.prototype.updateProjectionMatrix=function(){this.projectionMatrix=THREE.Matrix4.makeOrtho(this.left,this.right,this.top,this.bottom,this.near,this.far)};
-THREE.PerspectiveCamera=function(a,b,c,d){THREE.Camera.call(this);this.fov=a!==void 0?a:50;this.aspect=b!==void 0?b:1;this.near=c!==void 0?c:0.1;this.far=d!==void 0?d:2E3;this.updateProjectionMatrix()};THREE.PerspectiveCamera.prototype=new THREE.Camera;THREE.PerspectiveCamera.prototype.constructor=THREE.PerspectiveCamera;THREE.PerspectiveCamera.prototype.setLens=function(a,b){this.fov=2*Math.atan((b!==void 0?b:43.25)/(a*2));this.fov*=180/Math.PI;this.updateProjectionMatrix()};
-THREE.PerspectiveCamera.prototype.setViewOffset=function(a,b,c,d,f,e){this.fullWidth=a;this.fullHeight=b;this.x=c;this.y=d;this.width=f;this.height=e;this.updateProjectionMatrix()};
-THREE.PerspectiveCamera.prototype.updateProjectionMatrix=function(){if(this.fullWidth){var a=this.fullWidth/this.fullHeight,b=Math.tan(this.fov*Math.PI/360)*this.near,c=-b,d=a*c,a=Math.abs(a*b-d),c=Math.abs(b-c);this.projectionMatrix=THREE.Matrix4.makeFrustum(d+this.x*a/this.fullWidth,d+(this.x+this.width)*a/this.fullWidth,b-(this.y+this.height)*c/this.fullHeight,b-this.y*c/this.fullHeight,this.near,this.far)}else this.projectionMatrix=THREE.Matrix4.makePerspective(this.fov,this.aspect,this.near,
-this.far)};THREE.Light=function(a){THREE.Object3D.call(this);this.color=new THREE.Color(a)};THREE.Light.prototype=new THREE.Object3D;THREE.Light.prototype.constructor=THREE.Light;THREE.Light.prototype.supr=THREE.Object3D.prototype;THREE.AmbientLight=function(a){THREE.Light.call(this,a)};THREE.AmbientLight.prototype=new THREE.Light;THREE.AmbientLight.prototype.constructor=THREE.AmbientLight;
-THREE.DirectionalLight=function(a,b,c){THREE.Light.call(this,a);this.position=new THREE.Vector3(0,1,0);this.intensity=b!==void 0?b:1;this.distance=c!==void 0?c:0};THREE.DirectionalLight.prototype=new THREE.Light;THREE.DirectionalLight.prototype.constructor=THREE.DirectionalLight;THREE.PointLight=function(a,b,c){THREE.Light.call(this,a);this.position=new THREE.Vector3(0,0,0);this.intensity=b!==void 0?b:1;this.distance=c!==void 0?c:0};THREE.PointLight.prototype=new THREE.Light;
-THREE.PointLight.prototype.constructor=THREE.PointLight;
-THREE.Material=function(a){this.name="";this.id=THREE.MaterialCount++;a=a||{};this.opacity=a.opacity!==void 0?a.opacity:1;this.transparent=a.transparent!==void 0?a.transparent:!1;this.blending=a.blending!==void 0?a.blending:THREE.NormalBlending;this.depthTest=a.depthTest!==void 0?a.depthTest:!0;this.depthWrite=a.depthWrite!==void 0?a.depthWrite:!0;this.polygonOffset=a.polygonOffset!==void 0?a.polygonOffset:!1;this.polygonOffsetFactor=a.polygonOffsetFactor!==void 0?a.polygonOffsetFactor:0;this.polygonOffsetUnits=
-a.polygonOffsetUnits!==void 0?a.polygonOffsetUnits:0;this.alphaTest=a.alphaTest!==void 0?a.alphaTest:0};THREE.MaterialCount=0;THREE.NoShading=0;THREE.FlatShading=1;THREE.SmoothShading=2;THREE.NoColors=0;THREE.FaceColors=1;THREE.VertexColors=2;THREE.NormalBlending=0;THREE.AdditiveBlending=1;THREE.SubtractiveBlending=2;THREE.MultiplyBlending=3;THREE.AdditiveAlphaBlending=4;
-THREE.LineBasicMaterial=function(a){THREE.Material.call(this,a);a=a||{};this.color=a.color!==void 0?new THREE.Color(a.color):new THREE.Color(16777215);this.linewidth=a.linewidth!==void 0?a.linewidth:1;this.linecap=a.linecap!==void 0?a.linecap:"round";this.linejoin=a.linejoin!==void 0?a.linejoin:"round";this.vertexColors=a.vertexColors?a.vertexColors:!1;this.fog=a.fog!==void 0?a.fog:!0};THREE.LineBasicMaterial.prototype=new THREE.Material;THREE.LineBasicMaterial.prototype.constructor=THREE.LineBasicMaterial;
-THREE.MeshBasicMaterial=function(a){THREE.Material.call(this,a);a=a||{};this.color=a.color!==void 0?new THREE.Color(a.color):new THREE.Color(16777215);this.map=a.map!==void 0?a.map:null;this.lightMap=a.lightMap!==void 0?a.lightMap:null;this.envMap=a.envMap!==void 0?a.envMap:null;this.combine=a.combine!==void 0?a.combine:THREE.MultiplyOperation;this.reflectivity=a.reflectivity!==void 0?a.reflectivity:1;this.refractionRatio=a.refractionRatio!==void 0?a.refractionRatio:0.98;this.fog=a.fog!==void 0?a.fog:
-!0;this.shading=a.shading!==void 0?a.shading:THREE.SmoothShading;this.wireframe=a.wireframe!==void 0?a.wireframe:!1;this.wireframeLinewidth=a.wireframeLinewidth!==void 0?a.wireframeLinewidth:1;this.wireframeLinecap=a.wireframeLinecap!==void 0?a.wireframeLinecap:"round";this.wireframeLinejoin=a.wireframeLinejoin!==void 0?a.wireframeLinejoin:"round";this.vertexColors=a.vertexColors!==void 0?a.vertexColors:!1;this.skinning=a.skinning!==void 0?a.skinning:!1;this.morphTargets=a.morphTargets!==void 0?a.morphTargets:
-!1};THREE.MeshBasicMaterial.prototype=new THREE.Material;THREE.MeshBasicMaterial.prototype.constructor=THREE.MeshBasicMaterial;
-THREE.MeshLambertMaterial=function(a){THREE.Material.call(this,a);a=a||{};this.color=a.color!==void 0?new THREE.Color(a.color):new THREE.Color(16777215);this.map=a.map!==void 0?a.map:null;this.lightMap=a.lightMap!==void 0?a.lightMap:null;this.envMap=a.envMap!==void 0?a.envMap:null;this.combine=a.combine!==void 0?a.combine:THREE.MultiplyOperation;this.reflectivity=a.reflectivity!==void 0?a.reflectivity:1;this.refractionRatio=a.refractionRatio!==void 0?a.refractionRatio:0.98;this.fog=a.fog!==void 0?
-a.fog:!0;this.shading=a.shading!==void 0?a.shading:THREE.SmoothShading;this.wireframe=a.wireframe!==void 0?a.wireframe:!1;this.wireframeLinewidth=a.wireframeLinewidth!==void 0?a.wireframeLinewidth:1;this.wireframeLinecap=a.wireframeLinecap!==void 0?a.wireframeLinecap:"round";this.wireframeLinejoin=a.wireframeLinejoin!==void 0?a.wireframeLinejoin:"round";this.vertexColors=a.vertexColors!==void 0?a.vertexColors:!1;this.skinning=a.skinning!==void 0?a.skinning:!1;this.morphTargets=a.morphTargets!==void 0?
-a.morphTargets:!1};THREE.MeshLambertMaterial.prototype=new THREE.Material;THREE.MeshLambertMaterial.prototype.constructor=THREE.MeshLambertMaterial;
-THREE.MeshPhongMaterial=function(a){THREE.Material.call(this,a);a=a||{};this.color=a.color!==void 0?new THREE.Color(a.color):new THREE.Color(16777215);this.ambient=a.ambient!==void 0?new THREE.Color(a.ambient):new THREE.Color(328965);this.specular=a.specular!==void 0?new THREE.Color(a.specular):new THREE.Color(1118481);this.shininess=a.shininess!==void 0?a.shininess:30;this.map=a.map!==void 0?a.map:null;this.lightMap=a.lightMap!==void 0?a.lightMap:null;this.envMap=a.envMap!==void 0?a.envMap:null;
-this.combine=a.combine!==void 0?a.combine:THREE.MultiplyOperation;this.reflectivity=a.reflectivity!==void 0?a.reflectivity:1;this.refractionRatio=a.refractionRatio!==void 0?a.refractionRatio:0.98;this.fog=a.fog!==void 0?a.fog:!0;this.shading=a.shading!==void 0?a.shading:THREE.SmoothShading;this.wireframe=a.wireframe!==void 0?a.wireframe:!1;this.wireframeLinewidth=a.wireframeLinewidth!==void 0?a.wireframeLinewidth:1;this.wireframeLinecap=a.wireframeLinecap!==void 0?a.wireframeLinecap:"round";this.wireframeLinejoin=
-a.wireframeLinejoin!==void 0?a.wireframeLinejoin:"round";this.vertexColors=a.vertexColors!==void 0?a.vertexColors:!1;this.skinning=a.skinning!==void 0?a.skinning:!1;this.morphTargets=a.morphTargets!==void 0?a.morphTargets:!1};THREE.MeshPhongMaterial.prototype=new THREE.Material;THREE.MeshPhongMaterial.prototype.constructor=THREE.MeshPhongMaterial;
-THREE.MeshDepthMaterial=function(a){THREE.Material.call(this,a);a=a||{};this.shading=a.shading!==void 0?a.shading:THREE.SmoothShading;this.wireframe=a.wireframe!==void 0?a.wireframe:!1;this.wireframeLinewidth=a.wireframeLinewidth!==void 0?a.wireframeLinewidth:1};THREE.MeshDepthMaterial.prototype=new THREE.Material;THREE.MeshDepthMaterial.prototype.constructor=THREE.MeshDepthMaterial;
-THREE.MeshNormalMaterial=function(a){THREE.Material.call(this,a);a=a||{};this.shading=a.shading?a.shading:THREE.FlatShading;this.wireframe=a.wireframe?a.wireframe:!1;this.wireframeLinewidth=a.wireframeLinewidth?a.wireframeLinewidth:1};THREE.MeshNormalMaterial.prototype=new THREE.Material;THREE.MeshNormalMaterial.prototype.constructor=THREE.MeshNormalMaterial;THREE.MeshFaceMaterial=function(){};
-THREE.ParticleBasicMaterial=function(a){THREE.Material.call(this,a);a=a||{};this.color=a.color!==void 0?new THREE.Color(a.color):new THREE.Color(16777215);this.map=a.map!==void 0?a.map:null;this.size=a.size!==void 0?a.size:1;this.sizeAttenuation=a.sizeAttenuation!==void 0?a.sizeAttenuation:!0;this.vertexColors=a.vertexColors!==void 0?a.vertexColors:!1;this.fog=a.fog!==void 0?a.fog:!0};THREE.ParticleBasicMaterial.prototype=new THREE.Material;THREE.ParticleBasicMaterial.prototype.constructor=THREE.ParticleBasicMaterial;
-THREE.ParticleCanvasMaterial=function(a){THREE.Material.call(this,a);a=a||{};this.color=a.color!==void 0?new THREE.Color(a.color):new THREE.Color(16777215);this.program=a.program!==void 0?a.program:function(){}};THREE.ParticleCanvasMaterial.prototype=new THREE.Material;THREE.ParticleCanvasMaterial.prototype.constructor=THREE.ParticleCanvasMaterial;
-THREE.Texture=function(a,b,c,d,f,e){this.id=THREE.TextureCount++;this.image=a;this.mapping=b!==void 0?b:new THREE.UVMapping;this.wrapS=c!==void 0?c:THREE.ClampToEdgeWrapping;this.wrapT=d!==void 0?d:THREE.ClampToEdgeWrapping;this.magFilter=f!==void 0?f:THREE.LinearFilter;this.minFilter=e!==void 0?e:THREE.LinearMipMapLinearFilter;this.offset=new THREE.Vector2(0,0);this.repeat=new THREE.Vector2(1,1);this.needsUpdate=!1};
-THREE.Texture.prototype={constructor:THREE.Texture,clone:function(){var a=new THREE.Texture(this.image,this.mapping,this.wrapS,this.wrapT,this.magFilter,this.minFilter);a.offset.copy(this.offset);a.repeat.copy(this.repeat);return a}};THREE.TextureCount=0;THREE.MultiplyOperation=0;THREE.MixOperation=1;THREE.CubeReflectionMapping=function(){};THREE.CubeRefractionMapping=function(){};THREE.LatitudeReflectionMapping=function(){};THREE.LatitudeRefractionMapping=function(){};
-THREE.SphericalReflectionMapping=function(){};THREE.SphericalRefractionMapping=function(){};THREE.UVMapping=function(){};THREE.RepeatWrapping=0;THREE.ClampToEdgeWrapping=1;THREE.MirroredRepeatWrapping=2;THREE.NearestFilter=3;THREE.NearestMipMapNearestFilter=4;THREE.NearestMipMapLinearFilter=5;THREE.LinearFilter=6;THREE.LinearMipMapNearestFilter=7;THREE.LinearMipMapLinearFilter=8;THREE.ByteType=9;THREE.UnsignedByteType=10;THREE.ShortType=11;THREE.UnsignedShortType=12;THREE.IntType=13;
-THREE.UnsignedIntType=14;THREE.FloatType=15;THREE.AlphaFormat=16;THREE.RGBFormat=17;THREE.RGBAFormat=18;THREE.LuminanceFormat=19;THREE.LuminanceAlphaFormat=20;THREE.Particle=function(a){THREE.Object3D.call(this);this.materials=a instanceof Array?a:[a]};THREE.Particle.prototype=new THREE.Object3D;THREE.Particle.prototype.constructor=THREE.Particle;THREE.Line=function(a,b,c){THREE.Object3D.call(this);this.geometry=a;this.materials=b instanceof Array?b:[b];this.type=c!=void 0?c:THREE.LineStrip};
-THREE.LineStrip=0;THREE.LinePieces=1;THREE.Line.prototype=new THREE.Object3D;THREE.Line.prototype.constructor=THREE.Line;
-THREE.Mesh=function(a,b){THREE.Object3D.call(this);this.geometry=a;this.materials=b&&b.length?b:[b];this.overdraw=!1;if(this.geometry&&(this.geometry.boundingSphere||this.geometry.computeBoundingSphere(),this.boundRadius=a.boundingSphere.radius,this.geometry.morphTargets.length)){this.morphTargetBase=-1;this.morphTargetForcedOrder=[];this.morphTargetInfluences=[];this.morphTargetDictionary={};for(var c=0;c<this.geometry.morphTargets.length;c++)this.morphTargetInfluences.push(0),this.morphTargetDictionary[this.geometry.morphTargets[c].name]=
-c}};THREE.Mesh.prototype=new THREE.Object3D;THREE.Mesh.prototype.constructor=THREE.Mesh;THREE.Mesh.prototype.supr=THREE.Object3D.prototype;THREE.Mesh.prototype.getMorphTargetIndexByName=function(a){if(this.morphTargetDictionary[a]!==void 0)return this.morphTargetDictionary[a];console.log("THREE.Mesh.getMorphTargetIndexByName: morph target "+a+" does not exist. Returning 0.");return 0};
-THREE.Bone=function(a){THREE.Object3D.call(this);this.skin=a;this.skinMatrix=new THREE.Matrix4;this.hasNoneBoneChildren=!1};THREE.Bone.prototype=new THREE.Object3D;THREE.Bone.prototype.constructor=THREE.Bone;THREE.Bone.prototype.supr=THREE.Object3D.prototype;
-THREE.Bone.prototype.update=function(a,b,c){this.matrixAutoUpdate&&(b|=this.updateMatrix());if(b||this.matrixWorldNeedsUpdate)a?this.skinMatrix.multiply(a,this.matrix):this.skinMatrix.copy(this.matrix),this.matrixWorldNeedsUpdate=!1,b=!0;var d,f=this.children.length;if(this.hasNoneBoneChildren){this.matrixWorld.multiply(this.skin.matrixWorld,this.skinMatrix);for(d=0;d<f;d++)a=this.children[d],a instanceof THREE.Bone?a.update(this.skinMatrix,b,c):a.update(this.matrixWorld,!0,c)}else for(d=0;d<f;d++)this.children[d].update(this.skinMatrix,
-b,c)};THREE.Bone.prototype.addChild=function(a){if(this.children.indexOf(a)===-1&&(a.parent!==void 0&&a.parent.removeChild(a),a.parent=this,this.children.push(a),!(a instanceof THREE.Bone)))this.hasNoneBoneChildren=!0};THREE.Scene=function(){THREE.Object3D.call(this);this.fog=null;this.matrixAutoUpdate=!1;this.collisions=this.overrideMaterial=null;this.objects=[];this.lights=[];this.__objectsAdded=[];this.__objectsRemoved=[]};THREE.Scene.prototype=new THREE.Object3D;
-THREE.Scene.prototype.constructor=THREE.Scene;THREE.Scene.prototype.supr=THREE.Object3D.prototype;THREE.Scene.prototype.add=function(a){this.supr.add.call(this,a);this.addChildRecurse(a)};
-THREE.Scene.prototype.addChildRecurse=function(a){if(a instanceof THREE.Light)this.lights.indexOf(a)===-1&&this.lights.push(a);else if(!(a instanceof THREE.Camera||a instanceof THREE.Bone)&&this.objects.indexOf(a)===-1){this.objects.push(a);this.__objectsAdded.push(a);var b=this.__objectsRemoved.indexOf(a);b!==-1&&this.__objectsRemoved.splice(b,1)}for(b=0;b<a.children.length;b++)this.addChildRecurse(a.children[b])};THREE.Scene.prototype.remove=function(a){this.supr.remove.call(this,a);this.removeChildRecurse(a)};
-THREE.Scene.prototype.removeChildRecurse=function(a){if(a instanceof THREE.Light){var b=this.lights.indexOf(a);b!==-1&&this.lights.splice(b,1)}else a instanceof THREE.Camera||(b=this.objects.indexOf(a),b!==-1&&(this.objects.splice(b,1),this.__objectsRemoved.push(a),b=this.__objectsAdded.indexOf(a),b!==-1&&this.__objectsAdded.splice(b,1)));for(b=0;b<a.children.length;b++)this.removeChildRecurse(a.children[b])};
-THREE.Scene.prototype.addChild=function(a){console.warn("DEPRECATED: Scene.addChild() is now Scene.add().");this.add(a)};THREE.Scene.prototype.addObject=function(a){console.warn("DEPRECATED: Scene.addObject() is now Scene.add().");this.add(a)};THREE.Scene.prototype.addLight=function(a){console.warn("DEPRECATED: Scene.addLight() is now Scene.add().");this.add(a)};THREE.Scene.prototype.removeChild=function(a){console.warn("DEPRECATED: Scene.removeChild() is now Scene.remove().");this.remove(a)};
-THREE.Scene.prototype.removeObject=function(a){console.warn("DEPRECATED: Scene.removeObject() is now Scene.remove().");this.remove(a)};THREE.Scene.prototype.removeLight=function(a){console.warn("DEPRECATED: Scene.removeLight() is now Scene.remove().");this.remove(a)};
-THREE.CanvasRenderer=function(a){function b(a){if(w!=a)j.globalAlpha=w=a}function c(a){if(u!=a){switch(a){case THREE.NormalBlending:j.globalCompositeOperation="source-over";break;case THREE.AdditiveBlending:j.globalCompositeOperation="lighter";break;case THREE.SubtractiveBlending:j.globalCompositeOperation="darker"}u=a}}function d(a){if(M!=a)j.strokeStyle=M=a}function f(a){if(R!=a)j.fillStyle=R=a}var e=this,g=null,h=new THREE.Projector,a=a||{},l=a.canvas!==void 0?a.canvas:document.createElement("canvas"),
-k,o,i,n,j=l.getContext("2d"),r=new THREE.Color(0),s=0,w=1,u=0,M=null,R=null,B=null,N=null,O=null,t,m,C,D,T=new THREE.RenderableVertex,U=new THREE.RenderableVertex,F,K,I,J,P,Q,V,E,pa,y,L,H,z=new THREE.Color(0),x=new THREE.Color(0),q=new THREE.Color(0),v=new THREE.Color(0),G=new THREE.Color(0),za=[],ea,Z,ba,W,Da,Ea,Fa,Ga,Ha,Ia,ka=new THREE.Rectangle,$=new THREE.Rectangle,Y=new THREE.Rectangle,Aa=!1,ca=new THREE.Color,aa=new THREE.Color,ta=new THREE.Color,ua=new THREE.Color,S=new THREE.Vector3,qa,ra,
-Ba,da,sa,va,a=16;qa=document.createElement("canvas");qa.width=qa.height=2;ra=qa.getContext("2d");ra.fillStyle="rgba(0,0,0,1)";ra.fillRect(0,0,2,2);Ba=ra.getImageData(0,0,2,2);da=Ba.data;sa=document.createElement("canvas");sa.width=sa.height=a;va=sa.getContext("2d");va.translate(-a/2,-a/2);va.scale(a,a);a--;this.domElement=l;this.sortElements=this.sortObjects=this.autoClear=!0;this.info={render:{vertices:0,faces:0}};this.setSize=function(a,b){k=a;o=b;i=Math.floor(k/2);n=Math.floor(o/2);l.width=k;l.height=
-o;ka.set(-i,-n,i,n);$.set(-i,-n,i,n);w=1;u=0;O=N=B=R=M=null};this.setClearColor=function(a,b){r.copy(a);s=b;$.set(-i,-n,i,n)};this.setClearColorHex=function(a,b){r.setHex(a);s=b;$.set(-i,-n,i,n)};this.clear=function(){j.setTransform(1,0,0,-1,i,n);$.isEmpty()||($.minSelf(ka),$.inflate(2),s<1&&j.clearRect(Math.floor($.getX()),Math.floor($.getY()),Math.floor($.getWidth()),Math.floor($.getHeight())),s>0&&(c(THREE.NormalBlending),b(1),f("rgba("+Math.floor(r.r*255)+","+Math.floor(r.g*255)+","+Math.floor(r.b*
-255)+","+s+")"),j.fillRect(Math.floor($.getX()),Math.floor($.getY()),Math.floor($.getWidth()),Math.floor($.getHeight()))),$.empty())};this.render=function(a,k){function l(a){var b,c,d,e=a.lights;aa.setRGB(0,0,0);ta.setRGB(0,0,0);ua.setRGB(0,0,0);a=0;for(b=e.length;a<b;a++)c=e[a],d=c.color,c instanceof THREE.AmbientLight?(aa.r+=d.r,aa.g+=d.g,aa.b+=d.b):c instanceof THREE.DirectionalLight?(ta.r+=d.r,ta.g+=d.g,ta.b+=d.b):c instanceof THREE.PointLight&&(ua.r+=d.r,ua.g+=d.g,ua.b+=d.b)}function o(a,b,c,
-d){var e,f,g,h,j=a.lights,a=0;for(e=j.length;a<e;a++)f=j[a],g=f.color,f instanceof THREE.DirectionalLight?(h=c.dot(f.position),h<=0||(h*=f.intensity,d.r+=g.r*h,d.g+=g.g*h,d.b+=g.b*h)):f instanceof THREE.PointLight&&(h=c.dot(S.sub(f.position,b).normalize()),h<=0||(h*=f.distance==0?1:1-Math.min(b.distanceTo(f.position)/f.distance,1),h!=0&&(h*=f.intensity,d.r+=g.r*h,d.g+=g.g*h,d.b+=g.b*h)))}function r(a,e,g){b(g.opacity);c(g.blending);var h,k,l,o,p,m;if(g instanceof THREE.ParticleBasicMaterial){if(g.map)o=
-g.map.image,p=o.width>>1,m=o.height>>1,g=e.scale.x*i,l=e.scale.y*n,h=g*p,k=l*m,Y.set(a.x-h,a.y-k,a.x+h,a.y+k),ka.intersects(Y)&&(j.save(),j.translate(a.x,a.y),j.rotate(-e.rotation),j.scale(g,-l),j.translate(-p,-m),j.drawImage(o,0,0),j.restore())}else g instanceof THREE.ParticleCanvasMaterial&&(h=e.scale.x*i,k=e.scale.y*n,Y.set(a.x-h,a.y-k,a.x+h,a.y+k),ka.intersects(Y)&&(d(g.color.getContextStyle()),f(g.color.getContextStyle()),j.save(),j.translate(a.x,a.y),j.rotate(-e.rotation),j.scale(h,k),g.program(j),
-j.restore()))}function s(a,e,f,g){b(g.opacity);c(g.blending);j.beginPath();j.moveTo(a.positionScreen.x,a.positionScreen.y);j.lineTo(e.positionScreen.x,e.positionScreen.y);j.closePath();if(g instanceof THREE.LineBasicMaterial){a=g.linewidth;if(B!=a)j.lineWidth=B=a;a=g.linecap;if(N!=a)j.lineCap=N=a;a=g.linejoin;if(O!=a)j.lineJoin=O=a;d(g.color.getContextStyle());j.stroke();Y.inflate(g.linewidth*2)}}function u(a,d,f,g,h,j,i,p,l){e.info.render.vertices+=3;e.info.render.faces++;b(p.opacity);c(p.blending);
-F=a.positionScreen.x;K=a.positionScreen.y;I=d.positionScreen.x;J=d.positionScreen.y;P=f.positionScreen.x;Q=f.positionScreen.y;M(F,K,I,J,P,Q);if(p instanceof THREE.MeshBasicMaterial)if(p.map)p.map.mapping instanceof THREE.UVMapping&&(W=i.uvs[0],Ca(F,K,I,J,P,Q,W[g].u,W[g].v,W[h].u,W[h].v,W[j].u,W[j].v,p.map));else if(p.envMap){if(p.envMap.mapping instanceof THREE.SphericalReflectionMapping)a=k.matrixWorldInverse,S.copy(i.vertexNormalsWorld[0]),Da=(S.x*a.n11+S.y*a.n12+S.z*a.n13)*0.5+0.5,Ea=-(S.x*a.n21+
-S.y*a.n22+S.z*a.n23)*0.5+0.5,S.copy(i.vertexNormalsWorld[1]),Fa=(S.x*a.n11+S.y*a.n12+S.z*a.n13)*0.5+0.5,Ga=-(S.x*a.n21+S.y*a.n22+S.z*a.n23)*0.5+0.5,S.copy(i.vertexNormalsWorld[2]),Ha=(S.x*a.n11+S.y*a.n12+S.z*a.n13)*0.5+0.5,Ia=-(S.x*a.n21+S.y*a.n22+S.z*a.n23)*0.5+0.5,Ca(F,K,I,J,P,Q,Da,Ea,Fa,Ga,Ha,Ia,p.envMap)}else p.wireframe?ga(p.color,p.wireframeLinewidth,p.wireframeLinecap,p.wireframeLinejoin):ha(p.color);else if(p instanceof THREE.MeshLambertMaterial)p.map&&!p.wireframe&&(p.map.mapping instanceof
-THREE.UVMapping&&(W=i.uvs[0],Ca(F,K,I,J,P,Q,W[g].u,W[g].v,W[h].u,W[h].v,W[j].u,W[j].v,p.map)),c(THREE.SubtractiveBlending)),Aa?!p.wireframe&&p.shading==THREE.SmoothShading&&i.vertexNormalsWorld.length==3?(x.r=q.r=v.r=aa.r,x.g=q.g=v.g=aa.g,x.b=q.b=v.b=aa.b,o(l,i.v1.positionWorld,i.vertexNormalsWorld[0],x),o(l,i.v2.positionWorld,i.vertexNormalsWorld[1],q),o(l,i.v3.positionWorld,i.vertexNormalsWorld[2],v),x.r=Math.max(0,Math.min(p.color.r*x.r,1)),x.g=Math.max(0,Math.min(p.color.g*x.g,1)),x.b=Math.max(0,
-Math.min(p.color.b*x.b,1)),q.r=Math.max(0,Math.min(p.color.r*q.r,1)),q.g=Math.max(0,Math.min(p.color.g*q.g,1)),q.b=Math.max(0,Math.min(p.color.b*q.b,1)),v.r=Math.max(0,Math.min(p.color.r*v.r,1)),v.g=Math.max(0,Math.min(p.color.g*v.g,1)),v.b=Math.max(0,Math.min(p.color.b*v.b,1)),G.r=(q.r+v.r)*0.5,G.g=(q.g+v.g)*0.5,G.b=(q.b+v.b)*0.5,ba=wa(x,q,v,G),ma(F,K,I,J,P,Q,0,0,1,0,0,1,ba)):(ca.r=aa.r,ca.g=aa.g,ca.b=aa.b,o(l,i.centroidWorld,i.normalWorld,ca),z.r=Math.max(0,Math.min(p.color.r*ca.r,1)),z.g=Math.max(0,
-Math.min(p.color.g*ca.g,1)),z.b=Math.max(0,Math.min(p.color.b*ca.b,1)),p.wireframe?ga(z,p.wireframeLinewidth,p.wireframeLinecap,p.wireframeLinejoin):ha(z)):p.wireframe?ga(p.color,p.wireframeLinewidth,p.wireframeLinecap,p.wireframeLinejoin):ha(p.color);else if(p instanceof THREE.MeshDepthMaterial)ea=k.near,Z=k.far,x.r=x.g=x.b=1-la(a.positionScreen.z,ea,Z),q.r=q.g=q.b=1-la(d.positionScreen.z,ea,Z),v.r=v.g=v.b=1-la(f.positionScreen.z,ea,Z),G.r=(q.r+v.r)*0.5,G.g=(q.g+v.g)*0.5,G.b=(q.b+v.b)*0.5,ba=wa(x,
-q,v,G),ma(F,K,I,J,P,Q,0,0,1,0,0,1,ba);else if(p instanceof THREE.MeshNormalMaterial)z.r=na(i.normalWorld.x),z.g=na(i.normalWorld.y),z.b=na(i.normalWorld.z),p.wireframe?ga(z,p.wireframeLinewidth,p.wireframeLinecap,p.wireframeLinejoin):ha(z)}function w(a,d,f,g,h,j,i,p,l){e.info.render.vertices+=4;e.info.render.faces++;b(p.opacity);c(p.blending);if(p.map||p.envMap)u(a,d,g,0,1,3,i,p,l),u(h,f,j,1,2,3,i,p,l);else if(F=a.positionScreen.x,K=a.positionScreen.y,I=d.positionScreen.x,J=d.positionScreen.y,P=f.positionScreen.x,
-Q=f.positionScreen.y,V=g.positionScreen.x,E=g.positionScreen.y,pa=h.positionScreen.x,y=h.positionScreen.y,L=j.positionScreen.x,H=j.positionScreen.y,p instanceof THREE.MeshBasicMaterial)R(F,K,I,J,P,Q,V,E),p.wireframe?ga(p.color,p.wireframeLinewidth,p.wireframeLinecap,p.wireframeLinejoin):ha(p.color);else if(p instanceof THREE.MeshLambertMaterial)Aa?!p.wireframe&&p.shading==THREE.SmoothShading&&i.vertexNormalsWorld.length==4?(x.r=q.r=v.r=G.r=aa.r,x.g=q.g=v.g=G.g=aa.g,x.b=q.b=v.b=G.b=aa.b,o(l,i.v1.positionWorld,
-i.vertexNormalsWorld[0],x),o(l,i.v2.positionWorld,i.vertexNormalsWorld[1],q),o(l,i.v4.positionWorld,i.vertexNormalsWorld[3],v),o(l,i.v3.positionWorld,i.vertexNormalsWorld[2],G),x.r=Math.max(0,Math.min(p.color.r*x.r,1)),x.g=Math.max(0,Math.min(p.color.g*x.g,1)),x.b=Math.max(0,Math.min(p.color.b*x.b,1)),q.r=Math.max(0,Math.min(p.color.r*q.r,1)),q.g=Math.max(0,Math.min(p.color.g*q.g,1)),q.b=Math.max(0,Math.min(p.color.b*q.b,1)),v.r=Math.max(0,Math.min(p.color.r*v.r,1)),v.g=Math.max(0,Math.min(p.color.g*
-v.g,1)),v.b=Math.max(0,Math.min(p.color.b*v.b,1)),G.r=Math.max(0,Math.min(p.color.r*G.r,1)),G.g=Math.max(0,Math.min(p.color.g*G.g,1)),G.b=Math.max(0,Math.min(p.color.b*G.b,1)),ba=wa(x,q,v,G),M(F,K,I,J,V,E),ma(F,K,I,J,V,E,0,0,1,0,0,1,ba),M(pa,y,P,Q,L,H),ma(pa,y,P,Q,L,H,1,0,1,1,0,1,ba)):(ca.r=aa.r,ca.g=aa.g,ca.b=aa.b,o(l,i.centroidWorld,i.normalWorld,ca),z.r=Math.max(0,Math.min(p.color.r*ca.r,1)),z.g=Math.max(0,Math.min(p.color.g*ca.g,1)),z.b=Math.max(0,Math.min(p.color.b*ca.b,1)),R(F,K,I,J,P,Q,V,E),
-p.wireframe?ga(z,p.wireframeLinewidth,p.wireframeLinecap,p.wireframeLinejoin):ha(z)):(R(F,K,I,J,P,Q,V,E),p.wireframe?ga(p.color,p.wireframeLinewidth,p.wireframeLinecap,p.wireframeLinejoin):ha(p.color));else if(p instanceof THREE.MeshNormalMaterial)z.r=na(i.normalWorld.x),z.g=na(i.normalWorld.y),z.b=na(i.normalWorld.z),R(F,K,I,J,P,Q,V,E),p.wireframe?ga(z,p.wireframeLinewidth,p.wireframeLinecap,p.wireframeLinejoin):ha(z);else if(p instanceof THREE.MeshDepthMaterial)ea=k.near,Z=k.far,x.r=x.g=x.b=1-la(a.positionScreen.z,
-ea,Z),q.r=q.g=q.b=1-la(d.positionScreen.z,ea,Z),v.r=v.g=v.b=1-la(g.positionScreen.z,ea,Z),G.r=G.g=G.b=1-la(f.positionScreen.z,ea,Z),ba=wa(x,q,v,G),M(F,K,I,J,V,E),ma(F,K,I,J,V,E,0,0,1,0,0,1,ba),M(pa,y,P,Q,L,H),ma(pa,y,P,Q,L,H,1,0,1,1,0,1,ba)}function M(a,b,c,d,e,f){j.beginPath();j.moveTo(a,b);j.lineTo(c,d);j.lineTo(e,f);j.lineTo(a,b);j.closePath()}function R(a,b,c,d,e,f,g,h){j.beginPath();j.moveTo(a,b);j.lineTo(c,d);j.lineTo(e,f);j.lineTo(g,h);j.lineTo(a,b);j.closePath()}function ga(a,b,c,e){if(B!=
-b)j.lineWidth=B=b;if(N!=c)j.lineCap=N=c;if(O!=e)j.lineJoin=O=e;d(a.getContextStyle());j.stroke();Y.inflate(b*2)}function ha(a){f(a.getContextStyle());j.fill()}function Ca(a,b,c,d,e,g,h,i,k,l,o,n,m){if(m.image.width!=0){if(m.needsUpdate==!0||za[m.id]==void 0){var q=m.wrapS==THREE.RepeatWrapping,r=m.wrapT==THREE.RepeatWrapping;za[m.id]=j.createPattern(m.image,q&&r?"repeat":q&&!r?"repeat-x":!q&&r?"repeat-y":"no-repeat");m.needsUpdate=!1}f(za[m.id]);var q=m.offset.x/m.repeat.x,r=m.offset.y/m.repeat.y,
-s=(m.image.width-1)*m.repeat.x,m=(m.image.height-1)*m.repeat.y,h=(h+q)*s,i=(i+r)*m,k=(k+q)*s,l=(l+r)*m,o=(o+q)*s,n=(n+r)*m;c-=a;d-=b;e-=a;g-=b;k-=h;l-=i;o-=h;n-=i;q=1/(k*n-o*l);m=(n*c-l*e)*q;l=(n*d-l*g)*q;c=(k*e-o*c)*q;d=(k*g-o*d)*q;a=a-m*h-c*i;b=b-l*h-d*i;j.save();j.transform(m,l,c,d,a,b);j.fill();j.restore()}}function ma(a,b,c,d,e,f,g,h,i,k,l,m,o){var n,q;n=o.width-1;q=o.height-1;g*=n;h*=q;i*=n;k*=q;l*=n;m*=q;c-=a;d-=b;e-=a;f-=b;i-=g;k-=h;l-=g;m-=h;q=1/(i*m-l*k);n=(m*c-k*e)*q;k=(m*d-k*f)*q;c=(i*
-e-l*c)*q;d=(i*f-l*d)*q;a=a-n*g-c*h;b=b-k*g-d*h;j.save();j.transform(n,k,c,d,a,b);j.clip();j.drawImage(o,0,0);j.restore()}function wa(a,b,c,d){var e=~~(a.r*255),f=~~(a.g*255),a=~~(a.b*255),g=~~(b.r*255),h=~~(b.g*255),b=~~(b.b*255),i=~~(c.r*255),j=~~(c.g*255),c=~~(c.b*255),k=~~(d.r*255),l=~~(d.g*255),d=~~(d.b*255);da[0]=e<0?0:e>255?255:e;da[1]=f<0?0:f>255?255:f;da[2]=a<0?0:a>255?255:a;da[4]=g<0?0:g>255?255:g;da[5]=h<0?0:h>255?255:h;da[6]=b<0?0:b>255?255:b;da[8]=i<0?0:i>255?255:i;da[9]=j<0?0:j>255?255:
-j;da[10]=c<0?0:c>255?255:c;da[12]=k<0?0:k>255?255:k;da[13]=l<0?0:l>255?255:l;da[14]=d<0?0:d>255?255:d;ra.putImageData(Ba,0,0);va.drawImage(qa,0,0);return sa}function la(a,b,c){a=(a-b)/(c-b);return a*a*(3-2*a)}function na(a){a=(a+1)*0.5;return a<0?0:a>1?1:a}function ia(a,b){var c=b.x-a.x,d=b.y-a.y,e=c*c+d*d;e!=0&&(e=1/Math.sqrt(e),c*=e,d*=e,b.x+=c,b.y+=d,a.x-=c,a.y-=d)}var xa,Ja,A,fa,ja,oa,ya,X;this.autoClear?this.clear():j.setTransform(1,0,0,-1,i,n);e.info.render.vertices=0;e.info.render.faces=0;
-g=h.projectScene(a,k,this.sortElements);(Aa=a.lights.length>0)&&l(a);xa=0;for(Ja=g.length;xa<Ja;xa++){A=g[xa];Y.empty();if(A instanceof THREE.RenderableParticle){t=A;t.x*=i;t.y*=n;fa=0;for(ja=A.materials.length;fa<ja;)X=A.materials[fa++],X.opacity!=0&&r(t,A,X,a)}else if(A instanceof THREE.RenderableLine){if(t=A.v1,m=A.v2,t.positionScreen.x*=i,t.positionScreen.y*=n,m.positionScreen.x*=i,m.positionScreen.y*=n,Y.addPoint(t.positionScreen.x,t.positionScreen.y),Y.addPoint(m.positionScreen.x,m.positionScreen.y),
-ka.intersects(Y)){fa=0;for(ja=A.materials.length;fa<ja;)X=A.materials[fa++],X.opacity!=0&&s(t,m,A,X,a)}}else if(A instanceof THREE.RenderableFace3){if(t=A.v1,m=A.v2,C=A.v3,t.positionScreen.x*=i,t.positionScreen.y*=n,m.positionScreen.x*=i,m.positionScreen.y*=n,C.positionScreen.x*=i,C.positionScreen.y*=n,A.overdraw&&(ia(t.positionScreen,m.positionScreen),ia(m.positionScreen,C.positionScreen),ia(C.positionScreen,t.positionScreen)),Y.add3Points(t.positionScreen.x,t.positionScreen.y,m.positionScreen.x,
-m.positionScreen.y,C.positionScreen.x,C.positionScreen.y),ka.intersects(Y)){fa=0;for(ja=A.meshMaterials.length;fa<ja;)if(X=A.meshMaterials[fa++],X instanceof THREE.MeshFaceMaterial){oa=0;for(ya=A.faceMaterials.length;oa<ya;)(X=A.faceMaterials[oa++])&&X.opacity!=0&&u(t,m,C,0,1,2,A,X,a)}else X.opacity!=0&&u(t,m,C,0,1,2,A,X,a)}}else if(A instanceof THREE.RenderableFace4&&(t=A.v1,m=A.v2,C=A.v3,D=A.v4,t.positionScreen.x*=i,t.positionScreen.y*=n,m.positionScreen.x*=i,m.positionScreen.y*=n,C.positionScreen.x*=
-i,C.positionScreen.y*=n,D.positionScreen.x*=i,D.positionScreen.y*=n,T.positionScreen.copy(m.positionScreen),U.positionScreen.copy(D.positionScreen),A.overdraw&&(ia(t.positionScreen,m.positionScreen),ia(m.positionScreen,D.positionScreen),ia(D.positionScreen,t.positionScreen),ia(C.positionScreen,T.positionScreen),ia(C.positionScreen,U.positionScreen)),Y.addPoint(t.positionScreen.x,t.positionScreen.y),Y.addPoint(m.positionScreen.x,m.positionScreen.y),Y.addPoint(C.positionScreen.x,C.positionScreen.y),
-Y.addPoint(D.positionScreen.x,D.positionScreen.y),ka.intersects(Y))){fa=0;for(ja=A.meshMaterials.length;fa<ja;)if(X=A.meshMaterials[fa++],X instanceof THREE.MeshFaceMaterial){oa=0;for(ya=A.faceMaterials.length;oa<ya;)(X=A.faceMaterials[oa++])&&X.opacity!=0&&w(t,m,C,D,T,U,A,X,a)}else X.opacity!=0&&w(t,m,C,D,T,U,A,X,a)}$.addRectangle(Y)}j.setTransform(1,0,0,1,0,0)}};THREE.RenderableVertex=function(){this.positionWorld=new THREE.Vector3;this.positionScreen=new THREE.Vector4;this.visible=!0};
-THREE.RenderableVertex.prototype.copy=function(a){this.positionWorld.copy(a.positionWorld);this.positionScreen.copy(a.positionScreen)};
-THREE.RenderableFace3=function(){this.v1=new THREE.RenderableVertex;this.v2=new THREE.RenderableVertex;this.v3=new THREE.RenderableVertex;this.centroidWorld=new THREE.Vector3;this.centroidScreen=new THREE.Vector3;this.normalWorld=new THREE.Vector3;this.vertexNormalsWorld=[new THREE.Vector3,new THREE.Vector3,new THREE.Vector3];this.faceMaterials=this.meshMaterials=null;this.overdraw=!1;this.uvs=[[]];this.z=null};
-THREE.RenderableFace4=function(){this.v1=new THREE.RenderableVertex;this.v2=new THREE.RenderableVertex;this.v3=new THREE.RenderableVertex;this.v4=new THREE.RenderableVertex;this.centroidWorld=new THREE.Vector3;this.centroidScreen=new THREE.Vector3;this.normalWorld=new THREE.Vector3;this.vertexNormalsWorld=[new THREE.Vector3,new THREE.Vector3,new THREE.Vector3,new THREE.Vector3];this.faceMaterials=this.meshMaterials=null;this.overdraw=!1;this.uvs=[[]];this.z=null};
-THREE.RenderableObject=function(){this.z=this.object=null};THREE.RenderableParticle=function(){this.rotation=this.z=this.y=this.x=null;this.scale=new THREE.Vector2;this.materials=null};THREE.RenderableLine=function(){this.z=null;this.v1=new THREE.RenderableVertex;this.v2=new THREE.RenderableVertex;this.materials=null};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+var THREE = THREE || {};
+
+if ( ! self.Int32Array ) {
+
+	self.Int32Array = Array;
+	self.Float32Array = Array;
+
+}
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.Color = function ( hex ) {
+
+	if ( hex !== undefined ) this.setHex( hex );
+	return this;
+
+};
+
+THREE.Color.prototype = {
+
+	constructor: THREE.Color,
+	
+	r: 1, g: 1, b: 1,
+
+	copy: function ( color ) {
+
+		this.r = color.r;
+		this.g = color.g;
+		this.b = color.b;
+
+		return this;
+
+	},
+
+	setRGB: function ( r, g, b ) {
+
+		this.r = r;
+		this.g = g;
+		this.b = b;
+
+		return this;
+
+	},
+
+	setHSV: function ( h, s, v ) {
+
+		// based on MochiKit implementation by Bob Ippolito
+		// h,s,v ranges are < 0.0 - 1.0 >
+
+		var i, f, p, q, t;
+
+		if ( v == 0 ) {
+
+			this.r = this.g = this.b = 0;
+
+		} else {
+
+			i = Math.floor( h * 6 );
+			f = ( h * 6 ) - i;
+			p = v * ( 1 - s );
+			q = v * ( 1 - ( s * f ) );
+			t = v * ( 1 - ( s * ( 1 - f ) ) );
+
+			switch ( i ) {
+
+				case 1: this.r = q; this.g = v; this.b = p; break;
+				case 2: this.r = p; this.g = v; this.b = t; break;
+				case 3: this.r = p; this.g = q; this.b = v; break;
+				case 4: this.r = t; this.g = p; this.b = v; break;
+				case 5: this.r = v; this.g = p; this.b = q; break;
+				case 6: // fall through
+				case 0: this.r = v; this.g = t; this.b = p; break;
+
+			}
+
+		}
+
+		return this;
+
+	},
+
+	setHex: function ( hex ) {
+
+		hex = Math.floor( hex );
+
+		this.r = ( hex >> 16 & 255 ) / 255;
+		this.g = ( hex >> 8 & 255 ) / 255;
+		this.b = ( hex & 255 ) / 255;
+
+		return this;
+
+	},
+
+	getHex: function () {
+
+		return ~~ ( this.r * 255 ) << 16 ^ ~~ ( this.g * 255 ) << 8 ^ ~~ ( this.b * 255 );
+
+	},
+
+	getContextStyle: function () {
+
+		return 'rgb(' + Math.floor( this.r * 255 ) + ',' + Math.floor( this.g * 255 ) + ',' + Math.floor( this.b * 255 ) + ')';
+
+	},
+
+	clone: function () {
+
+		return new THREE.Color().setRGB( this.r, this.g, this.b );
+
+	}
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author philogb / http://blog.thejit.org/
+ * @author egraether / http://egraether.com/
+ * @author zz85 / http://www.lab4games.net/zz85/blog
+ */
+
+THREE.Vector2 = function ( x, y ) {
+
+	this.x = x || 0;
+	this.y = y || 0;
+
+};
+
+THREE.Vector2.prototype = {
+
+	constructor: THREE.Vector2,
+
+	set: function ( x, y ) {
+
+		this.x = x;
+		this.y = y;
+
+		return this;
+
+	},
+
+	copy: function ( v ) {
+
+		this.x = v.x;
+		this.y = v.y;
+
+		return this;
+
+	},
+
+	clone: function () {
+
+		return new THREE.Vector2( this.x, this.y );
+
+	},
+
+
+	add: function ( v1, v2 ) {
+
+		this.x = v1.x + v2.x;
+		this.y = v1.y + v2.y;
+
+		return this;
+
+	},
+
+	addSelf: function ( v ) {
+
+		this.x += v.x;
+		this.y += v.y;
+
+		return this;
+
+	},
+
+	sub: function ( v1, v2 ) {
+
+		this.x = v1.x - v2.x;
+		this.y = v1.y - v2.y;
+
+		return this;
+
+	},
+
+	subSelf: function ( v ) {
+
+		this.x -= v.x;
+		this.y -= v.y;
+
+		return this;
+
+	},
+
+	multiplyScalar: function ( s ) {
+
+		this.x *= s;
+		this.y *= s;
+
+		return this;
+
+	},
+
+	divideScalar: function ( s ) {
+
+		if ( s ) {
+
+			this.x /= s;
+			this.y /= s;
+
+		} else {
+
+			this.set( 0, 0 );
+
+		}
+
+		return this;
+
+	},
+
+
+	negate: function() {
+
+		return this.multiplyScalar( -1 );
+
+	},
+
+	dot: function ( v ) {
+
+		return this.x * v.x + this.y * v.y;
+
+	},
+
+	lengthSq: function () {
+
+		return this.x * this.x + this.y * this.y;
+
+	},
+
+	length: function () {
+
+		return Math.sqrt( this.lengthSq() );
+
+	},
+
+	normalize: function () {
+
+		return this.divideScalar( this.length() );
+
+	},
+
+	distanceTo: function ( v ) {
+
+		return Math.sqrt( this.distanceToSquared( v ) );
+
+	},
+
+	distanceToSquared: function ( v ) {
+
+		var dx = this.x - v.x, dy = this.y - v.y;
+		return dx * dx + dy * dy;
+
+	},
+
+
+	setLength: function ( l ) {
+
+		return this.normalize().multiplyScalar( l );
+
+	},
+
+	equals: function( v ) {
+
+		return ( ( v.x == this.x ) && ( v.y == this.y ) );
+
+	}
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author kile / http://kile.stravaganza.org/
+ * @author philogb / http://blog.thejit.org/
+ * @author mikael emtinger / http://gomo.se/
+ * @author egraether / http://egraether.com/
+ */
+
+THREE.Vector3 = function ( x, y, z ) {
+
+	this.x = x || 0;
+	this.y = y || 0;
+	this.z = z || 0;
+
+};
+
+
+THREE.Vector3.prototype = {
+
+	constructor: THREE.Vector3,
+
+	set: function ( x, y, z ) {
+
+		this.x = x;
+		this.y = y;
+		this.z = z;
+
+		return this;
+
+	},
+
+	setX: function ( x ) {
+
+		this.x = x;
+
+		return this;
+
+	},
+
+	setY: function ( y ) {
+
+		this.y = y;
+
+		return this;
+
+	},
+
+	setZ: function ( z ) {
+
+		this.z = z;
+
+		return this;
+
+	},
+
+	copy: function ( v ) {
+
+		this.x = v.x;
+		this.y = v.y;
+		this.z = v.z;
+
+		return this;
+
+	},
+
+	clone: function () {
+
+		return new THREE.Vector3( this.x, this.y, this.z );
+
+	},
+
+
+	add: function ( v1, v2 ) {
+
+		this.x = v1.x + v2.x;
+		this.y = v1.y + v2.y;
+		this.z = v1.z + v2.z;
+
+		return this;
+
+	},
+
+	addSelf: function ( v ) {
+
+		this.x += v.x;
+		this.y += v.y;
+		this.z += v.z;
+
+		return this;
+
+	},
+
+	addScalar: function ( s ) {
+
+		this.x += s;
+		this.y += s;
+		this.z += s;
+
+		return this;
+
+	},
+
+	sub: function ( v1, v2 ) {
+
+		this.x = v1.x - v2.x;
+		this.y = v1.y - v2.y;
+		this.z = v1.z - v2.z;
+
+		return this;
+
+	},
+
+	subSelf: function ( v ) {
+
+		this.x -= v.x;
+		this.y -= v.y;
+		this.z -= v.z;
+
+		return this;
+
+	},
+
+	multiply: function ( a, b ) {
+
+		this.x = a.x * b.x;
+		this.y = a.y * b.y;
+		this.z = a.z * b.z;
+
+		return this;
+
+	},
+
+	multiplySelf: function ( v ) {
+
+		this.x *= v.x;
+		this.y *= v.y;
+		this.z *= v.z;
+
+		return this;
+
+	},
+
+	multiplyScalar: function ( s ) {
+
+		this.x *= s;
+		this.y *= s;
+		this.z *= s;
+
+		return this;
+
+	},
+
+	divideSelf: function ( v ) {
+
+		this.x /= v.x;
+		this.y /= v.y;
+		this.z /= v.z;
+
+		return this;
+
+	},
+
+	divideScalar: function ( s ) {
+
+		if ( s ) {
+
+			this.x /= s;
+			this.y /= s;
+			this.z /= s;
+
+		} else {
+
+			this.set( 0, 0, 0 );
+
+		}
+
+		return this;
+
+	},
+
+
+	negate: function() {
+
+		return this.multiplyScalar( -1 );
+
+	},
+
+	dot: function ( v ) {
+
+		return this.x * v.x + this.y * v.y + this.z * v.z;
+
+	},
+
+	lengthSq: function () {
+
+		return this.x * this.x + this.y * this.y + this.z * this.z;
+
+	},
+
+	length: function () {
+
+		return Math.sqrt( this.lengthSq() );
+
+	},
+
+	lengthManhattan: function () {
+
+		// correct version
+		// return Math.abs( this.x ) + Math.abs( this.y ) + Math.abs( this.z );
+
+		return this.x + this.y + this.z;
+
+	},
+
+	normalize: function () {
+
+		return this.divideScalar( this.length() );
+
+	},
+
+	setLength: function ( l ) {
+
+		return this.normalize().multiplyScalar( l );
+
+	},
+
+
+	cross: function ( a, b ) {
+
+		this.x = a.y * b.z - a.z * b.y;
+		this.y = a.z * b.x - a.x * b.z;
+		this.z = a.x * b.y - a.y * b.x;
+
+		return this;
+
+	},
+
+	crossSelf: function ( v ) {
+
+		return this.set(
+
+			this.y * v.z - this.z * v.y,
+			this.z * v.x - this.x * v.z,
+			this.x * v.y - this.y * v.x
+
+		);
+
+	},
+
+
+	distanceTo: function ( v ) {
+
+		return Math.sqrt( this.distanceToSquared( v ) );
+
+	},
+
+	distanceToSquared: function ( v ) {
+
+		return new THREE.Vector3().sub( this, v ).lengthSq();
+
+	},
+
+
+	setPositionFromMatrix: function ( m ) {
+
+		this.x = m.n14;
+		this.y = m.n24;
+		this.z = m.n34;
+
+	},
+
+	setRotationFromMatrix: function ( m ) {
+
+		var cosY = Math.cos( this.y );
+
+		this.y = Math.asin( m.n13 );
+
+		if ( Math.abs( cosY ) > 0.00001 ) {
+
+			this.x = Math.atan2( - m.n23 / cosY, m.n33 / cosY );
+			this.z = Math.atan2( - m.n12 / cosY, m.n11 / cosY );
+
+		} else {
+
+			this.x = 0;
+			this.z = Math.atan2( m.n21, m.n22 );
+
+		}
+
+	},
+
+	isZero: function () {
+
+		return ( this.lengthSq() < 0.0001 /* almostZero */ );
+
+	}
+
+};
+/**
+ * @author supereggbert / http://www.paulbrunt.co.uk/
+ * @author philogb / http://blog.thejit.org/
+ * @author mikael emtinger / http://gomo.se/
+ * @author egraether / http://egraether.com/
+ */
+
+THREE.Vector4 = function ( x, y, z, w ) {
+
+	this.x = x || 0;
+	this.y = y || 0;
+	this.z = z || 0;
+	this.w = ( w !== undefined ) ? w : 1;
+
+};
+
+THREE.Vector4.prototype = {
+
+	constructor: THREE.Vector4,
+
+	set: function ( x, y, z, w ) {
+
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+
+		return this;
+
+	},
+
+	copy: function ( v ) {
+
+		this.x = v.x;
+		this.y = v.y;
+		this.z = v.z;
+		this.w = ( v.w !== undefined ) ? v.w : 1;
+
+	},
+
+	clone: function () {
+
+		return new THREE.Vector4( this.x, this.y, this.z, this.w );
+
+	},
+
+
+	add: function ( v1, v2 ) {
+
+		this.x = v1.x + v2.x;
+		this.y = v1.y + v2.y;
+		this.z = v1.z + v2.z;
+		this.w = v1.w + v2.w;
+
+		return this;
+
+	},
+
+	addSelf: function ( v ) {
+
+		this.x += v.x;
+		this.y += v.y;
+		this.z += v.z;
+		this.w += v.w;
+
+		return this;
+
+	},
+
+	sub: function ( v1, v2 ) {
+
+		this.x = v1.x - v2.x;
+		this.y = v1.y - v2.y;
+		this.z = v1.z - v2.z;
+		this.w = v1.w - v2.w;
+
+		return this;
+
+	},
+
+	subSelf: function ( v ) {
+
+		this.x -= v.x;
+		this.y -= v.y;
+		this.z -= v.z;
+		this.w -= v.w;
+
+		return this;
+
+	},
+
+	multiplyScalar: function ( s ) {
+
+		this.x *= s;
+		this.y *= s;
+		this.z *= s;
+		this.w *= s;
+
+		return this;
+
+	},
+
+	divideScalar: function ( s ) {
+
+		if ( s ) {
+
+			this.x /= s;
+			this.y /= s;
+			this.z /= s;
+			this.w /= s;
+
+		} else {
+
+			this.x = 0;
+			this.y = 0;
+			this.z = 0;
+			this.w = 1;
+
+		}
+
+		return this;
+
+	},
+
+
+	negate: function() {
+
+		return this.multiplyScalar( -1 );
+
+	},
+
+	dot: function ( v ) {
+
+		return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w;
+
+	},
+
+	lengthSq: function () {
+
+		return this.dot( this );
+
+	},
+
+	length: function () {
+
+		return Math.sqrt( this.lengthSq() );
+
+	},
+
+	normalize: function () {
+
+		return this.divideScalar( this.length() );
+
+	},
+
+	setLength: function ( l ) {
+
+		return this.normalize().multiplyScalar( l );
+
+	},
+
+
+	lerpSelf: function ( v, alpha ) {
+
+		this.x += ( v.x - this.x ) * alpha;
+		this.y += ( v.y - this.y ) * alpha;
+		this.z += ( v.z - this.z ) * alpha;
+		this.w += ( v.w - this.w ) * alpha;
+
+		return this;
+
+	}
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.Ray = function ( origin, direction ) {
+
+	this.origin = origin || new THREE.Vector3();
+	this.direction = direction || new THREE.Vector3();
+
+}
+
+THREE.Ray.prototype = {
+
+	constructor: THREE.Ray,
+
+	intersectScene: function ( scene ) {
+
+		return this.intersectObjects( scene.objects );
+
+	},
+
+	intersectObjects: function ( objects ) {
+
+		var i, l, object,
+		intersects = [];
+
+		for ( i = 0, l = objects.length; i < l; i ++ ) {
+
+			Array.prototype.push.apply( intersects, this.intersectObject( objects[ i ] ) );
+
+		}
+
+		intersects.sort( function ( a, b ) { return a.distance - b.distance; } );
+
+		return intersects;
+
+	},
+
+	intersectObject: function ( object ) {
+
+		if ( object instanceof THREE.Particle ) {
+
+			var distance = distanceFromIntersection( this.origin, this.direction, object.matrixWorld.getPosition() );
+
+			if ( distance == null || distance > object.scale.x ) {
+
+				return [];
+
+			}
+
+			return [ {
+
+				distance: distance,
+				point: object.position,
+				face: null,
+				object: object
+
+			} ];
+
+		} else if ( object instanceof THREE.Mesh ) {
+
+			// Checking boundingSphere
+
+			var distance = distanceFromIntersection( this.origin, this.direction, object.matrixWorld.getPosition() );
+
+			if ( distance == null || distance > object.geometry.boundingSphere.radius * Math.max( object.scale.x, Math.max( object.scale.y, object.scale.z ) ) ) {
+
+				return [];
+
+			}
+
+			// Checking faces
+
+			var f, fl, face,
+			a, b, c, d, normal,
+			vector, dot, scalar,
+			origin, direction,
+			geometry = object.geometry,
+			vertices = geometry.vertices,
+			objMatrix,
+			intersect, intersects = [],
+			intersectPoint;
+
+			for ( f = 0, fl = geometry.faces.length; f < fl; f ++ ) {
+
+				face = geometry.faces[ f ];
+
+				origin = this.origin.clone();
+				direction = this.direction.clone();
+
+				objMatrix = object.matrixWorld;
+
+				// check if face.centroid is behind the origin
+
+				vector = objMatrix.multiplyVector3( face.centroid.clone() ).subSelf( origin );
+				dot = vector.dot( direction );
+
+				if ( dot <= 0 ) continue;
+
+				//
+
+				a = objMatrix.multiplyVector3( vertices[ face.a ].position.clone() );
+				b = objMatrix.multiplyVector3( vertices[ face.b ].position.clone() );
+				c = objMatrix.multiplyVector3( vertices[ face.c ].position.clone() );
+				d = face instanceof THREE.Face4 ? objMatrix.multiplyVector3( vertices[ face.d ].position.clone() ) : null;
+
+				normal = object.matrixRotationWorld.multiplyVector3( face.normal.clone() );
+				dot = direction.dot( normal );
+
+				if ( object.doubleSided || ( object.flipSided ? dot > 0 : dot < 0 ) ) { // Math.abs( dot ) > 0.0001
+
+					scalar = normal.dot( new THREE.Vector3().sub( a, origin ) ) / dot;
+					intersectPoint = origin.addSelf( direction.multiplyScalar( scalar ) );
+
+					if ( face instanceof THREE.Face3 ) {
+
+						if ( pointInFace3( intersectPoint, a, b, c ) ) {
+
+							intersect = {
+
+								distance: this.origin.distanceTo( intersectPoint ),
+								point: intersectPoint,
+								face: face,
+								object: object
+
+							};
+
+							intersects.push( intersect );
+
+						}
+
+					} else if ( face instanceof THREE.Face4 ) {
+
+						if ( pointInFace3( intersectPoint, a, b, d ) || pointInFace3( intersectPoint, b, c, d ) ) {
+
+							intersect = {
+
+								distance: this.origin.distanceTo( intersectPoint ),
+								point: intersectPoint,
+								face: face,
+								object: object
+
+							};
+
+							intersects.push( intersect );
+
+						}
+
+					}
+
+				}
+
+			}
+
+			intersects.sort( function ( a, b ) { return a.distance - b.distance; } );
+
+			return intersects;
+
+		} else {
+
+			return [];
+
+		}
+
+		function distanceFromIntersection( origin, direction, position ) {
+
+			var vector, dot, intersect, distance;
+
+			vector = position.clone().subSelf( origin );
+			dot = vector.dot( direction );
+
+			if ( dot <= 0 ) return null; // check if position behind origin.
+
+			intersect = origin.clone().addSelf( direction.clone().multiplyScalar( dot ) );
+			distance = position.distanceTo( intersect );
+
+			return distance;
+
+		}
+
+		// http://www.blackpawn.com/texts/pointinpoly/default.html
+
+		function pointInFace3( p, a, b, c ) {
+
+			var v0 = c.clone().subSelf( a ), v1 = b.clone().subSelf( a ), v2 = p.clone().subSelf( a ),
+			dot00 = v0.dot( v0 ), dot01 = v0.dot( v1 ), dot02 = v0.dot( v2 ), dot11 = v1.dot( v1 ), dot12 = v1.dot( v2 ),
+
+			invDenom = 1 / ( dot00 * dot11 - dot01 * dot01 ),
+			u = ( dot11 * dot02 - dot01 * dot12 ) * invDenom,
+			v = ( dot00 * dot12 - dot01 * dot02 ) * invDenom;
+
+			return ( u > 0 ) && ( v > 0 ) && ( u + v < 1 );
+
+		}
+
+	}
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.Rectangle = function () {
+
+	var _left, _top, _right, _bottom,
+	_width, _height, _isEmpty = true;
+
+	function resize() {
+
+		_width = _right - _left;
+		_height = _bottom - _top;
+
+	}
+
+	this.getX = function () {
+
+		return _left;
+
+	};
+
+	this.getY = function () {
+
+		return _top;
+
+	};
+
+	this.getWidth = function () {
+
+		return _width;
+
+	};
+
+	this.getHeight = function () {
+
+		return _height;
+
+	};
+
+	this.getLeft = function() {
+
+		return _left;
+
+	};
+
+	this.getTop = function() {
+
+		return _top;
+
+	};
+
+	this.getRight = function() {
+
+		return _right;
+
+	};
+
+	this.getBottom = function() {
+
+		return _bottom;
+
+	};
+
+	this.set = function ( left, top, right, bottom ) {
+
+		_isEmpty = false;
+
+		_left = left; _top = top;
+		_right = right; _bottom = bottom;
+
+		resize();
+
+	};
+
+	this.addPoint = function ( x, y ) {
+
+		if ( _isEmpty ) {
+
+			_isEmpty = false;
+			_left = x; _top = y;
+			_right = x; _bottom = y;
+
+			resize();
+
+		} else {
+
+			_left = _left < x ? _left : x; // Math.min( _left, x );
+			_top = _top < y ? _top : y; // Math.min( _top, y );
+			_right = _right > x ? _right : x; // Math.max( _right, x );
+			_bottom = _bottom > y ? _bottom : y; // Math.max( _bottom, y );
+
+			resize();
+		}
+
+	};
+
+	this.add3Points = function ( x1, y1, x2, y2, x3, y3 ) {
+
+		if (_isEmpty) {
+
+			_isEmpty = false;
+			_left = x1 < x2 ? ( x1 < x3 ? x1 : x3 ) : ( x2 < x3 ? x2 : x3 );
+			_top = y1 < y2 ? ( y1 < y3 ? y1 : y3 ) : ( y2 < y3 ? y2 : y3 );
+			_right = x1 > x2 ? ( x1 > x3 ? x1 : x3 ) : ( x2 > x3 ? x2 : x3 );
+			_bottom = y1 > y2 ? ( y1 > y3 ? y1 : y3 ) : ( y2 > y3 ? y2 : y3 );
+
+			resize();
+
+		} else {
+
+			_left = x1 < x2 ? ( x1 < x3 ? ( x1 < _left ? x1 : _left ) : ( x3 < _left ? x3 : _left ) ) : ( x2 < x3 ? ( x2 < _left ? x2 : _left ) : ( x3 < _left ? x3 : _left ) );
+			_top = y1 < y2 ? ( y1 < y3 ? ( y1 < _top ? y1 : _top ) : ( y3 < _top ? y3 : _top ) ) : ( y2 < y3 ? ( y2 < _top ? y2 : _top ) : ( y3 < _top ? y3 : _top ) );
+			_right = x1 > x2 ? ( x1 > x3 ? ( x1 > _right ? x1 : _right ) : ( x3 > _right ? x3 : _right ) ) : ( x2 > x3 ? ( x2 > _right ? x2 : _right ) : ( x3 > _right ? x3 : _right ) );
+			_bottom = y1 > y2 ? ( y1 > y3 ? ( y1 > _bottom ? y1 : _bottom ) : ( y3 > _bottom ? y3 : _bottom ) ) : ( y2 > y3 ? ( y2 > _bottom ? y2 : _bottom ) : ( y3 > _bottom ? y3 : _bottom ) );
+
+			resize();
+
+		};
+
+	};
+
+	this.addRectangle = function ( r ) {
+
+		if ( _isEmpty ) {
+
+			_isEmpty = false;
+			_left = r.getLeft(); _top = r.getTop();
+			_right = r.getRight(); _bottom = r.getBottom();
+
+			resize();
+
+		} else {
+
+			_left = _left < r.getLeft() ? _left : r.getLeft(); // Math.min(_left, r.getLeft() );
+			_top = _top < r.getTop() ? _top : r.getTop(); // Math.min(_top, r.getTop() );
+			_right = _right > r.getRight() ? _right : r.getRight(); // Math.max(_right, r.getRight() );
+			_bottom = _bottom > r.getBottom() ? _bottom : r.getBottom(); // Math.max(_bottom, r.getBottom() );
+
+			resize();
+
+		}
+
+	};
+
+	this.inflate = function ( v ) {
+
+		_left -= v; _top -= v;
+		_right += v; _bottom += v;
+
+		resize();
+
+	};
+
+	this.minSelf = function ( r ) {
+
+		_left = _left > r.getLeft() ? _left : r.getLeft(); // Math.max( _left, r.getLeft() );
+		_top = _top > r.getTop() ? _top : r.getTop(); // Math.max( _top, r.getTop() );
+		_right = _right < r.getRight() ? _right : r.getRight(); // Math.min( _right, r.getRight() );
+		_bottom = _bottom < r.getBottom() ? _bottom : r.getBottom(); // Math.min( _bottom, r.getBottom() );
+
+		resize();
+
+	};
+
+	this.intersects = function ( r ) {
+
+		return Math.min( _right, r.getRight() ) - Math.max( _left, r.getLeft() ) >= 0 &&
+		        Math.min( _bottom, r.getBottom() ) - Math.max( _top, r.getTop() ) >= 0;
+
+	};
+
+	this.empty = function () {
+
+		_isEmpty = true;
+
+		_left = 0; _top = 0;
+		_right = 0; _bottom = 0;
+
+		resize();
+
+	};
+
+	this.isEmpty = function () {
+
+		return _isEmpty;
+
+	};
+
+};
+THREE.Matrix3 = function () {
+
+	this.m = [];
+
+};
+
+THREE.Matrix3.prototype = {
+
+	constructor: THREE.Matrix3,
+
+	transpose: function () {
+
+		var tmp, m = this.m;
+
+		tmp = m[1]; m[1] = m[3]; m[3] = tmp;
+		tmp = m[2]; m[2] = m[6]; m[6] = tmp;
+		tmp = m[5]; m[5] = m[7]; m[7] = tmp;
+
+		return this;
+
+	},
+
+	transposeIntoArray: function ( r ) {
+
+		var m = this.m;
+
+		r[ 0 ] = m[ 0 ];
+		r[ 1 ] = m[ 3 ];
+		r[ 2 ] = m[ 6 ];
+		r[ 3 ] = m[ 1 ];
+		r[ 4 ] = m[ 4 ];
+		r[ 5 ] = m[ 7 ];
+		r[ 6 ] = m[ 2 ];
+		r[ 7 ] = m[ 5 ];
+		r[ 8 ] = m[ 8 ];
+
+		return this;
+
+	}
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author supereggbert / http://www.paulbrunt.co.uk/
+ * @author philogb / http://blog.thejit.org/
+ * @author jordi_ros / http://plattsoft.com
+ * @author D1plo1d / http://github.com/D1plo1d
+ * @author alteredq / http://alteredqualia.com/
+ * @author mikael emtinger / http://gomo.se/
+ * @author timknip / http://www.floorplanner.com/
+ */
+
+THREE.Matrix4 = function ( n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 ) {
+
+	this.set(
+
+		( n11 !== undefined ) ? n11 : 1, n12 || 0, n13 || 0, n14 || 0,
+		n21 || 0, ( n22 !== undefined ) ? n22 : 1, n23 || 0, n24 || 0,
+		n31 || 0, n32 || 0, ( n33 !== undefined ) ? n33 : 1, n34 || 0,
+		n41 || 0, n42 || 0, n43 || 0, ( n44 !== undefined ) ? n44 : 1
+
+	);
+
+	this.flat = new Array( 16 );
+	this.m33 = new THREE.Matrix3();
+
+};
+
+THREE.Matrix4.prototype = {
+
+	constructor: THREE.Matrix4,
+
+	set: function ( n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 ) {
+
+		this.n11 = n11; this.n12 = n12; this.n13 = n13; this.n14 = n14;
+		this.n21 = n21; this.n22 = n22; this.n23 = n23; this.n24 = n24;
+		this.n31 = n31; this.n32 = n32; this.n33 = n33; this.n34 = n34;
+		this.n41 = n41; this.n42 = n42; this.n43 = n43; this.n44 = n44;
+
+		return this;
+
+	},
+
+	identity: function () {
+
+		this.set(
+
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+
+		);
+
+		return this;
+
+	},
+
+	copy: function ( m ) {
+
+		this.set(
+
+			m.n11, m.n12, m.n13, m.n14,
+			m.n21, m.n22, m.n23, m.n24,
+			m.n31, m.n32, m.n33, m.n34,
+			m.n41, m.n42, m.n43, m.n44
+
+		);
+
+		return this;
+
+	},
+
+	lookAt: function ( eye, center, up ) {
+
+		var x = THREE.Matrix4.__v1, y = THREE.Matrix4.__v2, z = THREE.Matrix4.__v3;
+
+		z.sub( eye, center ).normalize();
+
+		if ( z.length() === 0 ) {
+
+			z.z = 1;
+
+		}
+
+		x.cross( up, z ).normalize();
+
+		if ( x.length() === 0 ) {
+
+			z.x += 0.0001;
+			x.cross( up, z ).normalize();
+
+		}
+
+		y.cross( z, x ).normalize();
+
+
+		this.n11 = x.x; this.n12 = y.x; this.n13 = z.x;
+		this.n21 = x.y; this.n22 = y.y; this.n23 = z.y;
+		this.n31 = x.z; this.n32 = y.z; this.n33 = z.z;
+
+		return this;
+
+	},
+
+	multiplyVector3: function ( v ) {
+
+		var vx = v.x, vy = v.y, vz = v.z,
+		d = 1 / ( this.n41 * vx + this.n42 * vy + this.n43 * vz + this.n44 );
+
+		v.x = ( this.n11 * vx + this.n12 * vy + this.n13 * vz + this.n14 ) * d;
+		v.y = ( this.n21 * vx + this.n22 * vy + this.n23 * vz + this.n24 ) * d;
+		v.z = ( this.n31 * vx + this.n32 * vy + this.n33 * vz + this.n34 ) * d;
+
+		return v;
+
+	},
+
+	multiplyVector4: function ( v ) {
+
+		var vx = v.x, vy = v.y, vz = v.z, vw = v.w;
+
+		v.x = this.n11 * vx + this.n12 * vy + this.n13 * vz + this.n14 * vw;
+		v.y = this.n21 * vx + this.n22 * vy + this.n23 * vz + this.n24 * vw;
+		v.z = this.n31 * vx + this.n32 * vy + this.n33 * vz + this.n34 * vw;
+		v.w = this.n41 * vx + this.n42 * vy + this.n43 * vz + this.n44 * vw;
+
+		return v;
+
+	},
+
+	rotateAxis: function ( v ) {
+
+		var vx = v.x, vy = v.y, vz = v.z;
+
+		v.x = vx * this.n11 + vy * this.n12 + vz * this.n13;
+		v.y = vx * this.n21 + vy * this.n22 + vz * this.n23;
+		v.z = vx * this.n31 + vy * this.n32 + vz * this.n33;
+
+		v.normalize();
+
+		return v;
+
+	},
+
+	crossVector: function ( a ) {
+
+		var v = new THREE.Vector4();
+
+		v.x = this.n11 * a.x + this.n12 * a.y + this.n13 * a.z + this.n14 * a.w;
+		v.y = this.n21 * a.x + this.n22 * a.y + this.n23 * a.z + this.n24 * a.w;
+		v.z = this.n31 * a.x + this.n32 * a.y + this.n33 * a.z + this.n34 * a.w;
+
+		v.w = ( a.w ) ? this.n41 * a.x + this.n42 * a.y + this.n43 * a.z + this.n44 * a.w : 1;
+
+		return v;
+
+	},
+
+	multiply: function ( a, b ) {
+
+		var a11 = a.n11, a12 = a.n12, a13 = a.n13, a14 = a.n14,
+		a21 = a.n21, a22 = a.n22, a23 = a.n23, a24 = a.n24,
+		a31 = a.n31, a32 = a.n32, a33 = a.n33, a34 = a.n34,
+		a41 = a.n41, a42 = a.n42, a43 = a.n43, a44 = a.n44,
+
+		b11 = b.n11, b12 = b.n12, b13 = b.n13, b14 = b.n14,
+		b21 = b.n21, b22 = b.n22, b23 = b.n23, b24 = b.n24,
+		b31 = b.n31, b32 = b.n32, b33 = b.n33, b34 = b.n34,
+		b41 = b.n41, b42 = b.n42, b43 = b.n43, b44 = b.n44;
+
+		this.n11 = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
+		this.n12 = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
+		this.n13 = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
+		this.n14 = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
+
+		this.n21 = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
+		this.n22 = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
+		this.n23 = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
+		this.n24 = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
+
+		this.n31 = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
+		this.n32 = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
+		this.n33 = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
+		this.n34 = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
+
+		this.n41 = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41;
+		this.n42 = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42;
+		this.n43 = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43;
+		this.n44 = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
+
+		return this;
+
+	},
+
+	multiplyToArray: function ( a, b, r ) {
+
+		this.multiply( a, b );
+
+		r[ 0 ] = this.n11; r[ 1 ] = this.n21; r[ 2 ] = this.n31; r[ 3 ] = this.n41;
+		r[ 4 ] = this.n12; r[ 5 ] = this.n22; r[ 6 ] = this.n32; r[ 7 ] = this.n42;
+		r[ 8 ]  = this.n13; r[ 9 ]  = this.n23; r[ 10 ] = this.n33; r[ 11 ] = this.n43;
+		r[ 12 ] = this.n14; r[ 13 ] = this.n24; r[ 14 ] = this.n34; r[ 15 ] = this.n44;
+
+		return this;
+
+	},
+
+	multiplySelf: function ( m ) {
+
+		this.multiply( this, m );
+
+		return this;
+
+	},
+
+	multiplyScalar: function ( s ) {
+
+		this.n11 *= s; this.n12 *= s; this.n13 *= s; this.n14 *= s;
+		this.n21 *= s; this.n22 *= s; this.n23 *= s; this.n24 *= s;
+		this.n31 *= s; this.n32 *= s; this.n33 *= s; this.n34 *= s;
+		this.n41 *= s; this.n42 *= s; this.n43 *= s; this.n44 *= s;
+
+		return this;
+
+	},
+
+	determinant: function () {
+
+		var n11 = this.n11, n12 = this.n12, n13 = this.n13, n14 = this.n14,
+		n21 = this.n21, n22 = this.n22, n23 = this.n23, n24 = this.n24,
+		n31 = this.n31, n32 = this.n32, n33 = this.n33, n34 = this.n34,
+		n41 = this.n41, n42 = this.n42, n43 = this.n43, n44 = this.n44;
+
+		//TODO: make this more efficient
+		//( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
+		return (
+			n14 * n23 * n32 * n41-
+			n13 * n24 * n32 * n41-
+			n14 * n22 * n33 * n41+
+			n12 * n24 * n33 * n41+
+
+			n13 * n22 * n34 * n41-
+			n12 * n23 * n34 * n41-
+			n14 * n23 * n31 * n42+
+			n13 * n24 * n31 * n42+
+
+			n14 * n21 * n33 * n42-
+			n11 * n24 * n33 * n42-
+			n13 * n21 * n34 * n42+
+			n11 * n23 * n34 * n42+
+
+			n14 * n22 * n31 * n43-
+			n12 * n24 * n31 * n43-
+			n14 * n21 * n32 * n43+
+			n11 * n24 * n32 * n43+
+
+			n12 * n21 * n34 * n43-
+			n11 * n22 * n34 * n43-
+			n13 * n22 * n31 * n44+
+			n12 * n23 * n31 * n44+
+
+			n13 * n21 * n32 * n44-
+			n11 * n23 * n32 * n44-
+			n12 * n21 * n33 * n44+
+			n11 * n22 * n33 * n44
+		);
+
+	},
+
+	transpose: function () {
+
+		var tmp;
+
+		tmp = this.n21; this.n21 = this.n12; this.n12 = tmp;
+		tmp = this.n31; this.n31 = this.n13; this.n13 = tmp;
+		tmp = this.n32; this.n32 = this.n23; this.n23 = tmp;
+
+		tmp = this.n41; this.n41 = this.n14; this.n14 = tmp;
+		tmp = this.n42; this.n42 = this.n24; this.n24 = tmp;
+		tmp = this.n43; this.n43 = this.n34; this.n43 = tmp;
+
+		return this;
+
+	},
+
+	clone: function () {
+
+		var m = new THREE.Matrix4();
+
+		m.n11 = this.n11; m.n12 = this.n12; m.n13 = this.n13; m.n14 = this.n14;
+		m.n21 = this.n21; m.n22 = this.n22; m.n23 = this.n23; m.n24 = this.n24;
+		m.n31 = this.n31; m.n32 = this.n32; m.n33 = this.n33; m.n34 = this.n34;
+		m.n41 = this.n41; m.n42 = this.n42; m.n43 = this.n43; m.n44 = this.n44;
+
+		return m;
+
+	},
+
+	flatten: function () {
+
+		this.flat[ 0 ] = this.n11; this.flat[ 1 ] = this.n21; this.flat[ 2 ] = this.n31; this.flat[ 3 ] = this.n41;
+		this.flat[ 4 ] = this.n12; this.flat[ 5 ] = this.n22; this.flat[ 6 ] = this.n32; this.flat[ 7 ] = this.n42;
+		this.flat[ 8 ]  = this.n13; this.flat[ 9 ]  = this.n23; this.flat[ 10 ] = this.n33; this.flat[ 11 ] = this.n43;
+		this.flat[ 12 ] = this.n14; this.flat[ 13 ] = this.n24; this.flat[ 14 ] = this.n34; this.flat[ 15 ] = this.n44;
+
+		return this.flat;
+
+	},
+
+	flattenToArray: function ( flat ) {
+
+		flat[ 0 ] = this.n11; flat[ 1 ] = this.n21; flat[ 2 ] = this.n31; flat[ 3 ] = this.n41;
+		flat[ 4 ] = this.n12; flat[ 5 ] = this.n22; flat[ 6 ] = this.n32; flat[ 7 ] = this.n42;
+		flat[ 8 ]  = this.n13; flat[ 9 ]  = this.n23; flat[ 10 ] = this.n33; flat[ 11 ] = this.n43;
+		flat[ 12 ] = this.n14; flat[ 13 ] = this.n24; flat[ 14 ] = this.n34; flat[ 15 ] = this.n44;
+
+		return flat;
+
+	},
+
+	flattenToArrayOffset: function( flat, offset ) {
+
+		flat[ offset ] = this.n11;
+		flat[ offset + 1 ] = this.n21;
+		flat[ offset + 2 ] = this.n31;
+		flat[ offset + 3 ] = this.n41;
+
+		flat[ offset + 4 ] = this.n12;
+		flat[ offset + 5 ] = this.n22;
+		flat[ offset + 6 ] = this.n32;
+		flat[ offset + 7 ] = this.n42;
+
+		flat[ offset + 8 ]  = this.n13;
+		flat[ offset + 9 ]  = this.n23;
+		flat[ offset + 10 ] = this.n33;
+		flat[ offset + 11 ] = this.n43;
+
+		flat[ offset + 12 ] = this.n14;
+		flat[ offset + 13 ] = this.n24;
+		flat[ offset + 14 ] = this.n34;
+		flat[ offset + 15 ] = this.n44;
+
+		return flat;
+
+	},
+
+	setTranslation: function( x, y, z ) {
+
+		this.set(
+
+			1, 0, 0, x,
+			0, 1, 0, y,
+			0, 0, 1, z,
+			0, 0, 0, 1
+
+		);
+
+		return this;
+
+	},
+
+	setScale: function ( x, y, z ) {
+
+		this.set(
+
+			x, 0, 0, 0,
+			0, y, 0, 0,
+			0, 0, z, 0,
+			0, 0, 0, 1
+
+		);
+
+		return this;
+
+	},
+
+	setRotationX: function ( theta ) {
+
+		var c = Math.cos( theta ), s = Math.sin( theta );
+
+		this.set(
+
+			1, 0,  0, 0,
+			0, c, -s, 0,
+			0, s,  c, 0,
+			0, 0,  0, 1
+
+		);
+
+		return this;
+
+	},
+
+	setRotationY: function( theta ) {
+
+		var c = Math.cos( theta ), s = Math.sin( theta );
+
+		this.set(
+
+			 c, 0, s, 0,
+			 0, 1, 0, 0,
+			-s, 0, c, 0,
+			 0, 0, 0, 1
+
+		);
+
+		return this;
+
+	},
+
+	setRotationZ: function( theta ) {
+
+		var c = Math.cos( theta ), s = Math.sin( theta );
+
+		this.set(
+
+			c, -s, 0, 0,
+			s,  c, 0, 0,
+			0,  0, 1, 0,
+			0,  0, 0, 1
+
+		);
+
+		return this;
+
+	},
+
+	setRotationAxis: function( axis, angle ) {
+
+		// Based on http://www.gamedev.net/reference/articles/article1199.asp
+
+		var c = Math.cos( angle ),
+		s = Math.sin( angle ),
+		t = 1 - c,
+		x = axis.x, y = axis.y, z = axis.z,
+		tx = t * x, ty = t * y;
+
+		this.set(
+
+		 	tx * x + c, tx * y - s * z, tx * z + s * y, 0,
+			tx * y + s * z, ty * y + c, ty * z - s * x, 0,
+			tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
+			0, 0, 0, 1
+
+		);
+
+		 return this;
+
+	},
+
+	setPosition: function( v ) {
+
+		this.n14 = v.x;
+		this.n24 = v.y;
+		this.n34 = v.z;
+
+		return this;
+
+	},
+
+	getPosition: function() {
+
+		if ( ! this.position ) {
+
+			this.position = new THREE.Vector3();
+
+		}
+
+		this.position.set( this.n14, this.n24, this.n34 );
+
+		return this.position;
+
+	},
+
+	getColumnX: function() {
+
+		if ( ! this.columnX ) {
+
+			this.columnX = new THREE.Vector3();
+
+		}
+
+		this.columnX.set( this.n11, this.n21, this.n31 );
+
+		return this.columnX;
+	},
+
+	getColumnY: function() {
+
+		if ( ! this.columnY ) {
+
+			this.columnY = new THREE.Vector3();
+
+		}
+
+		this.columnY.set( this.n12, this.n22, this.n32 );
+
+		return this.columnY;
+
+	},
+
+	getColumnZ: function() {
+
+		if ( ! this.columnZ ) {
+
+			this.columnZ = new THREE.Vector3();
+
+		}
+
+		this.columnZ.set( this.n13, this.n23, this.n33 );
+
+		return this.columnZ;
+
+	},
+
+	setRotationFromEuler: function( v, order ) {
+
+		var x = v.x, y = v.y, z = v.z,
+		a = Math.cos( x ), b = Math.sin( x ),
+		c = Math.cos( y ), d = Math.sin( y ),
+		e = Math.cos( z ), f = Math.sin( z );
+
+		switch ( order ) {
+
+			case 'YXZ':
+
+				var ce = c * e, cf = c * f, de = d * e, df = d * f;
+
+				this.n11 = ce + df * b;
+				this.n12 = de * b - cf;
+				this.n13 = a * d;
+
+				this.n21 = a * f;
+				this.n22 = a * e;
+				this.n23 = - b;
+
+				this.n31 = cf * b - de;
+				this.n32 = df + ce * b;
+				this.n33 = a * c;
+				break;
+
+			case 'ZXY':
+
+				var ce = c * e, cf = c * f, de = d * e, df = d * f;
+
+				this.n11 = ce - df * b;
+				this.n12 = - a * f;
+				this.n13 = de + cf * b;
+
+				this.n21 = cf + de * b;
+				this.n22 = a * e;
+				this.n23 = df - ce * b;
+
+				this.n31 = - a * d;
+				this.n32 = b;
+				this.n33 = a * c;
+				break;
+
+			case 'ZYX':
+
+				var ae = a * e, af = a * f, be = b * e, bf = b * f;
+
+				this.n11 = c * e;
+				this.n12 = be * d - af;
+				this.n13 = ae * d + bf;
+
+				this.n21 = c * f;
+				this.n22 = bf * d + ae;
+				this.n23 = af * d - be;
+
+				this.n31 = - d;
+				this.n32 = b * c;
+				this.n33 = a * c;
+				break;
+
+			case 'YZX':
+
+				var ac = a * c, ad = a * d, bc = b * c, bd = b * d;
+
+				this.n11 = c * e;
+				this.n12 = bd - ac * f;
+				this.n13 = bc * f + ad;
+
+				this.n21 = f;
+				this.n22 = a * e;
+				this.n23 = - b * e;
+
+				this.n31 = - d * e;
+				this.n32 = ad * f + bc;
+				this.n33 = ac - bd * f;
+				break;
+
+			case 'XZY':
+
+				var ac = a * c, ad = a * d, bc = b * c, bd = b * d;
+
+				this.n11 = c * e;
+				this.n12 = - f;
+				this.n13 = d * e;
+
+				this.n21 = ac * f + bd;
+				this.n22 = a * e;
+				this.n23 = ad * f - bc;
+
+				this.n31 = bc * f - ad;
+				this.n32 = b * e;
+				this.n33 = bd * f + ac;
+				break;
+
+			default: // 'XYZ'
+
+				var ae = a * e, af = a * f, be = b * e, bf = b * f;
+
+				this.n11 = c * e;
+				this.n12 = - c * f;
+				this.n13 = d;
+
+				this.n21 = af + be * d;
+				this.n22 = ae - bf * d;
+				this.n23 = - b * c;
+
+				this.n31 = bf - ae * d;
+				this.n32 = be + af * d;
+				this.n33 = a * c;
+				break;
+
+		}
+
+		return this;
+
+	},
+
+
+	setRotationFromQuaternion: function( q ) {
+
+		var x = q.x, y = q.y, z = q.z, w = q.w,
+		x2 = x + x, y2 = y + y, z2 = z + z,
+		xx = x * x2, xy = x * y2, xz = x * z2,
+		yy = y * y2, yz = y * z2, zz = z * z2,
+		wx = w * x2, wy = w * y2, wz = w * z2;
+
+		this.n11 = 1 - ( yy + zz );
+		this.n12 = xy - wz;
+		this.n13 = xz + wy;
+
+		this.n21 = xy + wz;
+		this.n22 = 1 - ( xx + zz );
+		this.n23 = yz - wx;
+
+		this.n31 = xz - wy;
+		this.n32 = yz + wx;
+		this.n33 = 1 - ( xx + yy );
+
+		return this;
+
+	},
+
+	scale: function ( v ) {
+
+		var x = v.x, y = v.y, z = v.z;
+
+		this.n11 *= x; this.n12 *= y; this.n13 *= z;
+		this.n21 *= x; this.n22 *= y; this.n23 *= z;
+		this.n31 *= x; this.n32 *= y; this.n33 *= z;
+		this.n41 *= x; this.n42 *= y; this.n43 *= z;
+
+		return this;
+
+	},
+
+	compose: function ( translation, rotation, scale ) {
+
+		var mRotation = THREE.Matrix4.__m1;
+		var mScale = THREE.Matrix4.__m2;
+
+		mRotation.identity();
+		mRotation.setRotationFromQuaternion( rotation );
+
+		mScale.setScale( scale.x, scale.y, scale.z );
+
+		this.multiply( mRotation, mScale );
+
+		this.n14 = translation.x;
+		this.n24 = translation.y;
+		this.n34 = translation.z;
+
+		return this;
+
+	},
+
+	decompose: function ( translation, rotation, scale ) {
+
+		// grab the axis vectors
+
+		var x = THREE.Matrix4.__v1;
+		var y = THREE.Matrix4.__v2;
+		var z = THREE.Matrix4.__v3;
+
+		x.set( this.n11, this.n21, this.n31 );
+		y.set( this.n12, this.n22, this.n32 );
+		z.set( this.n13, this.n23, this.n33 );
+
+		translation = ( translation instanceof THREE.Vector3 ) ? translation : new THREE.Vector3();
+		rotation = ( rotation instanceof THREE.Quaternion ) ? rotation : new THREE.Quaternion();
+		scale = ( scale instanceof THREE.Vector3 ) ? scale : new THREE.Vector3();
+
+		scale.x = x.length();
+		scale.y = y.length();
+		scale.z = z.length();
+
+		translation.x = this.n14;
+		translation.y = this.n24;
+		translation.z = this.n34;
+
+		// scale the rotation part
+
+		var matrix = THREE.Matrix4.__m1;
+
+		matrix.copy( this );
+
+		matrix.n11 /= scale.x;
+		matrix.n21 /= scale.x;
+		matrix.n31 /= scale.x;
+
+		matrix.n12 /= scale.y;
+		matrix.n22 /= scale.y;
+		matrix.n32 /= scale.y;
+
+		matrix.n13 /= scale.z;
+		matrix.n23 /= scale.z;
+		matrix.n33 /= scale.z;
+
+		rotation.setFromRotationMatrix( matrix );
+
+		return [ translation, rotation, scale ];
+
+	},
+
+	extractPosition: function ( m ) {
+
+		this.n14 = m.n14;
+		this.n24 = m.n24;
+		this.n34 = m.n34;
+
+	},
+
+	extractRotation: function ( m, s ) {
+
+		var invScaleX = 1 / s.x, invScaleY = 1 / s.y, invScaleZ = 1 / s.z;
+
+		this.n11 = m.n11 * invScaleX;
+		this.n21 = m.n21 * invScaleX;
+		this.n31 = m.n31 * invScaleX;
+
+		this.n12 = m.n12 * invScaleY;
+		this.n22 = m.n22 * invScaleY;
+		this.n32 = m.n32 * invScaleY;
+
+		this.n13 = m.n13 * invScaleZ;
+		this.n23 = m.n23 * invScaleZ;
+		this.n33 = m.n33 * invScaleZ;
+
+	}
+
+};
+
+THREE.Matrix4.makeInvert = function ( m1, m2 ) {
+
+	// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+
+	var n11 = m1.n11, n12 = m1.n12, n13 = m1.n13, n14 = m1.n14,
+	n21 = m1.n21, n22 = m1.n22, n23 = m1.n23, n24 = m1.n24,
+	n31 = m1.n31, n32 = m1.n32, n33 = m1.n33, n34 = m1.n34,
+	n41 = m1.n41, n42 = m1.n42, n43 = m1.n43, n44 = m1.n44;
+
+	if ( m2 === undefined ) m2 = new THREE.Matrix4();
+
+	m2.n11 = n23*n34*n42 - n24*n33*n42 + n24*n32*n43 - n22*n34*n43 - n23*n32*n44 + n22*n33*n44;
+	m2.n12 = n14*n33*n42 - n13*n34*n42 - n14*n32*n43 + n12*n34*n43 + n13*n32*n44 - n12*n33*n44;
+	m2.n13 = n13*n24*n42 - n14*n23*n42 + n14*n22*n43 - n12*n24*n43 - n13*n22*n44 + n12*n23*n44;
+	m2.n14 = n14*n23*n32 - n13*n24*n32 - n14*n22*n33 + n12*n24*n33 + n13*n22*n34 - n12*n23*n34;
+	m2.n21 = n24*n33*n41 - n23*n34*n41 - n24*n31*n43 + n21*n34*n43 + n23*n31*n44 - n21*n33*n44;
+	m2.n22 = n13*n34*n41 - n14*n33*n41 + n14*n31*n43 - n11*n34*n43 - n13*n31*n44 + n11*n33*n44;
+	m2.n23 = n14*n23*n41 - n13*n24*n41 - n14*n21*n43 + n11*n24*n43 + n13*n21*n44 - n11*n23*n44;
+	m2.n24 = n13*n24*n31 - n14*n23*n31 + n14*n21*n33 - n11*n24*n33 - n13*n21*n34 + n11*n23*n34;
+	m2.n31 = n22*n34*n41 - n24*n32*n41 + n24*n31*n42 - n21*n34*n42 - n22*n31*n44 + n21*n32*n44;
+	m2.n32 = n14*n32*n41 - n12*n34*n41 - n14*n31*n42 + n11*n34*n42 + n12*n31*n44 - n11*n32*n44;
+	m2.n33 = n13*n24*n41 - n14*n22*n41 + n14*n21*n42 - n11*n24*n42 - n12*n21*n44 + n11*n22*n44;
+	m2.n34 = n14*n22*n31 - n12*n24*n31 - n14*n21*n32 + n11*n24*n32 + n12*n21*n34 - n11*n22*n34;
+	m2.n41 = n23*n32*n41 - n22*n33*n41 - n23*n31*n42 + n21*n33*n42 + n22*n31*n43 - n21*n32*n43;
+	m2.n42 = n12*n33*n41 - n13*n32*n41 + n13*n31*n42 - n11*n33*n42 - n12*n31*n43 + n11*n32*n43;
+	m2.n43 = n13*n22*n41 - n12*n23*n41 - n13*n21*n42 + n11*n23*n42 + n12*n21*n43 - n11*n22*n43;
+	m2.n44 = n12*n23*n31 - n13*n22*n31 + n13*n21*n32 - n11*n23*n32 - n12*n21*n33 + n11*n22*n33;
+	m2.multiplyScalar( 1 / m1.determinant() );
+
+	return m2;
+
+};
+
+THREE.Matrix4.makeInvert3x3 = function ( m1 ) {
+
+	// input:  THREE.Matrix4, output: THREE.Matrix3
+	// ( based on http://code.google.com/p/webgl-mjs/ )
+
+	var m33 = m1.m33, m33m = m33.m,
+	a11 =   m1.n33 * m1.n22 - m1.n32 * m1.n23,
+	a21 = - m1.n33 * m1.n21 + m1.n31 * m1.n23,
+	a31 =   m1.n32 * m1.n21 - m1.n31 * m1.n22,
+	a12 = - m1.n33 * m1.n12 + m1.n32 * m1.n13,
+	a22 =   m1.n33 * m1.n11 - m1.n31 * m1.n13,
+	a32 = - m1.n32 * m1.n11 + m1.n31 * m1.n12,
+	a13 =   m1.n23 * m1.n12 - m1.n22 * m1.n13,
+	a23 = - m1.n23 * m1.n11 + m1.n21 * m1.n13,
+	a33 =   m1.n22 * m1.n11 - m1.n21 * m1.n12,
+
+	det = m1.n11 * a11 + m1.n21 * a12 + m1.n31 * a13,
+
+	idet;
+
+	// no inverse
+	if ( det == 0 ) {
+
+		console.error( 'THREE.Matrix4.makeInvert3x3: Matrix not invertible.' );
+
+	}
+
+	idet = 1.0 / det;
+
+	m33m[ 0 ] = idet * a11; m33m[ 1 ] = idet * a21; m33m[ 2 ] = idet * a31;
+	m33m[ 3 ] = idet * a12; m33m[ 4 ] = idet * a22; m33m[ 5 ] = idet * a32;
+	m33m[ 6 ] = idet * a13; m33m[ 7 ] = idet * a23; m33m[ 8 ] = idet * a33;
+
+	return m33;
+
+}
+
+THREE.Matrix4.makeFrustum = function ( left, right, bottom, top, near, far ) {
+
+	var m, x, y, a, b, c, d;
+
+	m = new THREE.Matrix4();
+
+	x = 2 * near / ( right - left );
+	y = 2 * near / ( top - bottom );
+
+	a = ( right + left ) / ( right - left );
+	b = ( top + bottom ) / ( top - bottom );
+	c = - ( far + near ) / ( far - near );
+	d = - 2 * far * near / ( far - near );
+
+	m.n11 = x;  m.n12 = 0;  m.n13 = a;   m.n14 = 0;
+	m.n21 = 0;  m.n22 = y;  m.n23 = b;   m.n24 = 0;
+	m.n31 = 0;  m.n32 = 0;  m.n33 = c;   m.n34 = d;
+	m.n41 = 0;  m.n42 = 0;  m.n43 = - 1; m.n44 = 0;
+
+	return m;
+
+};
+
+THREE.Matrix4.makePerspective = function ( fov, aspect, near, far ) {
+
+	var ymax, ymin, xmin, xmax;
+
+	ymax = near * Math.tan( fov * Math.PI / 360 );
+	ymin = - ymax;
+	xmin = ymin * aspect;
+	xmax = ymax * aspect;
+
+	return THREE.Matrix4.makeFrustum( xmin, xmax, ymin, ymax, near, far );
+
+};
+
+THREE.Matrix4.makeOrtho = function ( left, right, top, bottom, near, far ) {
+
+	var m, x, y, z, w, h, p;
+
+	m = new THREE.Matrix4();
+
+	w = right - left;
+	h = top - bottom;
+	p = far - near;
+
+	x = ( right + left ) / w;
+	y = ( top + bottom ) / h;
+	z = ( far + near ) / p;
+
+	m.n11 = 2 / w; m.n12 = 0;     m.n13 = 0;      m.n14 = -x;
+	m.n21 = 0;     m.n22 = 2 / h; m.n23 = 0;      m.n24 = -y;
+	m.n31 = 0;     m.n32 = 0;     m.n33 = -2 / p; m.n34 = -z;
+	m.n41 = 0;     m.n42 = 0;     m.n43 = 0;      m.n44 = 1;
+
+	return m;
+
+};
+
+THREE.Matrix4.__v1 = new THREE.Vector3();
+THREE.Matrix4.__v2 = new THREE.Vector3();
+THREE.Matrix4.__v3 = new THREE.Vector3();
+
+THREE.Matrix4.__m1 = new THREE.Matrix4();
+THREE.Matrix4.__m2 = new THREE.Matrix4();
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author mikael emtinger / http://gomo.se/
+ * @author alteredq / http://alteredqualia.com/
+ */
+
+THREE.Object3D = function() {
+
+	this.name = '';
+
+	this.id = THREE.Object3DCount ++;
+
+	this.parent = undefined;
+	this.children = [];
+
+	this.up = new THREE.Vector3( 0, 1, 0 );
+
+	this.position = new THREE.Vector3();
+	this.rotation = new THREE.Vector3();
+	this.eulerOrder = 'XYZ';
+	this.scale = new THREE.Vector3( 1, 1, 1 );
+
+	this.dynamic = false; // when true it retains arrays so they can be updated with __dirty*
+
+	this.doubleSided = false;
+	this.flipSided = false;
+
+	this.renderDepth = null;
+
+	this.rotationAutoUpdate = true;
+
+	this.matrix = new THREE.Matrix4();
+	this.matrixWorld = new THREE.Matrix4();
+	this.matrixRotationWorld = new THREE.Matrix4();
+
+	this.matrixAutoUpdate = true;
+	this.matrixWorldNeedsUpdate = true;
+
+	this.quaternion = new THREE.Quaternion();
+	this.useQuaternion = false;
+
+	this.boundRadius = 0.0;
+	this.boundRadiusScale = 1.0;
+
+	this.visible = true;
+
+	this.castShadow = false;
+	this.receiveShadow = false;
+
+	this.frustumCulled = true;
+
+	this._vector = new THREE.Vector3();
+
+};
+
+
+THREE.Object3D.prototype = {
+
+	constructor: THREE.Object3D,
+
+	translate: function ( distance, axis ) {
+
+		this.matrix.rotateAxis( axis );
+		this.position.addSelf( axis.multiplyScalar( distance ) );
+
+	},
+
+	translateX: function ( distance ) {
+
+		this.translate( distance, this._vector.set( 1, 0, 0 ) );
+
+	},
+
+	translateY: function ( distance ) {
+
+		this.translate( distance, this._vector.set( 0, 1, 0 ) );
+
+	},
+
+	translateZ: function ( distance ) {
+
+		this.translate( distance, this._vector.set( 0, 0, 1 ) );
+
+	},
+
+	lookAt: function ( vector ) {
+
+		// TODO: Add hierarchy support.
+
+		this.matrix.lookAt( vector, this.position, this.up );
+
+		if ( this.rotationAutoUpdate ) {
+
+			this.rotation.setRotationFromMatrix( this.matrix );
+
+		}
+
+	},
+
+	add: function ( object ) {
+
+		if ( this.children.indexOf( object ) === - 1 ) {
+
+			if( object.parent !== undefined ) {
+
+				object.parent.removeChild( object );
+
+			}
+
+			object.parent = this;
+			this.children.push( object );
+
+			// add to scene
+
+			var scene = this;
+
+			while ( scene.parent !== undefined ) {
+
+				scene = scene.parent;
+
+			}
+
+			if ( scene !== undefined && scene instanceof THREE.Scene )  {
+
+				scene.addChildRecurse( object );
+
+			}
+
+		}
+
+	},
+
+	remove: function ( object ) {
+
+		var scene = this;
+
+		var childIndex = this.children.indexOf( object );
+
+		if ( childIndex !== - 1 ) {
+
+			object.parent = undefined;
+			this.children.splice( childIndex, 1 );
+
+			// remove from scene
+
+			while ( scene.parent !== undefined ) {
+
+				scene = scene.parent;
+
+			}
+
+			if ( scene !== undefined && scene instanceof THREE.Scene ) {
+
+				scene.removeChildRecurse( object );
+
+			}
+
+		}
+
+	},
+
+	getChildByName: function ( name, doRecurse ) {
+
+		var c, cl, child, recurseResult;
+
+		for ( c = 0, cl = this.children.length; c < cl; c ++ ) {
+
+			child = this.children[ c ];
+
+			if ( child.name === name ) {
+
+				return child;
+
+			}
+
+			if ( doRecurse ) {
+
+				recurseResult = child.getChildByName( name, doRecurse );
+
+				if ( recurseResult !== undefined ) {
+
+					return recurseResult;
+
+				}
+
+			}
+
+		}
+
+		return undefined;
+
+	},
+
+	updateMatrix: function () {
+
+		this.matrix.setPosition( this.position );
+
+		if ( this.useQuaternion )  {
+
+			this.matrix.setRotationFromQuaternion( this.quaternion );
+
+		} else {
+
+			this.matrix.setRotationFromEuler( this.rotation, this.eulerOrder );
+
+		}
+
+		if ( this.scale.x !== 1 || this.scale.y !== 1 || this.scale.z !== 1 ) {
+
+			this.matrix.scale( this.scale );
+			this.boundRadiusScale = Math.max( this.scale.x, Math.max( this.scale.y, this.scale.z ) );
+
+		}
+
+		this.matrixWorldNeedsUpdate = true;
+
+	},
+
+	update: function ( parentMatrixWorld, forceUpdate, camera ) {
+
+		this.matrixAutoUpdate && this.updateMatrix();
+
+		// update matrixWorld
+
+		if ( this.matrixWorldNeedsUpdate || forceUpdate ) {
+
+			if ( parentMatrixWorld ) {
+
+				this.matrixWorld.multiply( parentMatrixWorld, this.matrix );
+
+			} else {
+
+				this.matrixWorld.copy( this.matrix );
+
+			}
+
+			this.matrixRotationWorld.extractRotation( this.matrixWorld, this.scale );
+
+			this.matrixWorldNeedsUpdate = false;
+
+			forceUpdate = true;
+
+		}
+
+		// update children
+
+		for ( var i = 0, l = this.children.length; i < l; i ++ ) {
+
+			this.children[ i ].update( this.matrixWorld, forceUpdate, camera );
+
+		}
+
+	},
+
+	// DEPRECATED
+
+	addChild: function ( child ) {
+
+		console.warn( 'DEPRECATED: Object3D.addChild() is now Object3D.add().' );
+		this.add( child );
+
+	},
+
+	removeChild: function ( child ) {
+
+		console.warn( 'DEPRECATED: Object3D.removeChild() is now Object3D.remove().' );
+		this.remove( child );
+
+	}
+
+};
+
+THREE.Object3DCount = 0;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author supereggbert / http://www.paulbrunt.co.uk/
+ * @author julianwa / https://github.com/julianwa
+ */
+
+THREE.Projector = function() {
+
+	var _object, _objectCount, _objectPool = [],
+	_vertex, _vertexCount, _vertexPool = [],
+	_face, _face3Count, _face3Pool = [], _face4Count, _face4Pool = [],
+	_line, _lineCount, _linePool = [],
+	_particle, _particleCount, _particlePool = [],
+
+	_objectList = [], _renderList = [],
+
+	_vector3 = new THREE.Vector4(),
+	_vector4 = new THREE.Vector4(),
+	_projScreenMatrix = new THREE.Matrix4(),
+	_projScreenObjectMatrix = new THREE.Matrix4(),
+
+	_frustum = [
+		new THREE.Vector4(),
+		new THREE.Vector4(),
+		new THREE.Vector4(),
+		new THREE.Vector4(),
+		new THREE.Vector4(),
+		new THREE.Vector4()
+	 ],
+
+	_clippedVertex1PositionScreen = new THREE.Vector4(),
+	_clippedVertex2PositionScreen = new THREE.Vector4(),
+
+	_face3VertexNormals;
+
+
+	this.projectVector = function ( vector, camera ) {
+
+		_projScreenMatrix.multiply( camera.projectionMatrix, camera.matrixWorldInverse );
+		_projScreenMatrix.multiplyVector3( vector );
+
+		return vector;
+		
+	};
+
+	this.unprojectVector = function ( vector, camera ) {
+
+		_projScreenMatrix.multiply( camera.matrixWorld, THREE.Matrix4.makeInvert( camera.projectionMatrix ) );
+		_projScreenMatrix.multiplyVector3( vector );
+
+		return vector;
+		
+	};
+
+	/**
+	 * Translates a 2D point from NDC to a THREE.Ray
+	 * that can be used for picking.
+	 * @vector - THREE.Vector3 that represents 2D point
+	 * @camera - THREE.Camera
+	 */
+	this.pickingRay = function ( vector, camera ) {
+
+		var end, ray, t;
+
+		// set two vectors with opposing z values
+		vector.z = -1.0;
+		end = new THREE.Vector3( vector.x, vector.y, 1.0 );
+
+		this.unprojectVector( vector, camera );
+		this.unprojectVector( end, camera );
+
+		// find direction from vector to end
+		end.subSelf( vector ).normalize();
+
+		return new THREE.Ray( vector, end );
+		
+	};
+
+	this.projectObjects = function ( scene, camera, sort ) {
+
+		var o, ol, objects, object, matrix;
+
+		_objectList.length = 0;
+		_objectCount = 0;
+
+		objects = scene.objects;
+
+		for ( o = 0, ol = objects.length; o < ol; o ++ ) {
+
+			object = objects[ o ];
+
+			if ( !object.visible || ( object instanceof THREE.Mesh && ( object.frustumCulled && !isInFrustum( object ) ) ) ) continue;
+
+			_object = getNextObjectInPool();
+
+			_vector3.copy( object.position );
+			_projScreenMatrix.multiplyVector3( _vector3 );
+
+			_object.object = object;
+			_object.z = _vector3.z;
+
+			_objectList.push( _object );
+
+		}
+
+		sort && _objectList.sort( painterSort );
+
+		return _objectList;
+
+	};
+
+	// TODO: Rename to projectElements?
+
+	this.projectScene = function ( scene, camera, sort ) {
+
+		var near = camera.near, far = camera.far,
+		o, ol, v, vl, f, fl, n, nl, c, cl, u, ul, objects, object,
+		objectMatrix, objectMatrixRotation, objectMaterials, objectOverdraw,
+		geometry, vertices, vertex, vertexPositionScreen,
+		faces, face, faceVertexNormals, normal, faceVertexUvs, uvs,
+		v1, v2, v3, v4;
+
+		_renderList.length = 0;
+
+		_face3Count = 0;
+		_face4Count = 0;
+		_lineCount = 0;
+		_particleCount = 0;
+
+		camera.matrixAutoUpdate && camera.update( undefined, true );
+
+		scene.update( undefined, false, camera );
+
+		_projScreenMatrix.multiply( camera.projectionMatrix, camera.matrixWorldInverse );
+		computeFrustum( _projScreenMatrix );
+
+		objects = this.projectObjects( scene, camera, true );
+
+		for ( o = 0, ol = objects.length; o < ol; o++ ) {
+
+			object = objects[ o ].object;
+
+			if ( !object.visible ) continue;
+
+			objectMatrix = object.matrixWorld;
+			objectMatrixRotation = object.matrixRotationWorld;
+
+			objectMaterials = object.materials;
+			objectOverdraw = object.overdraw;
+
+			_vertexCount = 0;
+
+			if ( object instanceof THREE.Mesh ) {
+
+				geometry = object.geometry;
+				vertices = geometry.vertices;
+				faces = geometry.faces;
+				faceVertexUvs = geometry.faceVertexUvs;
+
+				for ( v = 0, vl = vertices.length; v < vl; v ++ ) {
+
+					_vertex = getNextVertexInPool();
+					_vertex.positionWorld.copy( vertices[ v ].position );
+
+					objectMatrix.multiplyVector3( _vertex.positionWorld );
+
+					_vertex.positionScreen.copy( _vertex.positionWorld );
+					_projScreenMatrix.multiplyVector4( _vertex.positionScreen );
+
+					_vertex.positionScreen.x /= _vertex.positionScreen.w;
+					_vertex.positionScreen.y /= _vertex.positionScreen.w;
+
+					_vertex.visible = _vertex.positionScreen.z > near && _vertex.positionScreen.z < far;
+
+				}
+
+				for ( f = 0, fl = faces.length; f < fl; f ++ ) {
+
+					face = faces[ f ];
+
+					if ( face instanceof THREE.Face3 ) {
+
+						v1 = _vertexPool[ face.a ];
+						v2 = _vertexPool[ face.b ];
+						v3 = _vertexPool[ face.c ];
+
+						if ( v1.visible && v2.visible && v3.visible &&
+							( object.doubleSided || ( object.flipSided !=
+							( v3.positionScreen.x - v1.positionScreen.x ) * ( v2.positionScreen.y - v1.positionScreen.y ) -
+							( v3.positionScreen.y - v1.positionScreen.y ) * ( v2.positionScreen.x - v1.positionScreen.x ) < 0 ) ) ) {
+
+							_face = getNextFace3InPool();
+
+							_face.v1.copy( v1 );
+							_face.v2.copy( v2 );
+							_face.v3.copy( v3 );
+
+						} else {
+
+							continue;
+
+						}
+
+					} else if ( face instanceof THREE.Face4 ) {
+
+						v1 = _vertexPool[ face.a ];
+						v2 = _vertexPool[ face.b ];
+						v3 = _vertexPool[ face.c ];
+						v4 = _vertexPool[ face.d ];
+
+						if ( v1.visible && v2.visible && v3.visible && v4.visible &&
+							( object.doubleSided || ( object.flipSided !=
+							( ( v4.positionScreen.x - v1.positionScreen.x ) * ( v2.positionScreen.y - v1.positionScreen.y ) -
+							( v4.positionScreen.y - v1.positionScreen.y ) * ( v2.positionScreen.x - v1.positionScreen.x ) < 0 ||
+							( v2.positionScreen.x - v3.positionScreen.x ) * ( v4.positionScreen.y - v3.positionScreen.y ) -
+							( v2.positionScreen.y - v3.positionScreen.y ) * ( v4.positionScreen.x - v3.positionScreen.x ) < 0 ) ) ) ) {
+
+							_face = getNextFace4InPool();
+
+							_face.v1.copy( v1 );
+							_face.v2.copy( v2 );
+							_face.v3.copy( v3 );
+							_face.v4.copy( v4 );
+
+						} else {
+
+							continue;
+
+						}
+
+					}
+
+					_face.normalWorld.copy( face.normal );
+					objectMatrixRotation.multiplyVector3( _face.normalWorld );
+
+					_face.centroidWorld.copy( face.centroid );
+					objectMatrix.multiplyVector3( _face.centroidWorld );
+
+					_face.centroidScreen.copy( _face.centroidWorld );
+					_projScreenMatrix.multiplyVector3( _face.centroidScreen );
+
+					faceVertexNormals = face.vertexNormals;
+
+					for ( n = 0, nl = faceVertexNormals.length; n < nl; n ++ ) {
+
+						normal = _face.vertexNormalsWorld[ n ];
+						normal.copy( faceVertexNormals[ n ] );
+						objectMatrixRotation.multiplyVector3( normal );
+
+					}
+
+					for ( c = 0, cl = faceVertexUvs.length; c < cl; c ++ ) {
+
+						uvs = faceVertexUvs[ c ][ f ];
+
+						if ( !uvs ) continue;
+
+						for ( u = 0, ul = uvs.length; u < ul; u ++ ) {
+
+							_face.uvs[ c ][ u ] = uvs[ u ];
+
+						}
+
+					}
+
+					_face.meshMaterials = objectMaterials;
+					_face.faceMaterials = face.materials;
+					_face.overdraw = objectOverdraw;
+
+					_face.z = _face.centroidScreen.z;
+
+					_renderList.push( _face );
+
+				}
+
+			} else if ( object instanceof THREE.Line ) {
+
+				_projScreenObjectMatrix.multiply( _projScreenMatrix, objectMatrix );
+
+				vertices = object.geometry.vertices;
+
+				v1 = getNextVertexInPool();
+				v1.positionScreen.copy( vertices[ 0 ].position );
+				_projScreenObjectMatrix.multiplyVector4( v1.positionScreen );
+
+				for ( v = 1, vl = vertices.length; v < vl; v++ ) {
+
+					v1 = getNextVertexInPool();
+					v1.positionScreen.copy( vertices[ v ].position );
+					_projScreenObjectMatrix.multiplyVector4( v1.positionScreen );
+
+					v2 = _vertexPool[ _vertexCount - 2 ];
+
+					_clippedVertex1PositionScreen.copy( v1.positionScreen );
+					_clippedVertex2PositionScreen.copy( v2.positionScreen );
+
+					if ( clipLine( _clippedVertex1PositionScreen, _clippedVertex2PositionScreen ) ) {
+
+						// Perform the perspective divide
+						_clippedVertex1PositionScreen.multiplyScalar( 1 / _clippedVertex1PositionScreen.w );
+						_clippedVertex2PositionScreen.multiplyScalar( 1 / _clippedVertex2PositionScreen.w );
+
+						_line = getNextLineInPool();
+						_line.v1.positionScreen.copy( _clippedVertex1PositionScreen );
+						_line.v2.positionScreen.copy( _clippedVertex2PositionScreen );
+
+						_line.z = Math.max( _clippedVertex1PositionScreen.z, _clippedVertex2PositionScreen.z );
+
+						_line.materials = object.materials;
+
+						_renderList.push( _line );
+
+					}
+				}
+
+			} else if ( object instanceof THREE.Particle ) {
+
+				_vector4.set( object.matrixWorld.n14, object.matrixWorld.n24, object.matrixWorld.n34, 1 );
+				_projScreenMatrix.multiplyVector4( _vector4 );
+
+				_vector4.z /= _vector4.w;
+
+				if ( _vector4.z > 0 && _vector4.z < 1 ) {
+
+					_particle = getNextParticleInPool();
+					_particle.x = _vector4.x / _vector4.w;
+					_particle.y = _vector4.y / _vector4.w;
+					_particle.z = _vector4.z;
+
+					_particle.rotation = object.rotation.z;
+
+					_particle.scale.x = object.scale.x * Math.abs( _particle.x - ( _vector4.x + camera.projectionMatrix.n11 ) / ( _vector4.w + camera.projectionMatrix.n14 ) );
+					_particle.scale.y = object.scale.y * Math.abs( _particle.y - ( _vector4.y + camera.projectionMatrix.n22 ) / ( _vector4.w + camera.projectionMatrix.n24 ) );
+
+					_particle.materials = object.materials;
+
+					_renderList.push( _particle );
+
+				}
+
+			}
+
+		}
+
+		sort && _renderList.sort( painterSort );
+
+		return _renderList;
+
+	};
+
+	// Pools
+
+	function getNextObjectInPool() {
+
+		var object = _objectPool[ _objectCount ] = _objectPool[ _objectCount ] || new THREE.RenderableObject();
+
+		_objectCount ++;
+
+		return object;
+
+	}
+
+	function getNextVertexInPool() {
+
+		var vertex = _vertexPool[ _vertexCount ] = _vertexPool[ _vertexCount ] || new THREE.RenderableVertex();
+
+		_vertexCount ++;
+
+		return vertex;
+
+	}
+
+	function getNextFace3InPool() {
+
+		var face = _face3Pool[ _face3Count ] = _face3Pool[ _face3Count ] || new THREE.RenderableFace3();
+
+		_face3Count ++;
+
+		return face;
+
+	}
+
+	function getNextFace4InPool() {
+
+		var face = _face4Pool[ _face4Count ] = _face4Pool[ _face4Count ] || new THREE.RenderableFace4();
+
+		_face4Count ++;
+
+		return face;
+
+	}
+
+	function getNextLineInPool() {
+
+		var line = _linePool[ _lineCount ] = _linePool[ _lineCount ] || new THREE.RenderableLine();
+
+		_lineCount ++;
+
+		return line;
+
+	}
+
+	function getNextParticleInPool() {
+
+		var particle = _particlePool[ _particleCount ] = _particlePool[ _particleCount ] || new THREE.RenderableParticle();
+		_particleCount ++;
+		return particle;
+
+	}
+
+	//
+
+	function painterSort( a, b ) {
+
+		return b.z - a.z;
+
+	}
+
+	function computeFrustum( m ) {
+
+		_frustum[ 0 ].set( m.n41 - m.n11, m.n42 - m.n12, m.n43 - m.n13, m.n44 - m.n14 );
+		_frustum[ 1 ].set( m.n41 + m.n11, m.n42 + m.n12, m.n43 + m.n13, m.n44 + m.n14 );
+		_frustum[ 2 ].set( m.n41 + m.n21, m.n42 + m.n22, m.n43 + m.n23, m.n44 + m.n24 );
+		_frustum[ 3 ].set( m.n41 - m.n21, m.n42 - m.n22, m.n43 - m.n23, m.n44 - m.n24 );
+		_frustum[ 4 ].set( m.n41 - m.n31, m.n42 - m.n32, m.n43 - m.n33, m.n44 - m.n34 );
+		_frustum[ 5 ].set( m.n41 + m.n31, m.n42 + m.n32, m.n43 + m.n33, m.n44 + m.n34 );
+
+		for ( var i = 0; i < 6; i ++ ) {
+
+			var plane = _frustum[ i ];
+			plane.divideScalar( Math.sqrt( plane.x * plane.x + plane.y * plane.y + plane.z * plane.z ) );
+
+		}
+
+	}
+
+	function isInFrustum( object ) {
+
+		var distance, matrix = object.matrixWorld,
+		radius = - object.geometry.boundingSphere.radius * Math.max( object.scale.x, Math.max( object.scale.y, object.scale.z ) );
+
+		for ( var i = 0; i < 6; i ++ ) {
+
+			distance = _frustum[ i ].x * matrix.n14 + _frustum[ i ].y * matrix.n24 + _frustum[ i ].z * matrix.n34 + _frustum[ i ].w;
+			if ( distance <= radius ) return false;
+
+		}
+
+		return true;
+
+	};
+
+	function clipLine( s1, s2 ) {
+
+		var alpha1 = 0, alpha2 = 1,
+
+		// Calculate the boundary coordinate of each vertex for the near and far clip planes,
+		// Z = -1 and Z = +1, respectively.
+		bc1near =  s1.z + s1.w,
+		bc2near =  s2.z + s2.w,
+		bc1far =  - s1.z + s1.w,
+		bc2far =  - s2.z + s2.w;
+
+		if ( bc1near >= 0 && bc2near >= 0 && bc1far >= 0 && bc2far >= 0 ) {
+
+			// Both vertices lie entirely within all clip planes.
+			return true;
+
+		} else if ( ( bc1near < 0 && bc2near < 0) || (bc1far < 0 && bc2far < 0 ) ) {
+
+			// Both vertices lie entirely outside one of the clip planes.
+			return false;
+
+		} else {
+
+			// The line segment spans at least one clip plane.
+
+			if ( bc1near < 0 ) {
+
+				// v1 lies outside the near plane, v2 inside
+				alpha1 = Math.max( alpha1, bc1near / ( bc1near - bc2near ) );
+
+			} else if ( bc2near < 0 ) {
+
+				// v2 lies outside the near plane, v1 inside
+				alpha2 = Math.min( alpha2, bc1near / ( bc1near - bc2near ) );
+
+			}
+
+			if ( bc1far < 0 ) {
+
+				// v1 lies outside the far plane, v2 inside
+				alpha1 = Math.max( alpha1, bc1far / ( bc1far - bc2far ) );
+
+			} else if ( bc2far < 0 ) {
+
+				// v2 lies outside the far plane, v2 inside
+				alpha2 = Math.min( alpha2, bc1far / ( bc1far - bc2far ) );
+
+			}
+
+			if ( alpha2 < alpha1 ) {
+
+				// The line segment spans two boundaries, but is outside both of them.
+				// (This can't happen when we're only clipping against just near/far but good
+				//  to leave the check here for future usage if other clip planes are added.)
+				return false;
+
+			} else {
+
+				// Update the s1 and s2 vertices to match the clipped line segment.
+				s1.lerpSelf( s2, alpha1 );
+				s2.lerpSelf( s1, 1 - alpha2 );
+
+				return true;
+
+			}
+
+		}
+
+	}
+
+};
+/**
+ * @author mikael emtinger / http://gomo.se/
+ * @author alteredq / http://alteredqualia.com/
+ */
+
+THREE.Quaternion = function( x, y, z, w ) {
+
+	this.set(
+
+		x || 0,
+		y || 0,
+		z || 0,
+		w !== undefined ? w : 1
+
+	);
+
+};
+
+THREE.Quaternion.prototype = {
+
+	constructor: THREE.Quaternion,
+
+	set: function ( x, y, z, w ) {
+
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+
+		return this;
+
+	},
+
+	copy: function ( q ) {
+
+		this.x = q.x;
+		this.y = q.y;
+		this.z = q.z;
+		this.w = q.w;
+
+		return this;
+
+	},
+
+	setFromEuler: function ( vec3 ) {
+
+		var c = Math.PI / 360, // 0.5 * Math.PI / 360, // 0.5 is an optimization
+		x = vec3.x * c,
+		y = vec3.y * c,
+		z = vec3.z * c,
+
+		c1 = Math.cos( y  ),
+		s1 = Math.sin( y  ),
+		c2 = Math.cos( -z ),
+		s2 = Math.sin( -z ),
+		c3 = Math.cos( x  ),
+		s3 = Math.sin( x  ),
+
+		c1c2 = c1 * c2,
+		s1s2 = s1 * s2;
+
+		this.w = c1c2 * c3  - s1s2 * s3;
+	  	this.x = c1c2 * s3  + s1s2 * c3;
+		this.y = s1 * c2 * c3 + c1 * s2 * s3;
+		this.z = c1 * s2 * c3 - s1 * c2 * s3;
+
+		return this;
+
+	},
+
+	setFromAxisAngle: function ( axis, angle ) {
+
+		// from http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
+		// axis have to be normalized
+
+		var halfAngle = angle / 2,
+			s = Math.sin( halfAngle );
+
+		this.x = axis.x * s;
+		this.y = axis.y * s;
+		this.z = axis.z * s;
+		this.w = Math.cos( halfAngle );
+
+		return this;
+
+	},
+	
+	setFromRotationMatrix: function ( m ) {
+		// Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+		function copySign(a, b) {
+			return b < 0 ? -Math.abs(a) : Math.abs(a);
+		}
+		var absQ = Math.pow(m.determinant(), 1.0 / 3.0);
+		this.w = Math.sqrt( Math.max( 0, absQ + m.n11 + m.n22 + m.n33 ) ) / 2; 
+		this.x = Math.sqrt( Math.max( 0, absQ + m.n11 - m.n22 - m.n33 ) ) / 2; 
+		this.y = Math.sqrt( Math.max( 0, absQ - m.n11 + m.n22 - m.n33 ) ) / 2; 
+		this.z = Math.sqrt( Math.max( 0, absQ - m.n11 - m.n22 + m.n33 ) ) / 2; 
+		this.x = copySign( this.x, ( m.n32 - m.n23 ) );
+		this.y = copySign( this.y, ( m.n13 - m.n31 ) );
+		this.z = copySign( this.z, ( m.n21 - m.n12 ) );
+		this.normalize();
+		return this;
+	},
+	
+	calculateW : function () {
+
+		this.w = - Math.sqrt( Math.abs( 1.0 - this.x * this.x - this.y * this.y - this.z * this.z ) );
+
+		return this;
+
+	},
+
+	inverse: function () {
+
+		this.x *= -1;
+		this.y *= -1;
+		this.z *= -1;
+
+		return this;
+
+	},
+
+	length: function () {
+
+		return Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w );
+
+	},
+
+	normalize: function () {
+
+		var l = Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w );
+
+		if ( l == 0 ) {
+
+			this.x = 0;
+			this.y = 0;
+			this.z = 0;
+			this.w = 0;
+
+		} else {
+
+			l = 1 / l;
+
+			this.x = this.x * l;
+			this.y = this.y * l;
+			this.z = this.z * l;
+			this.w = this.w * l;
+
+		}
+
+		return this;
+
+	},
+
+	multiplySelf: function ( quat2 ) {
+
+		var qax = this.x,  qay = this.y,  qaz = this.z,  qaw = this.w,
+		qbx = quat2.x, qby = quat2.y, qbz = quat2.z, qbw = quat2.w;
+
+		this.x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby;
+		this.y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz;
+		this.z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
+		this.w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
+
+		return this;
+
+	},
+
+	multiply: function ( q1, q2 ) {
+
+		// from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm
+
+		this.x =  q1.x * q2.w + q1.y * q2.z - q1.z * q2.y + q1.w * q2.x;
+		this.y = -q1.x * q2.z + q1.y * q2.w + q1.z * q2.x + q1.w * q2.y;
+		this.z =  q1.x * q2.y - q1.y * q2.x + q1.z * q2.w + q1.w * q2.z;
+		this.w = -q1.x * q2.x - q1.y * q2.y - q1.z * q2.z + q1.w * q2.w;
+		
+		return this;
+
+	},
+
+	multiplyVector3: function ( vec, dest ) {
+
+		if( !dest ) { dest = vec; }
+
+		var x    = vec.x,  y  = vec.y,  z  = vec.z,
+			qx   = this.x, qy = this.y, qz = this.z, qw = this.w;
+
+		// calculate quat * vec
+
+		var ix =  qw * x + qy * z - qz * y,
+			iy =  qw * y + qz * x - qx * z,
+			iz =  qw * z + qx * y - qy * x,
+			iw = -qx * x - qy * y - qz * z;
+
+		// calculate result * inverse quat
+
+		dest.x = ix * qw + iw * -qx + iy * -qz - iz * -qy;
+		dest.y = iy * qw + iw * -qy + iz * -qx - ix * -qz;
+		dest.z = iz * qw + iw * -qz + ix * -qy - iy * -qx;
+
+		return dest;
+
+	}
+
+}
+
+THREE.Quaternion.slerp = function ( qa, qb, qm, t ) {
+
+	var cosHalfTheta = qa.w * qb.w + qa.x * qb.x + qa.y * qb.y + qa.z * qb.z;
+
+	if ( Math.abs( cosHalfTheta ) >= 1.0 ) {
+
+		qm.w = qa.w; qm.x = qa.x; qm.y = qa.y; qm.z = qa.z;
+		return qm;
+
+	}
+
+	var halfTheta = Math.acos( cosHalfTheta ),
+	sinHalfTheta = Math.sqrt( 1.0 - cosHalfTheta * cosHalfTheta );
+
+	if ( Math.abs( sinHalfTheta ) < 0.001 ) { 
+
+		qm.w = 0.5 * ( qa.w + qb.w );
+		qm.x = 0.5 * ( qa.x + qb.x );
+		qm.y = 0.5 * ( qa.y + qb.y );
+		qm.z = 0.5 * ( qa.z + qb.z );
+
+		return qm;
+
+	}
+
+	var ratioA = Math.sin( ( 1 - t ) * halfTheta ) / sinHalfTheta,
+	ratioB = Math.sin( t * halfTheta ) / sinHalfTheta; 
+
+	qm.w = ( qa.w * ratioA + qb.w * ratioB );
+	qm.x = ( qa.x * ratioA + qb.x * ratioB );
+	qm.y = ( qa.y * ratioA + qb.y * ratioB );
+	qm.z = ( qa.z * ratioA + qb.z * ratioB );
+
+	return qm;
+
+}
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.Vertex = function ( position ) {
+
+	this.position = position || new THREE.Vector3();
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ */
+
+THREE.Face3 = function ( a, b, c, normal, color, materials ) {
+
+	this.a = a; 
+	this.b = b;
+	this.c = c;
+
+	this.normal = normal instanceof THREE.Vector3 ? normal : new THREE.Vector3();
+	this.vertexNormals = normal instanceof Array ? normal : [ ];
+
+	this.color = color instanceof THREE.Color ? color : new THREE.Color();
+	this.vertexColors = color instanceof Array ? color : [];
+
+	this.vertexTangents = [];
+
+	this.materials = materials instanceof Array ? materials : [ materials ];
+
+	this.centroid = new THREE.Vector3();
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ */
+
+THREE.Face4 = function ( a, b, c, d, normal, color, materials ) {
+
+	this.a = a; 
+	this.b = b;
+	this.c = c;
+	this.d = d;
+
+	this.normal = normal instanceof THREE.Vector3 ? normal : new THREE.Vector3();
+	this.vertexNormals = normal instanceof Array ? normal : [ ];
+
+	this.color = color instanceof THREE.Color ? color : new THREE.Color();
+	this.vertexColors = color instanceof Array ? color : [];
+
+	this.vertexTangents = [];
+
+	this.materials = materials instanceof Array ? materials : [ materials ];
+
+	this.centroid = new THREE.Vector3();
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.UV = function ( u, v ) {
+
+	this.u = u || 0;
+	this.v = v || 0;
+
+};
+
+THREE.UV.prototype = {
+
+	constructor: THREE.UV,
+
+	set: function ( u, v ) {
+
+		this.u = u;
+		this.v = v;
+
+		return this;
+
+	},
+
+	copy: function ( uv ) {
+
+		this.u = uv.u;
+		this.v = uv.v;
+
+		return this;
+
+	},
+
+	clone: function () {
+
+		return new THREE.UV( this.u, this.v );
+
+	}
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author kile / http://kile.stravaganza.org/
+ * @author alteredq / http://alteredqualia.com/
+ * @author mikael emtinger / http://gomo.se/
+ * @author zz85 / http://www.lab4games.net/zz85/blog
+ */
+
+THREE.Geometry = function () {
+
+	this.id = THREE.GeometryCount ++;
+
+	this.vertices = [];
+	this.colors = []; // one-to-one vertex colors, used in ParticleSystem, Line and Ribbon
+
+	this.faces = [];
+
+	this.faceUvs = [[]];
+	this.faceVertexUvs = [[]];
+
+	this.morphTargets = [];
+	this.morphColors = [];
+
+	this.skinWeights = [];
+	this.skinIndices = [];
+
+	this.boundingBox = null;
+	this.boundingSphere = null;
+
+	this.hasTangents = false;
+
+	this.dynamic = false; // unless set to true the *Arrays will be deleted once sent to a buffer.
+
+};
+
+THREE.Geometry.prototype = {
+
+	constructor : THREE.Geometry,
+
+	applyMatrix: function ( matrix ) {
+
+		var matrixRotation = new THREE.Matrix4();
+		matrixRotation.extractRotation( matrix, new THREE.Vector3( 1, 1, 1 ) );
+
+		for ( var i = 0, il = this.vertices.length; i < il; i ++ ) {
+
+			var vertex = this.vertices[ i ];
+
+			matrix.multiplyVector3( vertex.position );
+
+		}
+
+		for ( var i = 0, il = this.faces.length; i < il; i ++ ) {
+
+			var face = this.faces[ i ];
+
+			matrixRotation.multiplyVector3( face.normal );
+
+			for ( var j = 0, jl = face.vertexNormals.length; j < jl; j ++ ) {
+
+				matrixRotation.multiplyVector3( face.vertexNormals[ j ] );
+
+			}
+
+			matrix.multiplyVector3( face.centroid );
+
+		}
+
+	},
+
+	computeCentroids: function () {
+
+		var f, fl, face;
+
+		for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
+
+			face = this.faces[ f ];
+			face.centroid.set( 0, 0, 0 );
+
+			if ( face instanceof THREE.Face3 ) {
+
+				face.centroid.addSelf( this.vertices[ face.a ].position );
+				face.centroid.addSelf( this.vertices[ face.b ].position );
+				face.centroid.addSelf( this.vertices[ face.c ].position );
+				face.centroid.divideScalar( 3 );
+
+			} else if ( face instanceof THREE.Face4 ) {
+
+				face.centroid.addSelf( this.vertices[ face.a ].position );
+				face.centroid.addSelf( this.vertices[ face.b ].position );
+				face.centroid.addSelf( this.vertices[ face.c ].position );
+				face.centroid.addSelf( this.vertices[ face.d ].position );
+				face.centroid.divideScalar( 4 );
+
+			}
+
+		}
+
+	},
+
+	computeFaceNormals: function ( useVertexNormals ) {
+
+		var n, nl, v, vl, vertex, f, fl, face, vA, vB, vC,
+		cb = new THREE.Vector3(), ab = new THREE.Vector3();
+
+		/*
+		for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
+
+			vertex = this.vertices[ v ];
+			vertex.normal.set( 0, 0, 0 );
+
+		}
+		*/
+
+		for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
+
+			face = this.faces[ f ];
+
+			if ( useVertexNormals && face.vertexNormals.length  ) {
+
+				cb.set( 0, 0, 0 );
+
+				for ( n = 0, nl = face.vertexNormals.length; n < nl; n++ ) {
+
+					cb.addSelf( face.vertexNormals[n] );
+
+				}
+
+				cb.divideScalar( 3 );
+
+				if ( ! cb.isZero() ) {
+
+					cb.normalize();
+
+				}
+
+				face.normal.copy( cb );
+
+			} else {
+
+				vA = this.vertices[ face.a ];
+				vB = this.vertices[ face.b ];
+				vC = this.vertices[ face.c ];
+
+				cb.sub( vC.position, vB.position );
+				ab.sub( vA.position, vB.position );
+				cb.crossSelf( ab );
+
+				if ( !cb.isZero() ) {
+
+					cb.normalize();
+
+				}
+
+				face.normal.copy( cb );
+
+			}
+
+		}
+
+	},
+
+	computeVertexNormals: function () {
+
+		var v, vl, f, fl, face, vertices;
+
+		// create internal buffers for reuse when calling this method repeatedly
+		// (otherwise memory allocation / deallocation every frame is big resource hog)
+
+		if ( this.__tmpVertices == undefined ) {
+
+			this.__tmpVertices = new Array( this.vertices.length );
+			vertices = this.__tmpVertices;
+
+			for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
+
+				vertices[ v ] = new THREE.Vector3();
+
+			}
+
+			for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
+
+				face = this.faces[ f ];
+
+				if ( face instanceof THREE.Face3 ) {
+
+					face.vertexNormals = [ new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3() ];
+
+				} else if ( face instanceof THREE.Face4 ) {
+
+					face.vertexNormals = [ new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3() ];
+
+				}
+
+			}
+
+		} else {
+
+			vertices = this.__tmpVertices;
+
+			for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
+
+				vertices[ v ].set( 0, 0, 0 );
+
+			}
+
+		}
+
+		for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
+
+			face = this.faces[ f ];
+
+			if ( face instanceof THREE.Face3 ) {
+
+				vertices[ face.a ].addSelf( face.normal );
+				vertices[ face.b ].addSelf( face.normal );
+				vertices[ face.c ].addSelf( face.normal );
+
+			} else if ( face instanceof THREE.Face4 ) {
+
+				vertices[ face.a ].addSelf( face.normal );
+				vertices[ face.b ].addSelf( face.normal );
+				vertices[ face.c ].addSelf( face.normal );
+				vertices[ face.d ].addSelf( face.normal );
+
+			}
+
+		}
+
+		for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
+
+			vertices[ v ].normalize();
+
+		}
+
+		for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
+
+			face = this.faces[ f ];
+
+			if ( face instanceof THREE.Face3 ) {
+
+				face.vertexNormals[ 0 ].copy( vertices[ face.a ] );
+				face.vertexNormals[ 1 ].copy( vertices[ face.b ] );
+				face.vertexNormals[ 2 ].copy( vertices[ face.c ] );
+
+			} else if ( face instanceof THREE.Face4 ) {
+
+				face.vertexNormals[ 0 ].copy( vertices[ face.a ] );
+				face.vertexNormals[ 1 ].copy( vertices[ face.b ] );
+				face.vertexNormals[ 2 ].copy( vertices[ face.c ] );
+				face.vertexNormals[ 3 ].copy( vertices[ face.d ] );
+
+			}
+
+		}
+
+	},
+
+	computeTangents: function () {
+
+		// based on http://www.terathon.com/code/tangent.html
+		// tangents go to vertices
+
+		var f, fl, v, vl, i, il, vertexIndex,
+			face, uv, vA, vB, vC, uvA, uvB, uvC,
+			x1, x2, y1, y2, z1, z2,
+			s1, s2, t1, t2, r, t, test,
+			tan1 = [], tan2 = [],
+			sdir = new THREE.Vector3(), tdir = new THREE.Vector3(),
+			tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3(),
+			n = new THREE.Vector3(), w;
+
+		for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
+
+			tan1[ v ] = new THREE.Vector3();
+			tan2[ v ] = new THREE.Vector3();
+
+		}
+
+		function handleTriangle( context, a, b, c, ua, ub, uc ) {
+
+			vA = context.vertices[ a ].position;
+			vB = context.vertices[ b ].position;
+			vC = context.vertices[ c ].position;
+
+			uvA = uv[ ua ];
+			uvB = uv[ ub ];
+			uvC = uv[ uc ];
+
+			x1 = vB.x - vA.x;
+			x2 = vC.x - vA.x;
+			y1 = vB.y - vA.y;
+			y2 = vC.y - vA.y;
+			z1 = vB.z - vA.z;
+			z2 = vC.z - vA.z;
+
+			s1 = uvB.u - uvA.u;
+			s2 = uvC.u - uvA.u;
+			t1 = uvB.v - uvA.v;
+			t2 = uvC.v - uvA.v;
+
+			r = 1.0 / ( s1 * t2 - s2 * t1 );
+			sdir.set( ( t2 * x1 - t1 * x2 ) * r,
+					  ( t2 * y1 - t1 * y2 ) * r,
+					  ( t2 * z1 - t1 * z2 ) * r );
+			tdir.set( ( s1 * x2 - s2 * x1 ) * r,
+					  ( s1 * y2 - s2 * y1 ) * r,
+					  ( s1 * z2 - s2 * z1 ) * r );
+
+			tan1[ a ].addSelf( sdir );
+			tan1[ b ].addSelf( sdir );
+			tan1[ c ].addSelf( sdir );
+
+			tan2[ a ].addSelf( tdir );
+			tan2[ b ].addSelf( tdir );
+			tan2[ c ].addSelf( tdir );
+
+		}
+
+		for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
+
+			face = this.faces[ f ];
+			uv = this.faceVertexUvs[ 0 ][ f ]; // use UV layer 0 for tangents
+
+			if ( face instanceof THREE.Face3 ) {
+
+				handleTriangle( this, face.a, face.b, face.c, 0, 1, 2 );
+
+			} else if ( face instanceof THREE.Face4 ) {
+
+				handleTriangle( this, face.a, face.b, face.c, 0, 1, 2 );
+				handleTriangle( this, face.a, face.b, face.d, 0, 1, 3 );
+
+			}
+
+		}
+
+		var faceIndex = [ 'a', 'b', 'c', 'd' ];
+
+		for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
+
+			face = this.faces[ f ];
+
+			for ( i = 0; i < face.vertexNormals.length; i++ ) {
+
+				n.copy( face.vertexNormals[ i ] );
+
+				vertexIndex = face[ faceIndex[ i ] ];
+
+				t = tan1[ vertexIndex ];
+
+				// Gram-Schmidt orthogonalize
+
+				tmp.copy( t );
+				tmp.subSelf( n.multiplyScalar( n.dot( t ) ) ).normalize();
+
+				// Calculate handedness
+
+				tmp2.cross( face.vertexNormals[ i ], t );
+				test = tmp2.dot( tan2[ vertexIndex ] );
+				w = (test < 0.0) ? -1.0 : 1.0;
+
+				face.vertexTangents[ i ] = new THREE.Vector4( tmp.x, tmp.y, tmp.z, w );
+
+			}
+
+		}
+
+		this.hasTangents = true;
+
+	},
+
+	computeBoundingBox: function () {
+
+		var vertex;
+
+		if ( this.vertices.length > 0 ) {
+
+			this.boundingBox = { 'x': [ this.vertices[ 0 ].position.x, this.vertices[ 0 ].position.x ],
+			'y': [ this.vertices[ 0 ].position.y, this.vertices[ 0 ].position.y ],
+			'z': [ this.vertices[ 0 ].position.z, this.vertices[ 0 ].position.z ] };
+
+			for ( var v = 1, vl = this.vertices.length; v < vl; v ++ ) {
+
+				vertex = this.vertices[ v ];
+
+				if ( vertex.position.x < this.boundingBox.x[ 0 ] ) {
+
+					this.boundingBox.x[ 0 ] = vertex.position.x;
+
+				} else if ( vertex.position.x > this.boundingBox.x[ 1 ] ) {
+
+					this.boundingBox.x[ 1 ] = vertex.position.x;
+
+				}
+
+				if ( vertex.position.y < this.boundingBox.y[ 0 ] ) {
+
+					this.boundingBox.y[ 0 ] = vertex.position.y;
+
+				} else if ( vertex.position.y > this.boundingBox.y[ 1 ] ) {
+
+					this.boundingBox.y[ 1 ] = vertex.position.y;
+
+				}
+
+				if ( vertex.position.z < this.boundingBox.z[ 0 ] ) {
+
+					this.boundingBox.z[ 0 ] = vertex.position.z;
+
+				} else if ( vertex.position.z > this.boundingBox.z[ 1 ] ) {
+
+					this.boundingBox.z[ 1 ] = vertex.position.z;
+
+				}
+
+			}
+
+		}
+
+	},
+
+	computeBoundingSphere: function () {
+
+		// var radius = this.boundingSphere === null ? 0 : this.boundingSphere.radius;
+
+		var radius = 0;
+
+		for ( var v = 0, vl = this.vertices.length; v < vl; v ++ ) {
+
+			radius = Math.max( radius, this.vertices[ v ].position.length() );
+
+		}
+
+		this.boundingSphere = { radius: radius };
+
+	},
+	
+	/* 
+	 * Checks for duplicate vertices with hashmap. 
+	 * Duplicated vertices are removed
+	 * and faces' vertices are updated. 
+	 */
+	mergeVertices: function() {
+		
+		var verticesMap = {}; // Hashmap for looking up vertice by position coordinates (and making sure they are unique)
+		var unique = [], changes = [];
+		
+		var v, key;
+		var precisionPoints = 4; // number of decimal points, eg. 4 for epsilon of 0.0001 
+		var precision = Math.pow(10, precisionPoints)
+		var i,il, face;
+		
+		for (i=0,il=this.vertices.length;i<il;i++) {
+			
+			v = this.vertices[i].position;
+			key = [Math.round(v.x * precision), Math.round(v.y* precision), Math.round(v.z* precision)].join('_');
+			
+			if (verticesMap[key]===undefined) {
+				verticesMap[key] = i;
+				unique.push(this.vertices[i]);
+				changes[i] = unique.length - 1;
+			} else {
+				//console.log('Duplicate vertex found. ', i, ' could be using ', verticesMap[key]);
+				changes[i] = changes[verticesMap[key]];
+			}
+			
+		};
+		
+		
+		// Start to patch face indices.
+		for( i = 0, il = this.faces.length; i < il; i ++ ) {
+
+			face = this.faces[ i ];
+
+			if ( face instanceof THREE.Face3 ) {
+				face.a = changes[face.a];
+				face.b = changes[face.b];
+				face.c = changes[face.c];
+			
+			} if ( face instanceof THREE.Face4 ) {
+
+				face.a = changes[face.a];
+				face.b = changes[face.b];
+				face.c = changes[face.c];
+				face.d = changes[face.d];
+			
+			}
+		}
+		
+		// Use unique set of vertices
+		this.vertices = unique;
+		
+	}
+
+};
+
+THREE.GeometryCount = 0;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author mikael emtinger / http://gomo.se/
+ */
+
+THREE.Camera = function () {
+
+	if ( arguments.length ) {
+
+		console.warn( 'DEPRECATED: Camera() is now PerspectiveCamera() or OrthographicCamera().' );
+		return new THREE.PerspectiveCamera( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ] );
+
+	}
+
+	THREE.Object3D.call( this );
+
+	this.matrixWorldInverse = new THREE.Matrix4();
+	this.projectionMatrix = new THREE.Matrix4();
+
+};
+
+THREE.Camera.prototype = new THREE.Object3D();
+THREE.Camera.prototype.constructor = THREE.Camera;
+
+THREE.Camera.prototype.lookAt = function ( vector ) {
+
+	// TODO: Add hierarchy support.
+
+	this.matrix.lookAt( this.position, vector, this.up );
+
+	if ( this.rotationAutoUpdate ) {
+
+		this.rotation.setRotationFromMatrix( this.matrix );
+
+	}
+
+}
+
+THREE.Camera.prototype.update = function ( parentMatrixWorld, forceUpdate, camera ) {
+
+	this.matrixAutoUpdate && this.updateMatrix();
+
+	if ( forceUpdate || this.matrixWorldNeedsUpdate ) {
+
+		if ( parentMatrixWorld ) {
+
+			this.matrixWorld.multiply( parentMatrixWorld, this.matrix );
+
+		} else {
+
+			this.matrixWorld.copy( this.matrix );
+
+		}
+
+		this.matrixWorldNeedsUpdate = false;
+		forceUpdate = true;
+
+		THREE.Matrix4.makeInvert( this.matrixWorld, this.matrixWorldInverse );
+
+	}
+
+
+	// update children
+
+	for ( var i = 0; i < this.children.length; i ++ ) {
+
+		this.children[ i ].update( this.matrixWorld, forceUpdate, camera );
+
+	}
+
+};
+/**
+ * @author alteredq / http://alteredqualia.com/
+ */
+
+THREE.OrthographicCamera = function ( left, right, top, bottom, near, far ) {
+
+	THREE.Camera.call( this );
+
+	this.left = left;
+	this.right = right;
+	this.top = top;
+	this.bottom = bottom;
+
+	this.near = ( near !== undefined ) ? near : 0.1;
+	this.far = ( far !== undefined ) ? far : 2000;
+
+	this.updateProjectionMatrix();
+
+};
+
+THREE.OrthographicCamera.prototype = new THREE.Camera();
+THREE.OrthographicCamera.prototype.constructor = THREE.OrthographicCamera;
+
+THREE.OrthographicCamera.prototype.updateProjectionMatrix = function () {
+
+	this.projectionMatrix = THREE.Matrix4.makeOrtho( this.left, this.right, this.top, this.bottom, this.near, this.far );
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author greggman / http://games.greggman.com/
+ * @author zz85 / http://www.lab4games.net/zz85/blog
+ */
+
+THREE.PerspectiveCamera = function ( fov, aspect, near, far ) {
+
+	THREE.Camera.call( this );
+
+	this.fov = fov !== undefined ? fov : 50;
+	this.aspect = aspect !== undefined ? aspect : 1;
+	this.near = near !== undefined ? near : 0.1;
+	this.far = far !== undefined ? far : 2000;
+
+	this.updateProjectionMatrix();
+
+};
+
+THREE.PerspectiveCamera.prototype = new THREE.Camera();
+THREE.PerspectiveCamera.prototype.constructor = THREE.PerspectiveCamera;
+
+
+/**
+ * Uses Focal Length (in mm) to estimate and set FOV
+ * 35mm (fullframe) camera is used if frame size is not specified;
+ * Formula based on http://www.bobatkins.com/photography/technical/field_of_view.html
+ */
+
+THREE.PerspectiveCamera.prototype.setLens = function ( focalLength, frameSize ) {
+
+	frameSize = frameSize !== undefined ? frameSize : 43.25; // 36x24mm
+
+	this.fov = 2 * Math.atan( frameSize / ( focalLength * 2 ) );
+	this.fov = 180 / Math.PI * this.fov;
+
+	this.updateProjectionMatrix();
+
+}
+
+
+/**
+ * Sets an offset in a larger frustum. This is useful for multi-window or
+ * multi-monitor/multi-machine setups.
+ *
+ * For example, if you have 3x2 monitors and each monitor is 1920x1080 and
+ * the monitors are in grid like this
+ *
+ *   +---+---+---+
+ *   | A | B | C |
+ *   +---+---+---+
+ *   | D | E | F |
+ *   +---+---+---+
+ *
+ * then for each monitor you would call it like this
+ *
+ *   var w = 1920;
+ *   var h = 1080;
+ *   var fullWidth = w * 3;
+ *   var fullHeight = h * 2;
+ *
+ *   --A--
+ *   camera.setOffset( fullWidth, fullHeight, w * 0, h * 0, w, h );
+ *   --B--
+ *   camera.setOffset( fullWidth, fullHeight, w * 1, h * 0, w, h );
+ *   --C--
+ *   camera.setOffset( fullWidth, fullHeight, w * 2, h * 0, w, h );
+ *   --D--
+ *   camera.setOffset( fullWidth, fullHeight, w * 0, h * 1, w, h );
+ *   --E--
+ *   camera.setOffset( fullWidth, fullHeight, w * 1, h * 1, w, h );
+ *   --F--
+ *   camera.setOffset( fullWidth, fullHeight, w * 2, h * 1, w, h );
+ *
+ *   Note there is no reason monitors have to be the same size or in a grid.
+ */
+
+THREE.PerspectiveCamera.prototype.setViewOffset = function ( fullWidth, fullHeight, x, y, width, height ) {
+
+	this.fullWidth = fullWidth;
+	this.fullHeight = fullHeight;
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+
+	this.updateProjectionMatrix();
+
+};
+
+
+THREE.PerspectiveCamera.prototype.updateProjectionMatrix = function () {
+
+	if ( this.fullWidth ) {
+
+		var aspect = this.fullWidth / this.fullHeight;
+		var top = Math.tan( this.fov * Math.PI / 360 ) * this.near;
+		var bottom = -top;
+		var left = aspect * bottom;
+		var right = aspect * top;
+		var width = Math.abs( right - left );
+		var height = Math.abs( top - bottom );
+
+		this.projectionMatrix = THREE.Matrix4.makeFrustum(
+			left + this.x * width / this.fullWidth,
+			left + ( this.x + this.width ) * width / this.fullWidth,
+			top - ( this.y + this.height ) * height / this.fullHeight,
+			top - this.y * height / this.fullHeight,
+			this.near,
+			this.far );
+
+	} else {
+
+		this.projectionMatrix = THREE.Matrix4.makePerspective( this.fov, this.aspect, this.near, this.far );
+
+	}
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ */
+ 
+THREE.Light = function ( hex ) {
+
+	THREE.Object3D.call( this );
+
+	this.color = new THREE.Color( hex );
+
+};
+
+THREE.Light.prototype = new THREE.Object3D();
+THREE.Light.prototype.constructor = THREE.Light;
+THREE.Light.prototype.supr = THREE.Object3D.prototype;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.AmbientLight = function ( hex ) {
+
+	THREE.Light.call( this, hex );
+
+};
+
+THREE.AmbientLight.prototype = new THREE.Light();
+THREE.AmbientLight.prototype.constructor = THREE.AmbientLight; 
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.DirectionalLight = function ( hex, intensity, distance ) {
+
+	THREE.Light.call( this, hex );
+
+	this.position = new THREE.Vector3( 0, 1, 0 );
+	this.intensity = ( intensity !== undefined ) ? intensity : 1;
+	this.distance = ( distance !== undefined ) ? distance : 0;
+
+};
+
+THREE.DirectionalLight.prototype = new THREE.Light();
+THREE.DirectionalLight.prototype.constructor = THREE.DirectionalLight;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.PointLight = function ( hex, intensity, distance ) {
+
+	THREE.Light.call( this, hex );
+
+	this.position = new THREE.Vector3( 0, 0, 0 );
+	this.intensity = ( intensity !== undefined ) ? intensity : 1;
+	this.distance = ( distance !== undefined ) ? distance : 0;
+
+};
+
+THREE.PointLight.prototype = new THREE.Light();
+THREE.PointLight.prototype.constructor = THREE.PointLight;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.Material = function ( parameters ) {
+
+	this.name = '';
+
+	this.id = THREE.MaterialCount ++;
+
+	parameters = parameters || {};
+
+	this.opacity = parameters.opacity !== undefined ? parameters.opacity : 1;
+	this.transparent = parameters.transparent !== undefined ? parameters.transparent : false;
+
+	this.blending = parameters.blending !== undefined ? parameters.blending : THREE.NormalBlending;
+
+	this.depthTest = parameters.depthTest !== undefined ? parameters.depthTest : true;
+	this.depthWrite = parameters.depthWrite !== undefined ? parameters.depthWrite : true;
+
+	this.polygonOffset = parameters.polygonOffset !== undefined ? parameters.polygonOffset : false;
+	this.polygonOffsetFactor = parameters.polygonOffsetFactor !== undefined ? parameters.polygonOffsetFactor : 0;
+	this.polygonOffsetUnits = parameters.polygonOffsetUnits !== undefined ? parameters.polygonOffsetUnits : 0;
+
+	this.alphaTest = parameters.alphaTest !== undefined ? parameters.alphaTest : 0;
+
+}
+
+THREE.MaterialCount = 0;
+
+THREE.NoShading = 0;
+THREE.FlatShading = 1;
+THREE.SmoothShading = 2;
+
+THREE.NoColors = 0;
+THREE.FaceColors = 1;
+THREE.VertexColors = 2;
+
+THREE.NormalBlending = 0;
+THREE.AdditiveBlending = 1;
+THREE.SubtractiveBlending = 2;
+THREE.MultiplyBlending = 3;
+THREE.AdditiveAlphaBlending = 4;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * parameters = {
+ *  color: <hex>,
+ *  opacity: <float>,
+ *
+ *  blending: THREE.NormalBlending,
+ *  depthTest: <bool>,
+ *
+ *  linewidth: <float>,
+ *  linecap: "round",
+ *  linejoin: "round",
+ *
+ *  vertexColors: <bool>
+ *
+ *  fog: <bool>
+ * }
+ */
+
+THREE.LineBasicMaterial = function ( parameters ) {
+
+	THREE.Material.call( this, parameters );
+
+	parameters = parameters || {};
+
+	this.color = parameters.color !== undefined ? new THREE.Color( parameters.color ) : new THREE.Color( 0xffffff );
+
+	this.linewidth = parameters.linewidth !== undefined ? parameters.linewidth : 1;
+	this.linecap = parameters.linecap !== undefined ? parameters.linecap : 'round';
+	this.linejoin = parameters.linejoin !== undefined ? parameters.linejoin : 'round';
+
+	this.vertexColors = parameters.vertexColors ? parameters.vertexColors : false;
+
+	this.fog = parameters.fog !== undefined ? parameters.fog : true;
+
+};
+
+THREE.LineBasicMaterial.prototype = new THREE.Material();
+THREE.LineBasicMaterial.prototype.constructor = THREE.LineBasicMaterial;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * parameters = {
+ *  color: <hex>,
+ *  opacity: <float>,
+ *  map: new THREE.Texture( <Image> ),
+ *
+ *  lightMap: new THREE.Texture( <Image> ),
+ *
+ *  envMap: new THREE.TextureCube( [posx, negx, posy, negy, posz, negz] ),
+ *  combine: THREE.Multiply,
+ *  reflectivity: <float>,
+ *  refractionRatio: <float>,
+ *
+ *  shading: THREE.SmoothShading,
+ *  blending: THREE.NormalBlending,
+ *  depthTest: <bool>,
+ *
+ *  wireframe: <boolean>,
+ *  wireframeLinewidth: <float>,
+ *
+ *  vertexColors: false / THREE.VertexColors / THREE.FaceColors,
+ *  skinning: <bool>,
+ *
+ *	fog: <bool>
+ * }
+ */
+
+THREE.MeshBasicMaterial = function ( parameters ) {
+
+	THREE.Material.call( this, parameters );
+
+	parameters = parameters || {};
+
+	this.color = parameters.color !== undefined ? new THREE.Color( parameters.color ) : new THREE.Color( 0xffffff );
+
+	this.map = parameters.map !== undefined ? parameters.map : null;
+
+	this.lightMap = parameters.lightMap !== undefined ? parameters.lightMap : null;
+
+	this.envMap = parameters.envMap !== undefined ? parameters.envMap : null;
+	this.combine = parameters.combine !== undefined ? parameters.combine : THREE.MultiplyOperation;
+	this.reflectivity = parameters.reflectivity !== undefined ? parameters.reflectivity : 1;
+	this.refractionRatio = parameters.refractionRatio !== undefined ? parameters.refractionRatio : 0.98;
+
+	this.fog = parameters.fog !== undefined ? parameters.fog : true;
+
+	this.shading = parameters.shading !== undefined ? parameters.shading : THREE.SmoothShading;
+
+	this.wireframe = parameters.wireframe !== undefined ? parameters.wireframe : false;
+	this.wireframeLinewidth = parameters.wireframeLinewidth !== undefined ? parameters.wireframeLinewidth : 1;
+	this.wireframeLinecap = parameters.wireframeLinecap !== undefined ? parameters.wireframeLinecap : 'round';
+	this.wireframeLinejoin = parameters.wireframeLinejoin !== undefined ? parameters.wireframeLinejoin : 'round';
+
+	this.vertexColors = parameters.vertexColors !== undefined ? parameters.vertexColors : false;
+
+	this.skinning = parameters.skinning !== undefined ? parameters.skinning : false;
+	this.morphTargets = parameters.morphTargets !== undefined ? parameters.morphTargets : false;
+
+};
+
+THREE.MeshBasicMaterial.prototype = new THREE.Material();
+THREE.MeshBasicMaterial.prototype.constructor = THREE.MeshBasicMaterial;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * parameters = {
+ *  color: <hex>,
+ *  opacity: <float>,
+ *  map: new THREE.Texture( <Image> ),
+ *
+ *  lightMap: new THREE.Texture( <Image> ),
+ *
+ *  envMap: new THREE.TextureCube( [posx, negx, posy, negy, posz, negz] ),
+ *  combine: THREE.Multiply,
+ *  reflectivity: <float>,
+ *  refractionRatio: <float>,
+ *
+ *  shading: THREE.SmoothShading,
+ *  blending: THREE.NormalBlending,
+ *  depthTest: <bool>,
+ *
+ *  wireframe: <boolean>,
+ *  wireframeLinewidth: <float>,
+ *
+ *  vertexColors: false / THREE.VertexColors / THREE.FaceColors,
+ *  skinning: <bool>,
+ *
+ *	fog: <bool>
+ * }
+ */
+
+THREE.MeshLambertMaterial = function ( parameters ) {
+
+	THREE.Material.call( this, parameters );
+
+	parameters = parameters || {};
+
+	this.color = parameters.color !== undefined ? new THREE.Color( parameters.color ) : new THREE.Color( 0xffffff );
+
+	this.map = parameters.map !== undefined ? parameters.map : null;
+
+	this.lightMap = parameters.lightMap !== undefined ? parameters.lightMap : null;
+
+	this.envMap = parameters.envMap !== undefined ? parameters.envMap : null;
+	this.combine = parameters.combine !== undefined ? parameters.combine : THREE.MultiplyOperation;
+	this.reflectivity = parameters.reflectivity !== undefined ? parameters.reflectivity : 1;
+	this.refractionRatio = parameters.refractionRatio !== undefined ? parameters.refractionRatio : 0.98;
+
+	this.fog = parameters.fog !== undefined ? parameters.fog : true;
+
+	this.shading = parameters.shading !== undefined ? parameters.shading : THREE.SmoothShading;
+
+	this.wireframe = parameters.wireframe !== undefined ? parameters.wireframe : false;
+	this.wireframeLinewidth = parameters.wireframeLinewidth !== undefined ? parameters.wireframeLinewidth : 1;
+	this.wireframeLinecap = parameters.wireframeLinecap !== undefined ? parameters.wireframeLinecap : 'round';
+	this.wireframeLinejoin = parameters.wireframeLinejoin !== undefined ? parameters.wireframeLinejoin : 'round';
+
+	this.vertexColors = parameters.vertexColors !== undefined ? parameters.vertexColors : false;
+
+	this.skinning = parameters.skinning !== undefined ? parameters.skinning : false;
+	this.morphTargets = parameters.morphTargets !== undefined ? parameters.morphTargets : false;
+
+};
+
+THREE.MeshLambertMaterial.prototype = new THREE.Material();
+THREE.MeshLambertMaterial.prototype.constructor = THREE.MeshLambertMaterial;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * parameters = {
+ *  color: <hex>,
+ *  ambient: <hex>,
+ *  specular: <hex>,
+ *  shininess: <float>,
+ *  opacity: <float>,
+ *
+ *  map: new THREE.Texture( <Image> ),
+ *
+ *  lightMap: new THREE.Texture( <Image> ),
+ *
+ *  envMap: new THREE.TextureCube( [posx, negx, posy, negy, posz, negz] ),
+ *  combine: THREE.Multiply,
+ *  reflectivity: <float>,
+ *  refractionRatio: <float>,
+ *
+ *  shading: THREE.SmoothShading,
+ *  blending: THREE.NormalBlending,
+ *  depthTest: <bool>,
+ *
+ *  wireframe: <boolean>,
+ *  wireframeLinewidth: <float>,
+ *
+ *  vertexColors: false / THREE.VertexColors / THREE.FaceColors,
+ *  skinning: <bool>,
+ *
+ *	fog: <bool>
+ * }
+ */
+
+THREE.MeshPhongMaterial = function ( parameters ) {
+
+	THREE.Material.call( this, parameters );
+
+	parameters = parameters || {};
+
+	this.color = parameters.color !== undefined ? new THREE.Color( parameters.color ) : new THREE.Color( 0xffffff );
+	this.ambient = parameters.ambient !== undefined ? new THREE.Color( parameters.ambient ) : new THREE.Color( 0x050505 );
+	this.specular = parameters.specular !== undefined ? new THREE.Color( parameters.specular ) : new THREE.Color( 0x111111 );
+	this.shininess = parameters.shininess !== undefined ? parameters.shininess : 30;
+
+	this.map = parameters.map !== undefined ? parameters.map : null;
+
+	this.lightMap = parameters.lightMap !== undefined ? parameters.lightMap : null;
+
+	this.envMap = parameters.envMap !== undefined ? parameters.envMap : null;
+	this.combine = parameters.combine !== undefined ? parameters.combine : THREE.MultiplyOperation;
+	this.reflectivity = parameters.reflectivity !== undefined ? parameters.reflectivity : 1;
+	this.refractionRatio = parameters.refractionRatio !== undefined ? parameters.refractionRatio : 0.98;
+
+	this.fog = parameters.fog !== undefined ? parameters.fog : true;
+
+	this.shading = parameters.shading !== undefined ? parameters.shading : THREE.SmoothShading;
+
+	this.wireframe = parameters.wireframe !== undefined ? parameters.wireframe : false;
+	this.wireframeLinewidth = parameters.wireframeLinewidth !== undefined ? parameters.wireframeLinewidth : 1;
+	this.wireframeLinecap = parameters.wireframeLinecap !== undefined ? parameters.wireframeLinecap : 'round';
+	this.wireframeLinejoin = parameters.wireframeLinejoin !== undefined ? parameters.wireframeLinejoin : 'round';
+
+	this.vertexColors = parameters.vertexColors !== undefined ? parameters.vertexColors : false;
+
+	this.skinning = parameters.skinning !== undefined ? parameters.skinning : false;
+	this.morphTargets = parameters.morphTargets !== undefined ? parameters.morphTargets : false;
+
+};
+
+THREE.MeshPhongMaterial.prototype = new THREE.Material();
+THREE.MeshPhongMaterial.prototype.constructor = THREE.MeshPhongMaterial;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * parameters = {
+ *  opacity: <float>,
+ 
+ *  blending: THREE.NormalBlending,
+ *  depthTest: <bool>,
+ 
+ *  wireframe: <boolean>,
+ *  wireframeLinewidth: <float>
+ * } 
+ */
+
+THREE.MeshDepthMaterial = function ( parameters ) {
+
+	THREE.Material.call( this, parameters );
+
+	parameters = parameters || {};
+
+	this.shading = parameters.shading !== undefined ? parameters.shading : THREE.SmoothShading; // doesn't really apply here, normals are not used
+
+	this.wireframe = parameters.wireframe !== undefined ? parameters.wireframe : false;
+	this.wireframeLinewidth = parameters.wireframeLinewidth !== undefined ? parameters.wireframeLinewidth : 1;
+
+};
+
+THREE.MeshDepthMaterial.prototype = new THREE.Material();
+THREE.MeshDepthMaterial.prototype.constructor = THREE.MeshDepthMaterial;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ *
+ * parameters = {
+ *  opacity: <float>,
+ 
+ *  shading: THREE.FlatShading,
+ *  blending: THREE.NormalBlending,
+ *  depthTest: <bool>,
+ 
+ *  wireframe: <boolean>,
+ *  wireframeLinewidth: <float>
+ * }
+ */
+
+THREE.MeshNormalMaterial = function ( parameters ) {
+
+	THREE.Material.call( this, parameters );
+
+	parameters = parameters || {};
+
+	this.shading = parameters.shading ? parameters.shading : THREE.FlatShading;
+
+	this.wireframe = parameters.wireframe ? parameters.wireframe : false;
+	this.wireframeLinewidth = parameters.wireframeLinewidth ? parameters.wireframeLinewidth : 1;
+
+};
+
+THREE.MeshNormalMaterial.prototype = new THREE.Material();
+THREE.MeshNormalMaterial.prototype.constructor = THREE.MeshNormalMaterial;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.MeshFaceMaterial = function () {
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * parameters = {
+ *  color: <hex>,
+ *  opacity: <float>,
+ *  map: new THREE.Texture( <Image> ),
+ *
+ *  size: <float>,
+ *
+ *  blending: THREE.NormalBlending,
+ *  depthTest: <bool>,
+ *
+ *  vertexColors: <bool>,
+ *
+ *  fog: <bool>
+ * }
+ */
+
+THREE.ParticleBasicMaterial = function ( parameters ) {
+
+	THREE.Material.call( this, parameters );
+
+	parameters = parameters || {};
+
+	this.color = parameters.color !== undefined ? new THREE.Color( parameters.color ) : new THREE.Color( 0xffffff );
+
+	this.map = parameters.map !== undefined ? parameters.map : null;
+
+	this.size = parameters.size !== undefined ? parameters.size : 1;
+	this.sizeAttenuation = parameters.sizeAttenuation !== undefined ? parameters.sizeAttenuation : true;
+
+	this.vertexColors = parameters.vertexColors !== undefined ? parameters.vertexColors : false;
+
+	this.fog = parameters.fog !== undefined ? parameters.fog : true;
+
+};
+
+THREE.ParticleBasicMaterial.prototype = new THREE.Material();
+THREE.ParticleBasicMaterial.prototype.constructor = THREE.ParticleBasicMaterial;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ *
+ * parameters = {
+ *  color: <hex>,
+ *  program: <function>,
+ *  opacity: <float>,
+ *  blending: THREE.NormalBlending
+ * }
+ */
+
+THREE.ParticleCanvasMaterial = function ( parameters ) {
+
+	THREE.Material.call( this, parameters );
+
+	parameters = parameters || {};
+
+	this.color = parameters.color !== undefined ? new THREE.Color( parameters.color ) : new THREE.Color( 0xffffff );
+	this.program = parameters.program !== undefined ? parameters.program : function ( context, color ) {};
+
+};
+
+THREE.ParticleCanvasMaterial.prototype = new THREE.Material();
+THREE.ParticleCanvasMaterial.prototype.constructor = THREE.ParticleCanvasMaterial;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ * @author szimek / https://github.com/szimek/
+ */
+
+THREE.Texture = function ( image, mapping, wrapS, wrapT, magFilter, minFilter ) {
+
+	this.id = THREE.TextureCount ++;
+
+	this.image = image;
+
+	this.mapping = mapping !== undefined ? mapping : new THREE.UVMapping();
+
+	this.wrapS = wrapS !== undefined ? wrapS : THREE.ClampToEdgeWrapping;
+	this.wrapT = wrapT !== undefined ? wrapT : THREE.ClampToEdgeWrapping;
+
+	this.magFilter = magFilter !== undefined ? magFilter : THREE.LinearFilter;
+	this.minFilter = minFilter !== undefined ? minFilter : THREE.LinearMipMapLinearFilter;
+
+	this.offset = new THREE.Vector2( 0, 0 );
+	this.repeat = new THREE.Vector2( 1, 1 );
+
+	this.needsUpdate = false;
+
+};
+
+THREE.Texture.prototype = {
+
+	constructor: THREE.Texture,
+
+	clone: function () {
+
+		var clonedTexture = new THREE.Texture( this.image, this.mapping, this.wrapS, this.wrapT, this.magFilter, this.minFilter );
+
+		clonedTexture.offset.copy( this.offset );
+		clonedTexture.repeat.copy( this.repeat );
+
+		return clonedTexture;
+
+	}
+
+};
+
+THREE.TextureCount = 0;
+
+THREE.MultiplyOperation = 0;
+THREE.MixOperation = 1;
+
+// Mapping modes
+
+THREE.CubeReflectionMapping = function () {};
+THREE.CubeRefractionMapping = function () {};
+
+THREE.LatitudeReflectionMapping = function () {};
+THREE.LatitudeRefractionMapping = function () {};
+
+THREE.SphericalReflectionMapping = function () {};
+THREE.SphericalRefractionMapping = function () {};
+
+THREE.UVMapping = function () {};
+
+// Wrapping modes
+
+THREE.RepeatWrapping = 0;
+THREE.ClampToEdgeWrapping = 1;
+THREE.MirroredRepeatWrapping = 2;
+
+// Filters
+
+THREE.NearestFilter = 3;
+THREE.NearestMipMapNearestFilter = 4;
+THREE.NearestMipMapLinearFilter = 5;
+THREE.LinearFilter = 6;
+THREE.LinearMipMapNearestFilter = 7;
+THREE.LinearMipMapLinearFilter = 8;
+
+// Types
+
+THREE.ByteType = 9;
+THREE.UnsignedByteType = 10;
+THREE.ShortType = 11;
+THREE.UnsignedShortType = 12;
+THREE.IntType = 13;
+THREE.UnsignedIntType = 14;
+THREE.FloatType = 15;
+
+// Formats
+
+THREE.AlphaFormat = 16;
+THREE.RGBFormat = 17;
+THREE.RGBAFormat = 18;
+THREE.LuminanceFormat = 19;
+THREE.LuminanceAlphaFormat = 20;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.Particle = function ( materials ) {
+
+	THREE.Object3D.call( this );
+
+	this.materials = materials instanceof Array ? materials : [ materials ];
+
+};
+
+THREE.Particle.prototype = new THREE.Object3D();
+THREE.Particle.prototype.constructor = THREE.Particle;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.Line = function ( geometry, materials, type ) {
+
+	THREE.Object3D.call( this );
+
+	this.geometry = geometry;
+	this.materials = materials instanceof Array ? materials : [ materials ];
+
+	this.type = ( type != undefined ) ? type : THREE.LineStrip;
+
+};
+
+THREE.LineStrip = 0;
+THREE.LinePieces = 1;
+
+THREE.Line.prototype = new THREE.Object3D();
+THREE.Line.prototype.constructor = THREE.Line;
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ * @author mikael emtinger / http://gomo.se/
+ */
+
+THREE.Mesh = function ( geometry, materials ) {
+
+	THREE.Object3D.call( this );
+
+	this.geometry = geometry;
+	this.materials = materials && materials.length ? materials : [ materials ];
+
+	this.overdraw = false; // TODO: Move to material?
+
+
+	if ( this.geometry ) {
+
+		// calc bound radius
+
+		if( !this.geometry.boundingSphere ) {
+
+			this.geometry.computeBoundingSphere();
+
+		}
+
+		this.boundRadius = geometry.boundingSphere.radius;
+
+
+		// setup morph targets
+
+		if( this.geometry.morphTargets.length ) {
+
+			this.morphTargetBase = -1;
+			this.morphTargetForcedOrder = [];
+			this.morphTargetInfluences = [];
+			this.morphTargetDictionary = {};
+
+			for( var m = 0; m < this.geometry.morphTargets.length; m ++ ) {
+
+				this.morphTargetInfluences.push( 0 );
+				this.morphTargetDictionary[ this.geometry.morphTargets[ m ].name ] = m;
+
+			}
+
+		}
+
+	}
+
+}
+
+THREE.Mesh.prototype = new THREE.Object3D();
+THREE.Mesh.prototype.constructor = THREE.Mesh;
+THREE.Mesh.prototype.supr = THREE.Object3D.prototype;
+
+
+/*
+ * Get Morph Target Index by Name
+ */
+
+THREE.Mesh.prototype.getMorphTargetIndexByName = function( name ) {
+
+	if ( this.morphTargetDictionary[ name ] !== undefined ) {
+
+		return this.morphTargetDictionary[ name ];
+	}
+
+	console.log( "THREE.Mesh.getMorphTargetIndexByName: morph target " + name + " does not exist. Returning 0." );
+	return 0;
+
+}
+/**
+ * @author mikael emtinger / http://gomo.se/
+ */
+
+THREE.Bone = function( belongsToSkin ) {
+
+	THREE.Object3D.call( this );
+
+	this.skin = belongsToSkin;
+	this.skinMatrix = new THREE.Matrix4();
+	this.hasNoneBoneChildren = false;
+
+};
+
+THREE.Bone.prototype = new THREE.Object3D();
+THREE.Bone.prototype.constructor = THREE.Bone;
+THREE.Bone.prototype.supr = THREE.Object3D.prototype;
+
+
+/*
+ * Update
+ */
+
+THREE.Bone.prototype.update = function( parentSkinMatrix, forceUpdate, camera ) {
+
+	// update local
+
+	if ( this.matrixAutoUpdate ) {
+
+		forceUpdate |= this.updateMatrix();
+
+	}
+
+	// update skin matrix
+
+	if ( forceUpdate || this.matrixWorldNeedsUpdate ) {
+
+		if( parentSkinMatrix ) {
+
+			this.skinMatrix.multiply( parentSkinMatrix, this.matrix );
+
+		} else {
+
+			this.skinMatrix.copy( this.matrix );
+
+		}
+
+		this.matrixWorldNeedsUpdate = false;
+		forceUpdate = true;
+
+	}
+
+	// update children
+
+	var child, i, l = this.children.length;
+
+	if ( this.hasNoneBoneChildren ) {
+
+		this.matrixWorld.multiply( this.skin.matrixWorld, this.skinMatrix );
+
+
+		for ( i = 0; i < l; i++ ) {
+
+			child = this.children[ i ];
+
+			if ( ! ( child instanceof THREE.Bone ) ) {
+
+				child.update( this.matrixWorld, true, camera );
+
+			} else {
+
+				child.update( this.skinMatrix, forceUpdate, camera );
+
+			}
+
+		}
+
+	} else {
+
+		for ( i = 0; i < l; i++ ) {
+
+			this.children[ i ].update( this.skinMatrix, forceUpdate, camera );
+
+		}
+
+	}
+
+};
+
+
+/*
+ * Add child
+ */
+
+THREE.Bone.prototype.addChild = function( child ) {
+
+	if ( this.children.indexOf( child ) === - 1 ) {
+
+		if ( child.parent !== undefined ) {
+
+			child.parent.removeChild( child );
+
+		}
+
+		child.parent = this;
+		this.children.push( child );
+
+		if ( ! ( child instanceof THREE.Bone ) ) {
+
+			this.hasNoneBoneChildren = true;
+
+		}
+
+	}
+
+};
+
+/*
+ * TODO: Remove Children: see if any remaining are none-Bone
+ */
+/**
+ * @author mr.doob / http://mrdoob.com/
+ * @author mikael emtinger / http://gomo.se/
+ */
+
+THREE.Scene = function () {
+
+	THREE.Object3D.call( this );
+
+	this.fog = null;
+
+	this.matrixAutoUpdate = false;
+
+	this.overrideMaterial = null;
+
+	this.collisions = null;
+
+	this.objects = [];
+	this.lights = [];
+
+	this.__objectsAdded = [];
+	this.__objectsRemoved = [];
+
+};
+
+THREE.Scene.prototype = new THREE.Object3D();
+THREE.Scene.prototype.constructor = THREE.Scene;
+THREE.Scene.prototype.supr = THREE.Object3D.prototype;
+
+THREE.Scene.prototype.add = function ( object ) {
+
+	this.supr.add.call( this, object );
+	this.addChildRecurse( object );
+
+}
+
+THREE.Scene.prototype.addChildRecurse = function ( child ) {
+
+	if ( child instanceof THREE.Light ) {
+
+		if ( this.lights.indexOf( child ) === - 1 ) {
+
+			this.lights.push( child );
+
+		}
+
+	} else if ( !( child instanceof THREE.Camera || child instanceof THREE.Bone ) ) {
+
+		if ( this.objects.indexOf( child ) === - 1 ) {
+
+			this.objects.push( child );
+			this.__objectsAdded.push( child );
+
+			// check if previously removed
+
+			var i = this.__objectsRemoved.indexOf( child );
+
+			if ( i !== -1 ) {
+
+				this.__objectsRemoved.splice( i, 1 );
+
+			}
+
+		}
+
+	}
+
+	for ( var c = 0; c < child.children.length; c ++ ) {
+
+		this.addChildRecurse( child.children[ c ] );
+
+	}
+
+}
+
+THREE.Scene.prototype.remove = function ( object ) {
+
+	this.supr.remove.call( this, object );
+	this.removeChildRecurse( object );
+
+}
+
+THREE.Scene.prototype.removeChildRecurse = function ( child ) {
+
+	if ( child instanceof THREE.Light ) {
+
+		var i = this.lights.indexOf( child );
+
+		if ( i !== -1 ) {
+
+			this.lights.splice( i, 1 );
+
+		}
+
+	} else if ( !( child instanceof THREE.Camera ) ) {
+
+		var i = this.objects.indexOf( child );
+
+		if( i !== -1 ) {
+
+			this.objects.splice( i, 1 );
+			this.__objectsRemoved.push( child );
+
+			// check if previously added
+
+			var ai = this.__objectsAdded.indexOf( child );
+
+			if ( ai !== -1 ) {
+
+				this.__objectsAdded.splice( ai, 1 );
+
+			}
+		}
+
+	}
+
+	for ( var c = 0; c < child.children.length; c ++ ) {
+
+		this.removeChildRecurse( child.children[ c ] );
+
+	}
+
+}
+
+// DEPRECATED
+
+THREE.Scene.prototype.addChild = function ( child ) {
+
+	console.warn( 'DEPRECATED: Scene.addChild() is now Scene.add().' );
+	this.add( child );
+
+}
+
+THREE.Scene.prototype.addObject = function ( child ) {
+
+	console.warn( 'DEPRECATED: Scene.addObject() is now Scene.add().' );
+	this.add( child );
+
+}
+
+THREE.Scene.prototype.addLight = function ( child ) {
+
+	console.warn( 'DEPRECATED: Scene.addLight() is now Scene.add().' );
+	this.add( child );
+
+}
+
+THREE.Scene.prototype.removeChild = function ( child ) {
+
+	console.warn( 'DEPRECATED: Scene.removeChild() is now Scene.remove().' );
+	this.remove( child );
+
+}
+
+THREE.Scene.prototype.removeObject = function ( child ) {
+
+	console.warn( 'DEPRECATED: Scene.removeObject() is now Scene.remove().' );
+	this.remove( child );
+
+}
+
+THREE.Scene.prototype.removeLight = function ( child ) {
+
+	console.warn( 'DEPRECATED: Scene.removeLight() is now Scene.remove().' );
+	this.remove( child );
+
+}
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.CanvasRenderer = function ( parameters ) {
+
+	var _this = this,
+	_renderList = null,
+	_projector = new THREE.Projector(),
+
+	parameters = parameters || {},
+
+	_canvas = parameters.canvas !== undefined ? parameters.canvas : document.createElement( 'canvas' ),
+
+	_canvasWidth, _canvasHeight, _canvasWidthHalf, _canvasHeightHalf,
+	_context = _canvas.getContext( '2d' ),
+
+	_clearColor = new THREE.Color( 0x000000 ),
+	_clearOpacity = 0,
+
+	_contextGlobalAlpha = 1,
+	_contextGlobalCompositeOperation = 0,
+	_contextStrokeStyle = null,
+	_contextFillStyle = null,
+	_contextLineWidth = null,
+	_contextLineCap = null,
+	_contextLineJoin = null,
+
+	_v1, _v2, _v3, _v4,
+	_v5 = new THREE.RenderableVertex(),
+	_v6 = new THREE.RenderableVertex(),
+
+	_v1x, _v1y, _v2x, _v2y, _v3x, _v3y,
+	_v4x, _v4y, _v5x, _v5y, _v6x, _v6y,
+
+	_color = new THREE.Color( 0x000000 ),
+	_color1 = new THREE.Color( 0x000000 ),
+	_color2 = new THREE.Color( 0x000000 ),
+	_color3 = new THREE.Color( 0x000000 ),
+	_color4 = new THREE.Color( 0x000000 ),
+
+	_patterns = [],
+
+	_near, _far,
+
+	_image, _uvs,
+	_uv1x, _uv1y, _uv2x, _uv2y, _uv3x, _uv3y,
+
+	_clipRect = new THREE.Rectangle(),
+	_clearRect = new THREE.Rectangle(),
+	_bboxRect = new THREE.Rectangle(),
+
+	_enableLighting = false,
+	_light = new THREE.Color(),
+	_ambientLight = new THREE.Color(),
+	_directionalLights = new THREE.Color(),
+	_pointLights = new THREE.Color(),
+
+	_pi2 = Math.PI * 2,
+	_vector3 = new THREE.Vector3(), // Needed for PointLight
+
+	_pixelMap, _pixelMapContext, _pixelMapImage, _pixelMapData,
+	_gradientMap, _gradientMapContext, _gradientMapQuality = 16;
+
+	_pixelMap = document.createElement( 'canvas' );
+	_pixelMap.width = _pixelMap.height = 2;
+
+	_pixelMapContext = _pixelMap.getContext( '2d' );
+	_pixelMapContext.fillStyle = 'rgba(0,0,0,1)';
+	_pixelMapContext.fillRect( 0, 0, 2, 2 );
+
+	_pixelMapImage = _pixelMapContext.getImageData( 0, 0, 2, 2 );
+	_pixelMapData = _pixelMapImage.data;
+
+	_gradientMap = document.createElement( 'canvas' );
+	_gradientMap.width = _gradientMap.height = _gradientMapQuality;
+
+	_gradientMapContext = _gradientMap.getContext( '2d' );
+	_gradientMapContext.translate( - _gradientMapQuality / 2, - _gradientMapQuality / 2 );
+	_gradientMapContext.scale( _gradientMapQuality, _gradientMapQuality );
+
+	_gradientMapQuality --; // Fix UVs
+
+	this.domElement = _canvas;
+
+	this.autoClear = true;
+	this.sortObjects = true;
+	this.sortElements = true;
+
+	this.info = {
+
+		render: {
+
+			vertices: 0,
+			faces: 0
+
+		}
+
+	}
+
+	this.setSize = function ( width, height ) {
+
+		_canvasWidth = width;
+		_canvasHeight = height;
+		_canvasWidthHalf = Math.floor( _canvasWidth / 2 );
+		_canvasHeightHalf = Math.floor( _canvasHeight / 2 );
+
+		_canvas.width = _canvasWidth;
+		_canvas.height = _canvasHeight;
+
+		_clipRect.set( - _canvasWidthHalf, - _canvasHeightHalf, _canvasWidthHalf, _canvasHeightHalf );
+		_clearRect.set( - _canvasWidthHalf, - _canvasHeightHalf, _canvasWidthHalf, _canvasHeightHalf );
+
+		_contextGlobalAlpha = 1;
+		_contextGlobalCompositeOperation = 0;
+		_contextStrokeStyle = null;
+		_contextFillStyle = null;
+		_contextLineWidth = null;
+		_contextLineCap = null;
+		_contextLineJoin = null;
+
+	};
+
+	this.setClearColor = function( color, opacity ) {
+
+		_clearColor.copy( color );
+		_clearOpacity = opacity;
+
+		_clearRect.set( - _canvasWidthHalf, - _canvasHeightHalf, _canvasWidthHalf, _canvasHeightHalf );
+
+	};
+
+	this.setClearColorHex = function( hex, opacity ) {
+
+		_clearColor.setHex( hex );
+		_clearOpacity = opacity;
+
+		_clearRect.set( - _canvasWidthHalf, - _canvasHeightHalf, _canvasWidthHalf, _canvasHeightHalf );
+
+	};
+
+	this.clear = function () {
+
+		_context.setTransform( 1, 0, 0, - 1, _canvasWidthHalf, _canvasHeightHalf );
+
+		if ( !_clearRect.isEmpty() ) {
+
+			_clearRect.minSelf( _clipRect );
+			_clearRect.inflate( 2 );
+
+			if ( _clearOpacity < 1 ) {
+
+				_context.clearRect( Math.floor( _clearRect.getX() ), Math.floor( _clearRect.getY() ), Math.floor( _clearRect.getWidth() ), Math.floor( _clearRect.getHeight() ) );
+
+			}
+
+			if ( _clearOpacity > 0 ) {
+
+				setBlending( THREE.NormalBlending );
+				setOpacity( 1 );
+
+				setFillStyle( 'rgba(' + Math.floor( _clearColor.r * 255 ) + ',' + Math.floor( _clearColor.g * 255 ) + ',' + Math.floor( _clearColor.b * 255 ) + ',' + _clearOpacity + ')' );
+
+				_context.fillRect( Math.floor( _clearRect.getX() ), Math.floor( _clearRect.getY() ), Math.floor( _clearRect.getWidth() ), Math.floor( _clearRect.getHeight() ) );
+
+			}
+
+			_clearRect.empty();
+
+		}
+
+
+	};
+
+	this.render = function ( scene, camera ) {
+
+		var e, el, element, m, ml, fm, fml, material;
+
+		this.autoClear ? this.clear() : _context.setTransform( 1, 0, 0, - 1, _canvasWidthHalf, _canvasHeightHalf );
+
+		_this.info.render.vertices = 0;
+		_this.info.render.faces = 0;
+
+		_renderList = _projector.projectScene( scene, camera, this.sortElements );
+
+		/* DEBUG
+		_context.fillStyle = 'rgba( 0, 255, 255, 0.5 )';
+		_context.fillRect( _clipRect.getX(), _clipRect.getY(), _clipRect.getWidth(), _clipRect.getHeight() );
+		*/
+
+		_enableLighting = scene.lights.length > 0;
+
+		if ( _enableLighting ) {
+
+			 calculateLights( scene );
+
+		}
+
+		for ( e = 0, el = _renderList.length; e < el; e++ ) {
+
+			element = _renderList[ e ];
+
+			_bboxRect.empty();
+
+			if ( element instanceof THREE.RenderableParticle ) {
+
+				_v1 = element;
+				_v1.x *= _canvasWidthHalf; _v1.y *= _canvasHeightHalf;
+
+				m = 0; ml = element.materials.length;
+
+				while( m < ml ) {
+
+					material = element.materials[ m ++ ];
+					material.opacity != 0 && renderParticle( _v1, element, material, scene );
+
+				}
+
+			} else if ( element instanceof THREE.RenderableLine ) {
+
+				_v1 = element.v1; _v2 = element.v2;
+
+				_v1.positionScreen.x *= _canvasWidthHalf; _v1.positionScreen.y *= _canvasHeightHalf;
+				_v2.positionScreen.x *= _canvasWidthHalf; _v2.positionScreen.y *= _canvasHeightHalf;
+
+				_bboxRect.addPoint( _v1.positionScreen.x, _v1.positionScreen.y );
+				_bboxRect.addPoint( _v2.positionScreen.x, _v2.positionScreen.y );
+
+				if ( _clipRect.intersects( _bboxRect ) ) {
+
+					m = 0; ml = element.materials.length;
+
+					while ( m < ml ) {
+
+						material = element.materials[ m ++ ];
+						material.opacity != 0 && renderLine( _v1, _v2, element, material, scene );
+
+					}
+
+				}
+
+
+			} else if ( element instanceof THREE.RenderableFace3 ) {
+
+				_v1 = element.v1; _v2 = element.v2; _v3 = element.v3;
+
+				_v1.positionScreen.x *= _canvasWidthHalf; _v1.positionScreen.y *= _canvasHeightHalf;
+				_v2.positionScreen.x *= _canvasWidthHalf; _v2.positionScreen.y *= _canvasHeightHalf;
+				_v3.positionScreen.x *= _canvasWidthHalf; _v3.positionScreen.y *= _canvasHeightHalf;
+
+				if ( element.overdraw ) {
+
+					expand( _v1.positionScreen, _v2.positionScreen );
+					expand( _v2.positionScreen, _v3.positionScreen );
+					expand( _v3.positionScreen, _v1.positionScreen );
+
+				}
+
+				_bboxRect.add3Points( _v1.positionScreen.x, _v1.positionScreen.y,
+						      _v2.positionScreen.x, _v2.positionScreen.y,
+						      _v3.positionScreen.x, _v3.positionScreen.y );
+
+				if ( _clipRect.intersects( _bboxRect ) ) {
+
+					m = 0; ml = element.meshMaterials.length;
+
+					while ( m < ml ) {
+
+						material = element.meshMaterials[ m ++ ];
+
+						if ( material instanceof THREE.MeshFaceMaterial ) {
+
+							fm = 0; fml = element.faceMaterials.length;
+
+							while ( fm < fml ) {
+
+								material = element.faceMaterials[ fm ++ ];
+								material && material.opacity != 0 && renderFace3( _v1, _v2, _v3, 0, 1, 2, element, material, scene );
+
+							}
+
+							continue;
+
+						}
+
+						material.opacity != 0 && renderFace3( _v1, _v2, _v3, 0, 1, 2, element, material, scene );
+
+					}
+
+				}
+
+			} else if ( element instanceof THREE.RenderableFace4 ) {
+
+				_v1 = element.v1; _v2 = element.v2; _v3 = element.v3; _v4 = element.v4;
+
+				_v1.positionScreen.x *= _canvasWidthHalf; _v1.positionScreen.y *= _canvasHeightHalf;
+				_v2.positionScreen.x *= _canvasWidthHalf; _v2.positionScreen.y *= _canvasHeightHalf;
+				_v3.positionScreen.x *= _canvasWidthHalf; _v3.positionScreen.y *= _canvasHeightHalf;
+				_v4.positionScreen.x *= _canvasWidthHalf; _v4.positionScreen.y *= _canvasHeightHalf;
+
+				_v5.positionScreen.copy( _v2.positionScreen );
+				_v6.positionScreen.copy( _v4.positionScreen );
+
+				if ( element.overdraw ) {
+
+					expand( _v1.positionScreen, _v2.positionScreen );
+					expand( _v2.positionScreen, _v4.positionScreen );
+					expand( _v4.positionScreen, _v1.positionScreen );
+
+					expand( _v3.positionScreen, _v5.positionScreen );
+					expand( _v3.positionScreen, _v6.positionScreen );
+
+				}
+
+				_bboxRect.addPoint( _v1.positionScreen.x, _v1.positionScreen.y );
+				_bboxRect.addPoint( _v2.positionScreen.x, _v2.positionScreen.y );
+				_bboxRect.addPoint( _v3.positionScreen.x, _v3.positionScreen.y );
+				_bboxRect.addPoint( _v4.positionScreen.x, _v4.positionScreen.y );
+
+				if ( _clipRect.intersects( _bboxRect ) ) {
+
+					m = 0; ml = element.meshMaterials.length;
+
+					while ( m < ml ) {
+
+						material = element.meshMaterials[ m ++ ];
+
+						if ( material instanceof THREE.MeshFaceMaterial ) {
+
+							fm = 0; fml = element.faceMaterials.length;
+
+							while ( fm < fml ) {
+
+								material = element.faceMaterials[ fm ++ ];
+								material && material.opacity != 0 && renderFace4( _v1, _v2, _v3, _v4, _v5, _v6, element, material, scene );
+
+							}
+
+							continue;
+
+						}
+
+						material.opacity != 0 && renderFace4( _v1, _v2, _v3, _v4, _v5, _v6, element, material, scene );
+
+					}
+
+				}
+
+			}
+
+			/*
+			_context.lineWidth = 1;
+			_context.strokeStyle = 'rgba( 0, 255, 0, 0.5 )';
+			_context.strokeRect( _bboxRect.getX(), _bboxRect.getY(), _bboxRect.getWidth(), _bboxRect.getHeight() );
+			*/
+
+			_clearRect.addRectangle( _bboxRect );
+
+
+		}
+
+		/* DEBUG
+		_context.lineWidth = 1;
+		_context.strokeStyle = 'rgba( 255, 0, 0, 0.5 )';
+		_context.strokeRect( _clearRect.getX(), _clearRect.getY(), _clearRect.getWidth(), _clearRect.getHeight() );
+		*/
+
+		_context.setTransform( 1, 0, 0, 1, 0, 0 );
+
+		//
+
+		function calculateLights( scene ) {
+
+			var l, ll, light, lightColor,
+			lights = scene.lights;
+
+			_ambientLight.setRGB( 0, 0, 0 );
+			_directionalLights.setRGB( 0, 0, 0 );
+			_pointLights.setRGB( 0, 0, 0 );
+
+			for ( l = 0, ll = lights.length; l < ll; l ++ ) {
+
+				light = lights[ l ];
+				lightColor = light.color;
+
+				if ( light instanceof THREE.AmbientLight ) {
+
+					_ambientLight.r += lightColor.r;
+					_ambientLight.g += lightColor.g;
+					_ambientLight.b += lightColor.b;
+
+				} else if ( light instanceof THREE.DirectionalLight ) {
+
+					// for particles
+
+					_directionalLights.r += lightColor.r;
+					_directionalLights.g += lightColor.g;
+					_directionalLights.b += lightColor.b;
+
+				} else if ( light instanceof THREE.PointLight ) {
+
+					// for particles
+
+					_pointLights.r += lightColor.r;
+					_pointLights.g += lightColor.g;
+					_pointLights.b += lightColor.b;
+
+				}
+
+			}
+
+		}
+
+		function calculateLight( scene, position, normal, color ) {
+
+			var l, ll, light, lightColor,
+			amount, lights = scene.lights;
+
+			for ( l = 0, ll = lights.length; l < ll; l ++ ) {
+
+				light = lights[ l ];
+				lightColor = light.color;
+
+				if ( light instanceof THREE.DirectionalLight ) {
+
+					amount = normal.dot( light.position );
+
+					if ( amount <= 0 ) continue;
+
+					amount *= light.intensity;
+
+					color.r += lightColor.r * amount;
+					color.g += lightColor.g * amount;
+					color.b += lightColor.b * amount;
+
+				} else if ( light instanceof THREE.PointLight ) {
+
+					amount = normal.dot( _vector3.sub( light.position, position ).normalize() );
+
+					if ( amount <= 0 ) continue;
+
+					amount *= light.distance == 0 ? 1 : 1 - Math.min( position.distanceTo( light.position ) / light.distance, 1 );
+
+					if ( amount == 0 ) continue;
+
+					amount *= light.intensity;
+
+					color.r += lightColor.r * amount;
+					color.g += lightColor.g * amount;
+					color.b += lightColor.b * amount;
+
+				}
+
+			}
+
+		}
+
+		function renderParticle ( v1, element, material, scene ) {
+
+			setOpacity( material.opacity );
+			setBlending( material.blending );
+
+			var width, height, scaleX, scaleY,
+			bitmap, bitmapWidth, bitmapHeight;
+
+			if ( material instanceof THREE.ParticleBasicMaterial ) {
+
+				if ( material.map ) {
+
+					bitmap = material.map.image;
+					bitmapWidth = bitmap.width >> 1;
+					bitmapHeight = bitmap.height >> 1;
+
+					scaleX = element.scale.x * _canvasWidthHalf;
+					scaleY = element.scale.y * _canvasHeightHalf;
+
+					width = scaleX * bitmapWidth;
+					height = scaleY * bitmapHeight;
+
+					// TODO: Rotations break this...
+
+					_bboxRect.set( v1.x - width, v1.y - height, v1.x  + width, v1.y + height );
+
+					if ( !_clipRect.intersects( _bboxRect ) ) {
+
+						return;
+
+					}
+
+					_context.save();
+					_context.translate( v1.x, v1.y );
+					_context.rotate( - element.rotation );
+					_context.scale( scaleX, - scaleY );
+
+					_context.translate( - bitmapWidth, - bitmapHeight );
+					_context.drawImage( bitmap, 0, 0 );
+
+					_context.restore();
+
+				}
+
+				/* DEBUG
+				_context.beginPath();
+				_context.moveTo( v1.x - 10, v1.y );
+				_context.lineTo( v1.x + 10, v1.y );
+				_context.moveTo( v1.x, v1.y - 10 );
+				_context.lineTo( v1.x, v1.y + 10 );
+				_context.closePath();
+				_context.strokeStyle = 'rgb(255,255,0)';
+				_context.stroke();
+				*/
+
+			} else if ( material instanceof THREE.ParticleCanvasMaterial ) {
+
+				width = element.scale.x * _canvasWidthHalf;
+				height = element.scale.y * _canvasHeightHalf;
+
+				_bboxRect.set( v1.x - width, v1.y - height, v1.x + width, v1.y + height );
+
+				if ( !_clipRect.intersects( _bboxRect ) ) {
+
+					return;
+
+				}
+
+				setStrokeStyle( material.color.getContextStyle() );
+				setFillStyle( material.color.getContextStyle() );
+
+				_context.save();
+				_context.translate( v1.x, v1.y );
+				_context.rotate( - element.rotation );
+				_context.scale( width, height );
+
+				material.program( _context );
+
+				_context.restore();
+
+			}
+
+		}
+
+		function renderLine( v1, v2, element, material, scene ) {
+
+			setOpacity( material.opacity );
+			setBlending( material.blending );
+
+			_context.beginPath();
+			_context.moveTo( v1.positionScreen.x, v1.positionScreen.y );
+			_context.lineTo( v2.positionScreen.x, v2.positionScreen.y );
+			_context.closePath();
+
+			if ( material instanceof THREE.LineBasicMaterial ) {
+
+				setLineWidth( material.linewidth );
+				setLineCap( material.linecap );
+				setLineJoin( material.linejoin );
+				setStrokeStyle( material.color.getContextStyle() );
+
+				_context.stroke();
+				_bboxRect.inflate( material.linewidth * 2 );
+
+			}
+
+		}
+
+		function renderFace3( v1, v2, v3, uv1, uv2, uv3, element, material, scene ) {
+
+			_this.info.render.vertices += 3;
+			_this.info.render.faces ++;
+
+			setOpacity( material.opacity );
+			setBlending( material.blending );
+
+			_v1x = v1.positionScreen.x; _v1y = v1.positionScreen.y;
+			_v2x = v2.positionScreen.x; _v2y = v2.positionScreen.y;
+			_v3x = v3.positionScreen.x; _v3y = v3.positionScreen.y;
+
+			drawTriangle( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y );
+
+			if ( material instanceof THREE.MeshBasicMaterial ) {
+
+				if ( material.map/* && !material.wireframe*/ ) {
+
+					if ( material.map.mapping instanceof THREE.UVMapping ) {
+
+						_uvs = element.uvs[ 0 ];
+						patternPath( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y, _uvs[ uv1 ].u, _uvs[ uv1 ].v, _uvs[ uv2 ].u, _uvs[ uv2 ].v, _uvs[ uv3 ].u, _uvs[ uv3 ].v, material.map );
+
+					}
+
+
+				} else if ( material.envMap ) {
+
+					if ( material.envMap.mapping instanceof THREE.SphericalReflectionMapping ) {
+
+						var cameraMatrix = camera.matrixWorldInverse;
+
+						_vector3.copy( element.vertexNormalsWorld[ 0 ] );
+						_uv1x = ( _vector3.x * cameraMatrix.n11 + _vector3.y * cameraMatrix.n12 + _vector3.z * cameraMatrix.n13 ) * 0.5 + 0.5;
+						_uv1y = - ( _vector3.x * cameraMatrix.n21 + _vector3.y * cameraMatrix.n22 + _vector3.z * cameraMatrix.n23 ) * 0.5 + 0.5;
+
+						_vector3.copy( element.vertexNormalsWorld[ 1 ] );
+						_uv2x = ( _vector3.x * cameraMatrix.n11 + _vector3.y * cameraMatrix.n12 + _vector3.z * cameraMatrix.n13 ) * 0.5 + 0.5;
+						_uv2y = - ( _vector3.x * cameraMatrix.n21 + _vector3.y * cameraMatrix.n22 + _vector3.z * cameraMatrix.n23 ) * 0.5 + 0.5;
+
+						_vector3.copy( element.vertexNormalsWorld[ 2 ] );
+						_uv3x = ( _vector3.x * cameraMatrix.n11 + _vector3.y * cameraMatrix.n12 + _vector3.z * cameraMatrix.n13 ) * 0.5 + 0.5;
+						_uv3y = - ( _vector3.x * cameraMatrix.n21 + _vector3.y * cameraMatrix.n22 + _vector3.z * cameraMatrix.n23 ) * 0.5 + 0.5;
+
+						patternPath( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y, _uv1x, _uv1y, _uv2x, _uv2y, _uv3x, _uv3y, material.envMap );
+
+					}/* else if ( material.envMap.mapping == THREE.SphericalRefractionMapping ) {
+
+						
+
+					}*/
+
+
+				} else {
+
+					material.wireframe ? strokePath( material.color, material.wireframeLinewidth, material.wireframeLinecap, material.wireframeLinejoin ) : fillPath( material.color );
+
+				}
+
+			} else if ( material instanceof THREE.MeshLambertMaterial ) {
+
+				if ( material.map && !material.wireframe ) {
+
+					if ( material.map.mapping instanceof THREE.UVMapping ) {
+
+						_uvs = element.uvs[ 0 ];
+						patternPath( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y, _uvs[ uv1 ].u, _uvs[ uv1 ].v, _uvs[ uv2 ].u, _uvs[ uv2 ].v, _uvs[ uv3 ].u, _uvs[ uv3 ].v, material.map );
+
+					}
+
+					setBlending( THREE.SubtractiveBlending );
+
+				}
+
+				if ( _enableLighting ) {
+
+					if ( !material.wireframe && material.shading == THREE.SmoothShading && element.vertexNormalsWorld.length == 3 ) {
+
+						_color1.r = _color2.r = _color3.r = _ambientLight.r;
+						_color1.g = _color2.g = _color3.g = _ambientLight.g;
+						_color1.b = _color2.b = _color3.b = _ambientLight.b;
+
+						calculateLight( scene, element.v1.positionWorld, element.vertexNormalsWorld[ 0 ], _color1 );
+						calculateLight( scene, element.v2.positionWorld, element.vertexNormalsWorld[ 1 ], _color2 );
+						calculateLight( scene, element.v3.positionWorld, element.vertexNormalsWorld[ 2 ], _color3 );
+
+						_color1.r = Math.max( 0, Math.min( material.color.r * _color1.r, 1 ) );
+						_color1.g = Math.max( 0, Math.min( material.color.g * _color1.g, 1 ) );
+						_color1.b = Math.max( 0, Math.min( material.color.b * _color1.b, 1 ) );
+
+						_color2.r = Math.max( 0, Math.min( material.color.r * _color2.r, 1 ) );
+						_color2.g = Math.max( 0, Math.min( material.color.g * _color2.g, 1 ) );
+						_color2.b = Math.max( 0, Math.min( material.color.b * _color2.b, 1 ) );
+
+						_color3.r = Math.max( 0, Math.min( material.color.r * _color3.r, 1 ) );
+						_color3.g = Math.max( 0, Math.min( material.color.g * _color3.g, 1 ) );
+						_color3.b = Math.max( 0, Math.min( material.color.b * _color3.b, 1 ) );
+
+						_color4.r = ( _color2.r + _color3.r ) * 0.5;
+						_color4.g = ( _color2.g + _color3.g ) * 0.5;
+						_color4.b = ( _color2.b + _color3.b ) * 0.5;
+
+						_image = getGradientTexture( _color1, _color2, _color3, _color4 );
+
+						clipImage( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y, 0, 0, 1, 0, 0, 1, _image );
+
+					} else {
+
+						_light.r = _ambientLight.r;
+						_light.g = _ambientLight.g;
+						_light.b = _ambientLight.b;
+
+						calculateLight( scene, element.centroidWorld, element.normalWorld, _light );
+
+						_color.r = Math.max( 0, Math.min( material.color.r * _light.r, 1 ) );
+						_color.g = Math.max( 0, Math.min( material.color.g * _light.g, 1 ) );
+						_color.b = Math.max( 0, Math.min( material.color.b * _light.b, 1 ) );
+
+						material.wireframe ? strokePath( _color, material.wireframeLinewidth, material.wireframeLinecap, material.wireframeLinejoin ) : fillPath( _color );
+
+					}
+
+				} else {
+
+					material.wireframe ? strokePath( material.color, material.wireframeLinewidth, material.wireframeLinecap, material.wireframeLinejoin ) : fillPath( material.color );
+
+				}
+
+			} else if ( material instanceof THREE.MeshDepthMaterial ) {
+
+				_near = camera.near;
+				_far = camera.far;
+
+				_color1.r = _color1.g = _color1.b = 1 - smoothstep( v1.positionScreen.z, _near, _far );
+				_color2.r = _color2.g = _color2.b = 1 - smoothstep( v2.positionScreen.z, _near, _far );
+				_color3.r = _color3.g = _color3.b = 1 - smoothstep( v3.positionScreen.z, _near, _far );
+
+				_color4.r = ( _color2.r + _color3.r ) * 0.5;
+				_color4.g = ( _color2.g + _color3.g ) * 0.5;
+				_color4.b = ( _color2.b + _color3.b ) * 0.5;
+
+				_image = getGradientTexture( _color1, _color2, _color3, _color4 );
+
+				clipImage( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y, 0, 0, 1, 0, 0, 1, _image );
+
+			} else if ( material instanceof THREE.MeshNormalMaterial ) {
+
+				_color.r = normalToComponent( element.normalWorld.x );
+				_color.g = normalToComponent( element.normalWorld.y );
+				_color.b = normalToComponent( element.normalWorld.z );
+
+				material.wireframe ? strokePath( _color, material.wireframeLinewidth, material.wireframeLinecap, material.wireframeLinejoin ) : fillPath( _color );
+
+			}
+
+		}
+
+		function renderFace4( v1, v2, v3, v4, v5, v6, element, material, scene ) {
+
+			_this.info.render.vertices += 4;
+			_this.info.render.faces ++;
+
+			setOpacity( material.opacity );
+			setBlending( material.blending );
+
+			if ( material.map || material.envMap ) {
+
+				// Let renderFace3() handle this
+
+				renderFace3( v1, v2, v4, 0, 1, 3, element, material, scene );
+				renderFace3( v5, v3, v6, 1, 2, 3, element, material, scene );
+
+				return;
+
+			}
+
+			_v1x = v1.positionScreen.x; _v1y = v1.positionScreen.y;
+			_v2x = v2.positionScreen.x; _v2y = v2.positionScreen.y;
+			_v3x = v3.positionScreen.x; _v3y = v3.positionScreen.y;
+			_v4x = v4.positionScreen.x; _v4y = v4.positionScreen.y;
+			_v5x = v5.positionScreen.x; _v5y = v5.positionScreen.y;
+			_v6x = v6.positionScreen.x; _v6y = v6.positionScreen.y;
+
+			if ( material instanceof THREE.MeshBasicMaterial ) {
+
+				drawQuad( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y, _v4x, _v4y );
+
+				material.wireframe ? strokePath( material.color, material.wireframeLinewidth, material.wireframeLinecap, material.wireframeLinejoin ) : fillPath( material.color );
+
+			} else if ( material instanceof THREE.MeshLambertMaterial ) {
+
+				if ( _enableLighting ) {
+
+					if ( !material.wireframe && material.shading == THREE.SmoothShading && element.vertexNormalsWorld.length == 4 ) {
+
+						_color1.r = _color2.r = _color3.r = _color4.r = _ambientLight.r;
+						_color1.g = _color2.g = _color3.g = _color4.g = _ambientLight.g;
+						_color1.b = _color2.b = _color3.b = _color4.b = _ambientLight.b;
+
+						calculateLight( scene, element.v1.positionWorld, element.vertexNormalsWorld[ 0 ], _color1 );
+						calculateLight( scene, element.v2.positionWorld, element.vertexNormalsWorld[ 1 ], _color2 );
+						calculateLight( scene, element.v4.positionWorld, element.vertexNormalsWorld[ 3 ], _color3 );
+						calculateLight( scene, element.v3.positionWorld, element.vertexNormalsWorld[ 2 ], _color4 );
+
+						_color1.r = Math.max( 0, Math.min( material.color.r * _color1.r, 1 ) );
+						_color1.g = Math.max( 0, Math.min( material.color.g * _color1.g, 1 ) );
+						_color1.b = Math.max( 0, Math.min( material.color.b * _color1.b, 1 ) );
+
+						_color2.r = Math.max( 0, Math.min( material.color.r * _color2.r, 1 ) );
+						_color2.g = Math.max( 0, Math.min( material.color.g * _color2.g, 1 ) );
+						_color2.b = Math.max( 0, Math.min( material.color.b * _color2.b, 1 ) );
+
+						_color3.r = Math.max( 0, Math.min( material.color.r * _color3.r, 1 ) );
+						_color3.g = Math.max( 0, Math.min( material.color.g * _color3.g, 1 ) );
+						_color3.b = Math.max( 0, Math.min( material.color.b * _color3.b, 1 ) );
+
+						_color4.r = Math.max( 0, Math.min( material.color.r * _color4.r, 1 ) );
+						_color4.g = Math.max( 0, Math.min( material.color.g * _color4.g, 1 ) );
+						_color4.b = Math.max( 0, Math.min( material.color.b * _color4.b, 1 ) );
+
+						_image = getGradientTexture( _color1, _color2, _color3, _color4 );
+
+						// TODO: UVs are incorrect, v4->v3?
+
+						drawTriangle( _v1x, _v1y, _v2x, _v2y, _v4x, _v4y );
+						clipImage( _v1x, _v1y, _v2x, _v2y, _v4x, _v4y, 0, 0, 1, 0, 0, 1, _image );
+
+						drawTriangle( _v5x, _v5y, _v3x, _v3y, _v6x, _v6y );
+						clipImage( _v5x, _v5y, _v3x, _v3y, _v6x, _v6y, 1, 0, 1, 1, 0, 1, _image );
+
+					} else {
+
+						_light.r = _ambientLight.r;
+						_light.g = _ambientLight.g;
+						_light.b = _ambientLight.b;
+
+						calculateLight( scene, element.centroidWorld, element.normalWorld, _light );
+
+						_color.r = Math.max( 0, Math.min( material.color.r * _light.r, 1 ) );
+						_color.g = Math.max( 0, Math.min( material.color.g * _light.g, 1 ) );
+						_color.b = Math.max( 0, Math.min( material.color.b * _light.b, 1 ) );
+
+						drawQuad( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y, _v4x, _v4y );
+
+						material.wireframe ? strokePath( _color, material.wireframeLinewidth, material.wireframeLinecap, material.wireframeLinejoin ) : fillPath( _color );
+
+					}
+
+				} else {
+
+					drawQuad( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y, _v4x, _v4y );
+
+					material.wireframe ? strokePath( material.color, material.wireframeLinewidth, material.wireframeLinecap, material.wireframeLinejoin ) : fillPath( material.color );
+
+				}
+
+			} else if ( material instanceof THREE.MeshNormalMaterial ) {
+
+				_color.r = normalToComponent( element.normalWorld.x );
+				_color.g = normalToComponent( element.normalWorld.y );
+				_color.b = normalToComponent( element.normalWorld.z );
+
+				drawQuad( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y, _v4x, _v4y );
+
+				material.wireframe ? strokePath( _color, material.wireframeLinewidth, material.wireframeLinecap, material.wireframeLinejoin ) : fillPath( _color );
+
+			} else if ( material instanceof THREE.MeshDepthMaterial ) {
+
+				_near = camera.near;
+				_far = camera.far;
+
+				_color1.r = _color1.g = _color1.b = 1 - smoothstep( v1.positionScreen.z, _near, _far );
+				_color2.r = _color2.g = _color2.b = 1 - smoothstep( v2.positionScreen.z, _near, _far );
+				_color3.r = _color3.g = _color3.b = 1 - smoothstep( v4.positionScreen.z, _near, _far );
+				_color4.r = _color4.g = _color4.b = 1 - smoothstep( v3.positionScreen.z, _near, _far );
+
+				_image = getGradientTexture( _color1, _color2, _color3, _color4 );
+
+				// TODO: UVs are incorrect, v4->v3?
+
+				drawTriangle( _v1x, _v1y, _v2x, _v2y, _v4x, _v4y );
+				clipImage( _v1x, _v1y, _v2x, _v2y, _v4x, _v4y, 0, 0, 1, 0, 0, 1, _image );
+
+				drawTriangle( _v5x, _v5y, _v3x, _v3y, _v6x, _v6y );
+				clipImage( _v5x, _v5y, _v3x, _v3y, _v6x, _v6y, 1, 0, 1, 1, 0, 1, _image );
+
+			}
+
+		}
+
+		//
+
+		function drawTriangle( x0, y0, x1, y1, x2, y2 ) {
+
+			_context.beginPath();
+			_context.moveTo( x0, y0 );
+			_context.lineTo( x1, y1 );
+			_context.lineTo( x2, y2 );
+			_context.lineTo( x0, y0 );
+			_context.closePath();
+
+		}
+
+		function drawQuad( x0, y0, x1, y1, x2, y2, x3, y3 ) {
+
+			_context.beginPath();
+			_context.moveTo( x0, y0 );
+			_context.lineTo( x1, y1 );
+			_context.lineTo( x2, y2 );
+			_context.lineTo( x3, y3 );
+			_context.lineTo( x0, y0 );
+			_context.closePath();
+
+		}
+
+		function strokePath( color, linewidth, linecap, linejoin ) {
+
+			setLineWidth( linewidth );
+			setLineCap( linecap );
+			setLineJoin( linejoin );
+			setStrokeStyle( color.getContextStyle() );
+
+			_context.stroke();
+
+			_bboxRect.inflate( linewidth * 2 );
+
+		}
+
+		function fillPath( color ) {
+
+			setFillStyle( color.getContextStyle() );
+			_context.fill();
+
+		}
+
+		function patternPath( x0, y0, x1, y1, x2, y2, u0, v0, u1, v1, u2, v2, texture ) {
+
+			if ( texture.image.width == 0 ) return;
+
+			if ( texture.needsUpdate == true || _patterns[ texture.id ] == undefined ) {
+
+				var repeatX = texture.wrapS == THREE.RepeatWrapping;
+				var repeatY = texture.wrapT == THREE.RepeatWrapping;
+
+				_patterns[ texture.id ] = _context.createPattern( texture.image, repeatX && repeatY ? 'repeat' : repeatX && !repeatY ? 'repeat-x' : !repeatX && repeatY ? 'repeat-y' : 'no-repeat' );
+
+				texture.needsUpdate = false;
+
+			}
+
+			setFillStyle( _patterns[ texture.id ] );
+
+			// http://extremelysatisfactorytotalitarianism.com/blog/?p=2120
+
+			var a, b, c, d, e, f, det, idet,
+			offsetX = texture.offset.x / texture.repeat.x,
+			offsetY = texture.offset.y / texture.repeat.y,
+			width = ( texture.image.width - 1 ) * texture.repeat.x,
+			height = ( texture.image.height - 1 ) * texture.repeat.y;
+
+			u0 = ( u0 + offsetX ) * width;
+			v0 = ( v0 + offsetY ) * height;
+
+			u1 = ( u1 + offsetX ) * width;
+			v1 = ( v1 + offsetY ) * height;
+
+			u2 = ( u2 + offsetX ) * width;
+			v2 = ( v2 + offsetY ) * height;
+
+			x1 -= x0; y1 -= y0;
+			x2 -= x0; y2 -= y0;
+
+			u1 -= u0; v1 -= v0;
+			u2 -= u0; v2 -= v0;
+
+			det = u1 * v2 - u2 * v1;
+
+			idet = 1 / det;
+
+			a = ( v2 * x1 - v1 * x2 ) * idet;
+			b = ( v2 * y1 - v1 * y2 ) * idet;
+			c = ( u1 * x2 - u2 * x1 ) * idet;
+			d = ( u1 * y2 - u2 * y1 ) * idet;
+
+			e = x0 - a * u0 - c * v0;
+			f = y0 - b * u0 - d * v0;
+
+			_context.save();
+			_context.transform( a, b, c, d, e, f );
+			_context.fill();
+			_context.restore();
+
+		}
+
+		function clipImage( x0, y0, x1, y1, x2, y2, u0, v0, u1, v1, u2, v2, image ) {
+
+			// http://extremelysatisfactorytotalitarianism.com/blog/?p=2120
+
+			var a, b, c, d, e, f, det, idet,
+			width = image.width - 1,
+			height = image.height - 1;
+
+			u0 *= width; v0 *= height;
+			u1 *= width; v1 *= height;
+			u2 *= width; v2 *= height;
+
+			x1 -= x0; y1 -= y0;
+			x2 -= x0; y2 -= y0;
+
+			u1 -= u0; v1 -= v0;
+			u2 -= u0; v2 -= v0;
+
+			det = u1 * v2 - u2 * v1;
+
+			idet = 1 / det;
+
+			a = ( v2 * x1 - v1 * x2 ) * idet;
+			b = ( v2 * y1 - v1 * y2 ) * idet;
+			c = ( u1 * x2 - u2 * x1 ) * idet;
+			d = ( u1 * y2 - u2 * y1 ) * idet;
+
+			e = x0 - a * u0 - c * v0;
+			f = y0 - b * u0 - d * v0;
+
+			_context.save();
+			_context.transform( a, b, c, d, e, f );
+			_context.clip();
+			_context.drawImage( image, 0, 0 );
+			_context.restore();
+
+		}
+
+		function getGradientTexture( color1, color2, color3, color4 ) {
+
+			// http://mrdoob.com/blog/post/710
+
+			var c1r = ~~ ( color1.r * 255 ), c1g = ~~ ( color1.g * 255 ), c1b = ~~ ( color1.b * 255 ),
+			c2r = ~~ ( color2.r * 255 ), c2g = ~~ ( color2.g * 255 ), c2b = ~~ ( color2.b * 255 ),
+			c3r = ~~ ( color3.r * 255 ), c3g = ~~ ( color3.g * 255 ), c3b = ~~ ( color3.b * 255 ),
+			c4r = ~~ ( color4.r * 255 ), c4g = ~~ ( color4.g * 255 ), c4b = ~~ ( color4.b * 255 );
+
+			_pixelMapData[ 0 ] = c1r < 0 ? 0 : c1r > 255 ? 255 : c1r;
+			_pixelMapData[ 1 ] = c1g < 0 ? 0 : c1g > 255 ? 255 : c1g;
+			_pixelMapData[ 2 ] = c1b < 0 ? 0 : c1b > 255 ? 255 : c1b;
+
+			_pixelMapData[ 4 ] = c2r < 0 ? 0 : c2r > 255 ? 255 : c2r;
+			_pixelMapData[ 5 ] = c2g < 0 ? 0 : c2g > 255 ? 255 : c2g;
+			_pixelMapData[ 6 ] = c2b < 0 ? 0 : c2b > 255 ? 255 : c2b;
+
+			_pixelMapData[ 8 ] = c3r < 0 ? 0 : c3r > 255 ? 255 : c3r;
+			_pixelMapData[ 9 ] = c3g < 0 ? 0 : c3g > 255 ? 255 : c3g;
+			_pixelMapData[ 10 ] = c3b < 0 ? 0 : c3b > 255 ? 255 : c3b;
+
+			_pixelMapData[ 12 ] = c4r < 0 ? 0 : c4r > 255 ? 255 : c4r;
+			_pixelMapData[ 13 ] = c4g < 0 ? 0 : c4g > 255 ? 255 : c4g;
+			_pixelMapData[ 14 ] = c4b < 0 ? 0 : c4b > 255 ? 255 : c4b;
+
+			_pixelMapContext.putImageData( _pixelMapImage, 0, 0 );
+			_gradientMapContext.drawImage( _pixelMap, 0, 0 );
+
+			return _gradientMap;
+
+		}
+
+		function smoothstep( value, min, max ) {
+
+			/*
+			if ( value <= min ) return 0;
+			if ( value >= max ) return 1;
+			*/
+
+			var x = ( value - min ) / ( max - min );
+			return x * x * ( 3 - 2 * x );
+
+		}
+
+		function normalToComponent( normal ) {
+
+			var component = ( normal + 1 ) * 0.5;
+			return component < 0 ? 0 : ( component > 1 ? 1 : component );
+
+		}
+
+		// Hide anti-alias gaps
+
+		function expand( v1, v2 ) {
+
+			var x = v2.x - v1.x, y =  v2.y - v1.y,
+			det = x * x + y * y, idet;
+
+			if ( det == 0 ) return;
+
+			idet = 1 / Math.sqrt( det );
+
+			x *= idet; y *= idet;
+
+			v2.x += x; v2.y += y;
+			v1.x -= x; v1.y -= y;
+
+		}
+	};
+
+	// Context cached methods.
+
+	function setOpacity( value ) {
+
+		if ( _contextGlobalAlpha != value ) {
+
+			_context.globalAlpha = _contextGlobalAlpha = value;
+
+		}
+
+	}
+
+	function setBlending( value ) {
+
+		if ( _contextGlobalCompositeOperation != value ) {
+
+			switch ( value ) {
+
+				case THREE.NormalBlending:
+
+					_context.globalCompositeOperation = 'source-over';
+
+					break;
+
+				case THREE.AdditiveBlending:
+
+					_context.globalCompositeOperation = 'lighter';
+
+					break;
+
+				case THREE.SubtractiveBlending:
+
+					_context.globalCompositeOperation = 'darker';
+
+					break;
+
+			}
+
+			_contextGlobalCompositeOperation = value;
+
+		}
+
+	}
+
+	function setLineWidth( value ) {
+
+		if ( _contextLineWidth != value ) {
+
+			_context.lineWidth = _contextLineWidth = value;
+
+		}
+
+	}
+
+	function setLineCap( value ) {
+
+		// "butt", "round", "square"
+
+		if ( _contextLineCap != value ) {
+
+			_context.lineCap = _contextLineCap = value;
+
+		}
+
+	}
+
+	function setLineJoin( value ) {
+
+		// "round", "bevel", "miter"
+
+		if ( _contextLineJoin != value ) {
+
+			_context.lineJoin = _contextLineJoin = value;
+
+		}
+
+	}
+
+	function setStrokeStyle( style ) {
+
+		if ( _contextStrokeStyle != style ) {
+
+			_context.strokeStyle = _contextStrokeStyle = style;
+
+		}
+
+	}
+
+	function setFillStyle( style ) {
+
+		if ( _contextFillStyle != style ) {
+
+			_context.fillStyle = _contextFillStyle = style;
+
+		}
+
+	}
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.RenderableVertex = function () {
+
+	this.positionWorld = new THREE.Vector3();
+	this.positionScreen = new THREE.Vector4();
+
+	this.visible = true;
+
+};
+
+THREE.RenderableVertex.prototype.copy = function ( vertex ) {
+
+	this.positionWorld.copy( vertex.positionWorld );
+	this.positionScreen.copy( vertex.positionScreen );
+
+}
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.RenderableFace3 = function () {
+
+	this.v1 = new THREE.RenderableVertex();
+	this.v2 = new THREE.RenderableVertex();
+	this.v3 = new THREE.RenderableVertex();
+
+	this.centroidWorld = new THREE.Vector3();
+	this.centroidScreen = new THREE.Vector3();
+
+	this.normalWorld = new THREE.Vector3();
+	this.vertexNormalsWorld = [ new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3() ];
+
+	this.meshMaterials = null;
+	this.faceMaterials = null;
+	this.overdraw = false;
+	this.uvs = [[]];
+
+	this.z = null;
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.RenderableFace4 = function () {
+
+	this.v1 = new THREE.RenderableVertex();
+	this.v2 = new THREE.RenderableVertex();
+	this.v3 = new THREE.RenderableVertex();
+	this.v4 = new THREE.RenderableVertex();
+
+	this.centroidWorld = new THREE.Vector3();
+	this.centroidScreen = new THREE.Vector3();
+
+	this.normalWorld = new THREE.Vector3();
+	this.vertexNormalsWorld = [ new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3() ];
+
+	this.meshMaterials = null;
+	this.faceMaterials = null;
+	this.overdraw = false;
+	this.uvs = [[]];
+
+	this.z = null;
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.RenderableObject = function () {
+
+	this.object = null;
+	this.z = null;
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.RenderableParticle = function () {
+
+	this.x = null;
+	this.y = null;
+	this.z = null;
+
+	this.rotation = null;
+	this.scale = new THREE.Vector2();
+
+	this.materials = null;
+
+};
+/**
+ * @author mr.doob / http://mrdoob.com/
+ */
+
+THREE.RenderableLine = function () {
+
+	this.z = null;
+
+	this.v1 = new THREE.RenderableVertex();
+	this.v2 = new THREE.RenderableVertex();
+
+	this.materials = null;
+
+};
